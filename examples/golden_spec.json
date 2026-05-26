@@ -1,0 +1,2795 @@
+{
+  "project_name": "mAb 8000L Conceptual Design — URS_051 baseline",
+  "modality": "mAb",
+  "rooms": [
+    {
+      "id": "R_MEDIA_PREP",
+      "name_ko": "배지 조제실",
+      "name_en": "Media preparation",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 100.0,
+      "ceiling_height_mm": 5500,
+      "has_well_ceiling": true,
+      "volume_m3": 550.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Weigh booth",
+          "W_mm": 3500,
+          "D_mm": 3000,
+          "H_mm": 3000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 600.0,
+          "process_step": "P1-1",
+          "footprint_m2": 10.5
+        },
+        {
+          "name": "Mixing Tank-1 100L",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2000,
+          "weight_kg": 1000.0,
+          "max_op_weight_kg": 1100.0,
+          "process_step": "P1-2",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "Mixing Tank-2 500L",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": "P1-2",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "Mixing Tank-3 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 4000.0,
+          "process_step": "P1-2",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Mixing Tank-4 10000L",
+          "W_mm": 4000,
+          "D_mm": 3000,
+          "H_mm": 5000,
+          "weight_kg": 3000.0,
+          "max_op_weight_kg": 13000.0,
+          "process_step": "P1-2",
+          "footprint_m2": 12.0
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P1-1",
+        "P1-2",
+        "P1-3"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_BUFFER_PREP",
+      "name_ko": "버퍼 조제실",
+      "name_en": "Buffer preparation",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 200.0,
+      "ceiling_height_mm": 5500,
+      "has_well_ceiling": true,
+      "volume_m3": 1100.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Weigh booth",
+          "W_mm": 3500,
+          "D_mm": 3000,
+          "H_mm": 3000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 600.0,
+          "process_step": "P2-1",
+          "footprint_m2": 10.5
+        },
+        {
+          "name": "Mixing Tank-5 500L",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": "P2-2",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "Mixing Tank-6 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 4000.0,
+          "process_step": "P2-2",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Mixing Tank-7 4000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 6000.0,
+          "process_step": "P2-2",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Mixing Tank-8 10000L",
+          "W_mm": 4000,
+          "D_mm": 3000,
+          "H_mm": 5000,
+          "weight_kg": 4000.0,
+          "max_op_weight_kg": 14000.0,
+          "process_step": "P2-2",
+          "footprint_m2": 12.0
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P2-1",
+        "P2-2",
+        "P2-3"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_INOCULATION",
+      "name_ko": "Seed 접종실",
+      "name_en": "Inoculation",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 40.0,
+      "ceiling_height_mm": 3500,
+      "has_well_ceiling": true,
+      "volume_m3": 140.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Centrifuge",
+          "W_mm": 1000,
+          "D_mm": 600,
+          "H_mm": 500,
+          "weight_kg": 60.0,
+          "max_op_weight_kg": 60.0,
+          "process_step": "P3-1",
+          "footprint_m2": 0.6
+        },
+        {
+          "name": "Isolator",
+          "W_mm": 4000,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 1000.0,
+          "max_op_weight_kg": 1000.0,
+          "process_step": "P3-1",
+          "footprint_m2": 8.0
+        },
+        {
+          "name": "Cleanbench",
+          "W_mm": 2000,
+          "D_mm": 800,
+          "H_mm": 2000,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": "P3-2",
+          "footprint_m2": 1.6
+        },
+        {
+          "name": "Incubator",
+          "W_mm": 1200,
+          "D_mm": 800,
+          "H_mm": 600,
+          "weight_kg": 150.0,
+          "max_op_weight_kg": 150.0,
+          "process_step": "P3-2",
+          "footprint_m2": 0.96
+        }
+      ],
+      "one_way_flow": true,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P3-1",
+        "P3-2"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_CELL_CULTURE",
+      "name_ko": "배양실",
+      "name_en": "Cell Culture",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 300.0,
+      "ceiling_height_mm": 6000,
+      "has_well_ceiling": true,
+      "volume_m3": 1800.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Wave Reactor 20L",
+          "W_mm": 1200,
+          "D_mm": 600,
+          "H_mm": 800,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 220.0,
+          "process_step": "P4-1",
+          "footprint_m2": 0.72
+        },
+        {
+          "name": "BioReactor 100L",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 1000.0,
+          "max_op_weight_kg": 1100.0,
+          "process_step": "P4-2",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "BioReactor 500L",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3500,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": "P4-3",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "BioReactor 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4500,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 4000.0,
+          "process_step": "P4-4",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "BioReactor 10000L",
+          "W_mm": 4000,
+          "D_mm": 3000,
+          "H_mm": 5500,
+          "weight_kg": 3000.0,
+          "max_op_weight_kg": 11000.0,
+          "process_step": "P4-5",
+          "footprint_m2": 12.0
+        },
+        {
+          "name": "Storage tank-1 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 3500.0,
+          "process_step": "P4-5",
+          "footprint_m2": 7.5
+        }
+      ],
+      "one_way_flow": true,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P4-1",
+        "P4-2",
+        "P4-3",
+        "P4-4",
+        "P4-5"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_HARVEST",
+      "name_ko": "회수실",
+      "name_en": "Harvest",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 60.0,
+      "ceiling_height_mm": 5500,
+      "has_well_ceiling": true,
+      "volume_m3": 330.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Continuous centrifuge",
+          "W_mm": 3000,
+          "D_mm": 3000,
+          "H_mm": 3000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 2500.0,
+          "process_step": "P5-1",
+          "footprint_m2": 9.0
+        },
+        {
+          "name": "Depth filter system #1",
+          "W_mm": 2000,
+          "D_mm": 600,
+          "H_mm": 1800,
+          "weight_kg": 300.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P5-2",
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Depth filter system #2",
+          "W_mm": 2000,
+          "D_mm": 600,
+          "H_mm": 1800,
+          "weight_kg": 300.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P5-2",
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Storage tank-2 10000L",
+          "W_mm": 3000,
+          "D_mm": 3000,
+          "H_mm": 5000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 11500.0,
+          "process_step": "P5-2",
+          "footprint_m2": 9.0
+        }
+      ],
+      "one_way_flow": true,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P5-1",
+        "P5-2"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_PURIFICATION_1",
+      "name_ko": "정제실1",
+      "name_en": "Purification 1",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 350.4,
+      "ceiling_height_mm": 6000,
+      "has_well_ceiling": true,
+      "volume_m3": 2102.4,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Buffer tank-1 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 3500.0,
+          "process_step": "P6-1",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Buffer tank-2 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 3500.0,
+          "process_step": "P6-1",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Buffer tank-3 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 3500.0,
+          "process_step": "P6-1",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Buffer tank-4 4000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 6000.0,
+          "process_step": "P6-1",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Buffer tank-5 4000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 6000.0,
+          "process_step": "P6-1",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Buffer tank-6 4000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 6000.0,
+          "process_step": "P6-1",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Chromatography system 1",
+          "W_mm": 2000,
+          "D_mm": 1200,
+          "H_mm": 2000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P6-1",
+          "footprint_m2": 2.4
+        },
+        {
+          "name": "Column 1500mm",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 2200.0,
+          "process_step": "P6-1",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "Storage tank-3 4000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": "P6-1",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Storage tank-4 3000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4500,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 5000.0,
+          "process_step": "P6-1",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Acid tank 200L",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 700.0,
+          "process_step": "P6-2",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "Base tank 200L",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 700.0,
+          "process_step": "P6-2",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "Depth filter system VI",
+          "W_mm": 2000,
+          "D_mm": 600,
+          "H_mm": 1800,
+          "weight_kg": 300.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P6-2",
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Reactor 5000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 1500.0,
+          "process_step": "P6-2",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Storage tank-5 5000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 1500.0,
+          "process_step": "P6-2",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Chromatography system 2",
+          "W_mm": 2000,
+          "D_mm": 1200,
+          "H_mm": 2000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P6-3",
+          "footprint_m2": 2.4
+        },
+        {
+          "name": "Column 1000mm",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 1800.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": "P6-3",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "Storage tank-6 8000L",
+          "W_mm": 3500,
+          "D_mm": 3000,
+          "H_mm": 5500,
+          "weight_kg": 2500.0,
+          "max_op_weight_kg": 10000.0,
+          "process_step": "P6-3",
+          "footprint_m2": 10.5
+        },
+        {
+          "name": "Chromatography system 3",
+          "W_mm": 2000,
+          "D_mm": 1200,
+          "H_mm": 2000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P6-4",
+          "footprint_m2": 2.4
+        },
+        {
+          "name": "Column 800mm",
+          "W_mm": 2000,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 1600.0,
+          "process_step": "P6-4",
+          "footprint_m2": 4.0
+        },
+        {
+          "name": "Storage tank-7 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 3500.0,
+          "process_step": "P6-4",
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Nano filtration system",
+          "W_mm": 2000,
+          "D_mm": 800,
+          "H_mm": 1500,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 500.0,
+          "process_step": "P6-5",
+          "footprint_m2": 1.6
+        },
+        {
+          "name": "Storage tank-8 2000L",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 4000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 1500.0,
+          "process_step": "P6-5",
+          "footprint_m2": 7.5
+        }
+      ],
+      "one_way_flow": true,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P6-1",
+        "P6-2",
+        "P6-3",
+        "P6-4",
+        "P6-5"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_PURIFICATION_2",
+      "name_ko": "정제실2",
+      "name_en": "Purification 2",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 100.0,
+      "ceiling_height_mm": 5500,
+      "has_well_ceiling": true,
+      "volume_m3": 550.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.5,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Buffer tank-7 5000L",
+          "W_mm": 3500,
+          "D_mm": 2500,
+          "H_mm": 5000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 7000.0,
+          "process_step": "P7-1",
+          "footprint_m2": 8.75
+        },
+        {
+          "name": "Holding tank 500L",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 800.0,
+          "max_op_weight_kg": 1300.0,
+          "process_step": "P7-1",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "Storage tank-9 500L",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 3000,
+          "weight_kg": 800.0,
+          "max_op_weight_kg": 800.0,
+          "process_step": "P7-1",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "TFF system",
+          "W_mm": 2500,
+          "D_mm": 2000,
+          "H_mm": 2500,
+          "weight_kg": 1000.0,
+          "max_op_weight_kg": 1000.0,
+          "process_step": "P7-1",
+          "footprint_m2": 5.0
+        },
+        {
+          "name": "Filtration system",
+          "W_mm": 2000,
+          "D_mm": 800,
+          "H_mm": 1500,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": "P7-2",
+          "footprint_m2": 1.6
+        },
+        {
+          "name": "Bulk fill system",
+          "W_mm": 2000,
+          "D_mm": 800,
+          "H_mm": 1500,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": "P7-3",
+          "footprint_m2": 1.6
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [
+        "P7-1",
+        "P7-2",
+        "P7-3"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "R_PREPARATION",
+      "name_ko": "공정 준비실",
+      "name_en": "Preparation",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 80.0,
+      "ceiling_height_mm": 3500,
+      "has_well_ceiling": true,
+      "volume_m3": 280.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [
+        {
+          "name": "Autoclave",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 3000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 2000.0,
+          "process_step": null,
+          "footprint_m2": 7.5
+        },
+        {
+          "name": "Cleanbooth",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 3000,
+          "weight_kg": 500.0,
+          "max_op_weight_kg": 600.0,
+          "process_step": null,
+          "footprint_m2": 7.5
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_WASHING",
+      "name_ko": "세척실",
+      "name_en": "Washing",
+      "category": "process",
+      "clean_grade": "D",
+      "area_m2": 60.0,
+      "ceiling_height_mm": 3500,
+      "has_well_ceiling": true,
+      "volume_m3": 210.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [
+        {
+          "name": "COP system",
+          "W_mm": 3000,
+          "D_mm": 2500,
+          "H_mm": 3000,
+          "weight_kg": 1500.0,
+          "max_op_weight_kg": 1500.0,
+          "process_step": null,
+          "footprint_m2": 7.5
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_SUPPLY_CORRIDOR",
+      "name_ko": "공급복도",
+      "name_en": "Supply corridor",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 150.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 450.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": true,
+      "corridor_role": "supply",
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_RETURN_CORRIDOR",
+      "name_ko": "리턴복도",
+      "name_en": "Return corridor",
+      "category": "process",
+      "clean_grade": "D",
+      "area_m2": 250.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 750.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": true,
+      "corridor_role": "return",
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_GOWNING_PROCESS",
+      "name_ko": "착의실",
+      "name_en": "Gowning",
+      "category": "process",
+      "clean_grade": "C",
+      "area_m2": 30.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 90.0,
+      "background_color": "#FCD34D",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 15.0,
+      "air_changes_per_hour": 40,
+      "recovery_time_min": 20,
+      "gowning_type": "무진복",
+      "gowning_method": "over gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_MATERIAL_STORAGE",
+      "name_ko": "자재 보관실",
+      "name_en": "Material storage",
+      "category": "auxiliary",
+      "clean_grade": "D",
+      "area_m2": 100.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 300.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_EQUIPMENT_STORAGE",
+      "name_ko": "장비 보관실",
+      "name_en": "Equipment storage",
+      "category": "auxiliary",
+      "clean_grade": "D",
+      "area_m2": 100.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 300.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_DS_STORAGE",
+      "name_ko": "DS 보관실",
+      "name_en": "DS storage",
+      "category": "auxiliary",
+      "clean_grade": "D",
+      "area_m2": 50.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 150.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [
+        {
+          "name": "Deep freezer 1",
+          "W_mm": 1200,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 250.0,
+          "process_step": null,
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Deep freezer 2",
+          "W_mm": 1200,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 250.0,
+          "process_step": null,
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Deep freezer 3",
+          "W_mm": 1200,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 250.0,
+          "process_step": null,
+          "footprint_m2": 1.2
+        },
+        {
+          "name": "Deep freezer 4",
+          "W_mm": 1200,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 250.0,
+          "process_step": null,
+          "footprint_m2": 1.2
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_IPC",
+      "name_ko": "IPC 실",
+      "name_en": "IPC",
+      "category": "auxiliary",
+      "clean_grade": "D",
+      "area_m2": 30.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 90.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [
+        {
+          "name": "Deep freezer",
+          "W_mm": 900,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 150.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": null,
+          "footprint_m2": 0.9
+        },
+        {
+          "name": "Freezer",
+          "W_mm": 900,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 150.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": null,
+          "footprint_m2": 0.9
+        },
+        {
+          "name": "Refrigerator",
+          "W_mm": 900,
+          "D_mm": 1000,
+          "H_mm": 2000,
+          "weight_kg": 150.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": null,
+          "footprint_m2": 0.9
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_CELL_BANK_STORAGE",
+      "name_ko": "세포주 보관실",
+      "name_en": "Cell bank storage",
+      "category": "auxiliary",
+      "clean_grade": "D",
+      "area_m2": 20.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 60.0,
+      "background_color": "#93C5FD",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 5.0,
+      "air_changes_per_hour": 20,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [
+        {
+          "name": "Cell tank (nitrogen) 1",
+          "W_mm": 1000,
+          "D_mm": 1000,
+          "H_mm": 1500,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": null,
+          "footprint_m2": 1.0
+        },
+        {
+          "name": "Cell tank (nitrogen) 2",
+          "W_mm": 1000,
+          "D_mm": 1000,
+          "H_mm": 1500,
+          "weight_kg": 200.0,
+          "max_op_weight_kg": 200.0,
+          "process_step": null,
+          "footprint_m2": 1.0
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_CIP_SUPPLY",
+      "name_ko": "CIP 공급실",
+      "name_en": "CIP supply",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 60.0,
+      "ceiling_height_mm": 4500,
+      "has_well_ceiling": true,
+      "volume_m3": 270.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [
+        {
+          "name": "CIP station",
+          "W_mm": 5000,
+          "D_mm": 2000,
+          "H_mm": 4000,
+          "weight_kg": 2000.0,
+          "max_op_weight_kg": 4000.0,
+          "process_step": null,
+          "footprint_m2": 10.0
+        }
+      ],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_GOWNING_FEMALE",
+      "name_ko": "갱의실 (여)",
+      "name_en": "Gowning Female",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 50.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 150.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_GOWNING_MALE",
+      "name_ko": "갱의실 (남)",
+      "name_en": "Gowning Male",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 80.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 240.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_AUX_CORRIDOR",
+      "name_ko": "보조복도",
+      "name_en": "Auxiliary corridor",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 20.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 60.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": true,
+      "corridor_role": "auxiliary",
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_MATERIAL_INLET",
+      "name_ko": "자재반입실",
+      "name_en": "Material-in",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 30.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 90.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_WASTE_OUTLET",
+      "name_ko": "폐기물반출실",
+      "name_en": "Waste-out",
+      "category": "auxiliary",
+      "clean_grade": "CNC",
+      "area_m2": 30.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 90.0,
+      "background_color": "#D6D3D1",
+      "color_pattern": "dotted",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": 10,
+      "recovery_time_min": null,
+      "gowning_type": "스크럽",
+      "gowning_method": "degowning and gowning",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_MONITORING",
+      "name_ko": "모니터링실",
+      "name_en": "Monitoring",
+      "category": "auxiliary",
+      "clean_grade": "NC",
+      "area_m2": 50.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 150.0,
+      "background_color": "#E7E5E4",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": null,
+      "recovery_time_min": null,
+      "gowning_type": "일상복",
+      "gowning_method": "none",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_OFFICE",
+      "name_ko": "사무실",
+      "name_en": "Office",
+      "category": "NC",
+      "clean_grade": "NC",
+      "area_m2": 100.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 300.0,
+      "background_color": "#E7E5E4",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": null,
+      "recovery_time_min": null,
+      "gowning_type": "일상복",
+      "gowning_method": "none",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_TOILET_FEMALE",
+      "name_ko": "화장실 (여)",
+      "name_en": "Toilet (Female)",
+      "category": "NC",
+      "clean_grade": "NC",
+      "area_m2": 20.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 60.0,
+      "background_color": "#E7E5E4",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": null,
+      "recovery_time_min": null,
+      "gowning_type": "일상복",
+      "gowning_method": "none",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_TOILET_MALE",
+      "name_ko": "화장실 (남)",
+      "name_en": "Toilet (Male)",
+      "category": "NC",
+      "clean_grade": "NC",
+      "area_m2": 25.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 75.0,
+      "background_color": "#E7E5E4",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": null,
+      "recovery_time_min": null,
+      "gowning_type": "일상복",
+      "gowning_method": "none",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    },
+    {
+      "id": "R_LOBBY",
+      "name_ko": "로비",
+      "name_en": "Lobby",
+      "category": "NC",
+      "clean_grade": "NC",
+      "area_m2": 50.0,
+      "ceiling_height_mm": 3000,
+      "has_well_ceiling": false,
+      "volume_m3": 150.0,
+      "background_color": "#E7E5E4",
+      "color_pattern": "solid",
+      "transparency_pct": 50,
+      "differential_pressure_Pa": 0.0,
+      "air_changes_per_hour": null,
+      "recovery_time_min": null,
+      "gowning_type": "일상복",
+      "gowning_method": "none",
+      "equipment": [],
+      "one_way_flow": false,
+      "is_corridor": false,
+      "corridor_role": null,
+      "process_step_ids": [],
+      "notes": ""
+    }
+  ],
+  "airlocks": [
+    {
+      "id": "AL_001",
+      "type": "PAL_in",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_INOCULATION",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "personnel_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_002",
+      "type": "MAL_in",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_INOCULATION",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "material_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_003",
+      "type": "PAL_out",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_INOCULATION",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "personnel_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_004",
+      "type": "MAL_out",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_INOCULATION",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "material_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_005",
+      "type": "PAL_in",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_CELL_CULTURE",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "personnel_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_006",
+      "type": "MAL_in",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_CELL_CULTURE",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "material_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_007",
+      "type": "PAL_out",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_CELL_CULTURE",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "personnel_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_008",
+      "type": "MAL_out",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_CELL_CULTURE",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "material_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_009",
+      "type": "PAL_in",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_HARVEST",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "personnel_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_010",
+      "type": "MAL_in",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_HARVEST",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "material_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_011",
+      "type": "PAL_out",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_HARVEST",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "personnel_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_012",
+      "type": "MAL_out",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_HARVEST",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "material_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_013",
+      "type": "PAL_in",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_PURIFICATION_1",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "personnel_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_014",
+      "type": "MAL_in",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_PURIFICATION_1",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "material_entry",
+      "differential_pressure_Pa": 15.0
+    },
+    {
+      "id": "AL_015",
+      "type": "PAL_out",
+      "clean_grade": "C",
+      "area_m2": 12.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_PURIFICATION_1",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "personnel_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_016",
+      "type": "MAL_out",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_PURIFICATION_1",
+      "connects_lower": "R_RETURN_CORRIDOR",
+      "purpose": "material_exit",
+      "differential_pressure_Pa": 10.0
+    },
+    {
+      "id": "AL_017",
+      "type": "CAL",
+      "clean_grade": "C",
+      "area_m2": 16.0,
+      "flow_type": "cascade",
+      "connects_higher": "R_PURIFICATION_2",
+      "connects_lower": "R_SUPPLY_CORRIDOR",
+      "purpose": "common",
+      "differential_pressure_Pa": 15.2
+    }
+  ],
+  "adjacency": [
+    {
+      "from_id": "AL_001",
+      "to_id": "R_INOCULATION",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_001",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_002",
+      "to_id": "R_INOCULATION",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_002",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_003",
+      "to_id": "R_INOCULATION",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "AL_003",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_003",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_004",
+      "to_id": "R_INOCULATION",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "AL_004",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_004",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_005",
+      "to_id": "R_CELL_CULTURE",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_005",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_006",
+      "to_id": "R_CELL_CULTURE",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_006",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_007",
+      "to_id": "R_CELL_CULTURE",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "AL_007",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_007",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_008",
+      "to_id": "R_CELL_CULTURE",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "AL_008",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_008",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_009",
+      "to_id": "R_HARVEST",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_009",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_010",
+      "to_id": "R_HARVEST",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_010",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_011",
+      "to_id": "R_HARVEST",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "AL_011",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_011",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_012",
+      "to_id": "R_HARVEST",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "AL_012",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_012",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_013",
+      "to_id": "R_PURIFICATION_1",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_013",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_014",
+      "to_id": "R_PURIFICATION_1",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_014",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": null,
+      "flow_direction": "one_way_in",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_015",
+      "to_id": "R_PURIFICATION_1",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "AL_015",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_015",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_016",
+      "to_id": "R_PURIFICATION_1",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "AL_016",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "AL_016",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1800,
+      "door_swing_to": "R_RETURN_CORRIDOR",
+      "flow_direction": "one_way_out",
+      "notes": ""
+    },
+    {
+      "from_id": "AL_017",
+      "to_id": "R_PURIFICATION_2",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "AL_017",
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "AL_017",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_SUPPLY_CORRIDOR",
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "R_MEDIA_PREP",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "R_BUFFER_PREP",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "R_PREPARATION",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "R_WASHING",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": "R_WASHING",
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_SUPPLY_CORRIDOR",
+      "to_id": "R_GOWNING_PROCESS",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_RETURN_CORRIDOR",
+      "to_id": "R_WASHING",
+      "relationship": "door",
+      "door_count": 1,
+      "door_size_mm": 1000,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": ""
+    },
+    {
+      "from_id": "R_WASHING",
+      "to_id": "R_PREPARATION",
+      "relationship": "passthrough_only",
+      "door_count": 1,
+      "door_size_mm": 1200,
+      "door_swing_to": null,
+      "flow_direction": "bidirectional",
+      "notes": "Pass-through COP: 장비 통과만, 사람 왕래 물리 차단 (HARD C2)"
+    }
+  ],
+  "flow_paths": {
+    "personnel_entry": [
+      "R_LOBBY",
+      "R_GOWNING_FEMALE",
+      "R_GOWNING_MALE",
+      "R_GOWNING_PROCESS",
+      "R_SUPPLY_CORRIDOR",
+      "<process_room>"
+    ],
+    "personnel_exit": [
+      "<process_room>",
+      "R_RETURN_CORRIDOR",
+      "R_GOWNING_PROCESS",
+      "R_GOWNING_FEMALE",
+      "R_LOBBY"
+    ],
+    "material_entry": [
+      "<EXT>",
+      "R_MATERIAL_INLET",
+      "R_MATERIAL_STORAGE",
+      "R_SUPPLY_CORRIDOR",
+      "<process_room>"
+    ],
+    "waste_exit": [
+      "<process_room>",
+      "R_RETURN_CORRIDOR",
+      "R_WASTE_OUTLET",
+      "<EXT>"
+    ],
+    "product_process_order": [
+      "R_MEDIA_PREP",
+      "R_BUFFER_PREP",
+      "R_INOCULATION",
+      "R_CELL_CULTURE",
+      "R_HARVEST",
+      "R_PURIFICATION_1",
+      "R_PURIFICATION_2",
+      "R_DS_STORAGE"
+    ]
+  },
+  "zones": {
+    "process_zone": [
+      "R_MEDIA_PREP",
+      "R_BUFFER_PREP",
+      "R_INOCULATION",
+      "R_CELL_CULTURE",
+      "R_HARVEST",
+      "R_PURIFICATION_1",
+      "R_PURIFICATION_2",
+      "R_PREPARATION",
+      "R_WASHING",
+      "R_SUPPLY_CORRIDOR",
+      "R_RETURN_CORRIDOR",
+      "R_GOWNING_PROCESS"
+    ],
+    "auxiliary_zone": [
+      "R_MATERIAL_STORAGE",
+      "R_EQUIPMENT_STORAGE",
+      "R_DS_STORAGE",
+      "R_IPC",
+      "R_CELL_BANK_STORAGE",
+      "R_CIP_SUPPLY",
+      "R_GOWNING_FEMALE",
+      "R_GOWNING_MALE",
+      "R_AUX_CORRIDOR",
+      "R_MATERIAL_INLET",
+      "R_WASTE_OUTLET",
+      "R_MONITORING"
+    ],
+    "nc_zone": [
+      "R_OFFICE",
+      "R_TOILET_FEMALE",
+      "R_TOILET_MALE",
+      "R_LOBBY"
+    ]
+  },
+  "constraints": {
+    "corridor_width_mm": {
+      "min": 1500,
+      "preferred_min": 2000,
+      "preferred_max": 3000,
+      "max": 3000
+    },
+    "airlock_size_mm": {
+      "preferred_w_d": [
+        3000,
+        3000
+      ],
+      "min_passable_w_d": [
+        1500,
+        1500
+      ]
+    },
+    "ceiling_height_mm": {
+      "default": 3000,
+      "min": 2700,
+      "well_ceiling_threshold_equipment_h_mm": 2700,
+      "room_shape_allowed": [
+        "rectangle",
+        "rectilinear_union"
+      ]
+    },
+    "equipment_clearance_mm": {
+      "between_equipment": 1000,
+      "equipment_to_wall_min": 600,
+      "equipment_to_wall_max": 1200
+    },
+    "process_zone_area_ratio": {
+      "min": 0.4,
+      "max": 0.7,
+      "current": 0.395
+    },
+    "supply_return_no_direct_connection": true,
+    "wash_prep_no_personnel_crossing": true,
+    "color_legend": {
+      "A": "fill=#A7F3D0 border=#047857 (Emerald-200 + diagonal Black (Sterile Barrier), opacity=50%)",
+      "B": "fill=#6EE7B7 border=#059669 (Emerald-300 (Barrier Surround), opacity=50%)",
+      "C": "fill=#FCD34D border=#D97706 (Amber-300 (Main Process — default), opacity=50%)",
+      "D": "fill=#93C5FD border=#2563EB (Blue-300 (Support / Closed Process), opacity=50%)",
+      "CNC": "fill=#D6D3D1 border=#78716C (Stone-300 + dotted (Controlled Non-Classified), opacity=50%)",
+      "NC": "fill=#E7E5E4 border=#A8A29E (Stone-200 (Non-Classified), opacity=50%)"
+    },
+    "pressure_differential_min_pa": 10.0,
+    "pressure_grade_order": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "CNC",
+      "NC"
+    ]
+  },
+  "rationale": [
+    {
+      "rule_id": "rule_1_axis",
+      "target": "building",
+      "decision": "공정 시작=material(12시), 공정 종료=waste(9시), 인원 출입=3시",
+      "reason": "원자재 반입구 근방에서 공정 시작 → 폐기물 반출구 근방에서 공정 완료. 불필요한 물질 동선 최소화.",
+      "source": "GMP Layout Logic_0510 §1 전체적 배열 컨셉"
+    },
+    {
+      "rule_id": "rule_1_axis",
+      "target": "building",
+      "decision": "WARNING: 다층 layout인데 엘리베이터 좌표 미지정",
+      "reason": "floor_level=3 이지만 elevator_position_clock=None. 층간 동선 그래프 미정.",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_2_shape",
+      "target": "all_rooms",
+      "decision": "Room 도형 = 직사각형 (또는 직사각형 합)",
+      "reason": "청소·동선 관리 용이성. 비직각 형상 금지.",
+      "source": "GMP Layout Logic_0510 §2 Room 구성"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_MEDIA_PREP",
+      "decision": "area=100.0 m², ceiling=5500 mm (well-type), volume=550.0 m³",
+      "reason": "권장 면적 100 m² ≥ 장비 기반 Area_min=93.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_BUFFER_PREP",
+      "decision": "area=200.0 m², ceiling=5500 mm (well-type), volume=1100.0 m³",
+      "reason": "권장 면적 200 m² ≥ 장비 기반 Area_min=101.7 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_INOCULATION",
+      "decision": "area=40.0 m², ceiling=3500 mm (well-type), volume=140.0 m³",
+      "reason": "권장 면적 40 m² ≥ 장비 기반 Area_min=35.8 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_CELL_CULTURE",
+      "decision": "area=300.0 m², ceiling=6000 mm (well-type), volume=1800.0 m³",
+      "reason": "권장 면적 300 m² ≥ 장비 기반 Area_min=92.3 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_HARVEST",
+      "decision": "area=60.0 m², ceiling=5500 mm (well-type), volume=330.0 m³",
+      "reason": "권장 면적 60 m² ≥ 장비 기반 Area_min=54.1 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_PURIFICATION_1",
+      "decision": "area=350.4 m², ceiling=6000 mm (well-type), volume=2102.4 m³",
+      "reason": "장비 기반 Area_min=350.4 > 권장=300 → Area_min 채택. 장비 23대, 간격 1000mm/벽 600~1200mm 반영.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_PURIFICATION_2",
+      "decision": "area=100.0 m², ceiling=5500 mm (well-type), volume=550.0 m³",
+      "reason": "권장 면적 100 m² ≥ 장비 기반 Area_min=75.5 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_PREPARATION",
+      "decision": "area=80.0 m², ceiling=3500 mm (well-type), volume=280.0 m³",
+      "reason": "권장 면적 80 m² ≥ 장비 기반 Area_min=36.4 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_WASHING",
+      "decision": "area=60.0 m², ceiling=3500 mm (well-type), volume=210.0 m³",
+      "reason": "권장 면적 60 m² ≥ 장비 기반 Area_min=18.2 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_SUPPLY_CORRIDOR",
+      "decision": "area=150.0 m², ceiling=3000 mm, volume=450.0 m³",
+      "reason": "권장 면적 150 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_RETURN_CORRIDOR",
+      "decision": "area=250.0 m², ceiling=3000 mm, volume=750.0 m³",
+      "reason": "권장 면적 250 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_GOWNING_PROCESS",
+      "decision": "area=30.0 m², ceiling=3000 mm, volume=90.0 m³",
+      "reason": "권장 면적 30 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_MATERIAL_STORAGE",
+      "decision": "area=100.0 m², ceiling=3000 mm, volume=300.0 m³",
+      "reason": "권장 면적 100 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_EQUIPMENT_STORAGE",
+      "decision": "area=100.0 m², ceiling=3000 mm, volume=300.0 m³",
+      "reason": "권장 면적 100 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_DS_STORAGE",
+      "decision": "area=50.0 m², ceiling=3000 mm, volume=150.0 m³",
+      "reason": "권장 면적 50 m² ≥ 장비 기반 Area_min=22.9 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_IPC",
+      "decision": "area=30.0 m², ceiling=3000 mm, volume=90.0 m³",
+      "reason": "권장 면적 30 m² ≥ 장비 기반 Area_min=14.8 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_CELL_BANK_STORAGE",
+      "decision": "area=20.0 m², ceiling=3000 mm, volume=60.0 m³",
+      "reason": "권장 면적 20 m² ≥ 장비 기반 Area_min=10.4 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_CIP_SUPPLY",
+      "decision": "area=60.0 m², ceiling=4500 mm (well-type), volume=270.0 m³",
+      "reason": "권장 면적 60 m² ≥ 장비 기반 Area_min=23.4 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_GOWNING_FEMALE",
+      "decision": "area=50.0 m², ceiling=3000 mm, volume=150.0 m³",
+      "reason": "권장 면적 50 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_GOWNING_MALE",
+      "decision": "area=80.0 m², ceiling=3000 mm, volume=240.0 m³",
+      "reason": "권장 면적 80 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_AUX_CORRIDOR",
+      "decision": "area=20.0 m², ceiling=3000 mm, volume=60.0 m³",
+      "reason": "권장 면적 20 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_MATERIAL_INLET",
+      "decision": "area=30.0 m², ceiling=3000 mm, volume=90.0 m³",
+      "reason": "권장 면적 30 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_WASTE_OUTLET",
+      "decision": "area=30.0 m², ceiling=3000 mm, volume=90.0 m³",
+      "reason": "권장 면적 30 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_MONITORING",
+      "decision": "area=50.0 m², ceiling=3000 mm, volume=150.0 m³",
+      "reason": "권장 면적 50 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_OFFICE",
+      "decision": "area=100.0 m², ceiling=3000 mm, volume=300.0 m³",
+      "reason": "권장 면적 100 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_TOILET_FEMALE",
+      "decision": "area=20.0 m², ceiling=3000 mm, volume=60.0 m³",
+      "reason": "권장 면적 20 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_TOILET_MALE",
+      "decision": "area=25.0 m², ceiling=3000 mm, volume=75.0 m³",
+      "reason": "권장 면적 25 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "R_LOBBY",
+      "decision": "area=50.0 m², ceiling=3000 mm, volume=150.0 m³",
+      "reason": "권장 면적 50 m² ≥ 장비 기반 Area_min=0.0 → 권장 채택.",
+      "source": "GMP Layout Logic_0510 §3 Room 크기"
+    },
+    {
+      "rule_id": "rule_3_size",
+      "target": "process_zone_total",
+      "decision": "WARNING: 주공정 Room 비율 39.5% ∉ [40%, 70%]",
+      "reason": "주공정 합계 1320.4 m² / 전체 3340 m². 면적 재조정 또는 URS override 권장.",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_MEDIA_PREP",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_MEDIA_PREP=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_BUFFER_PREP",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_BUFFER_PREP=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_INOCULATION",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_INOCULATION=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_CELL_CULTURE",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_CELL_CULTURE=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_HARVEST",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_HARVEST=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_PURIFICATION_1",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_PURIFICATION_1=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_PURIFICATION_2",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_PURIFICATION_2=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_PREPARATION",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_PREPARATION=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_WASHING",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_WASHING=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_SUPPLY_CORRIDOR",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_SUPPLY_CORRIDOR=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_RETURN_CORRIDOR",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_RETURN_CORRIDOR=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_GOWNING_PROCESS",
+      "decision": "Grade C (color=Amber-300 (Main Process — default))",
+      "reason": "KB default_grade for R_GOWNING_PROCESS=C",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_MATERIAL_STORAGE",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_MATERIAL_STORAGE=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_EQUIPMENT_STORAGE",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_EQUIPMENT_STORAGE=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_DS_STORAGE",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_DS_STORAGE=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_IPC",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_IPC=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_CELL_BANK_STORAGE",
+      "decision": "Grade D (color=Blue-300 (Support / Closed Process))",
+      "reason": "KB default_grade for R_CELL_BANK_STORAGE=D",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_CIP_SUPPLY",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_CIP_SUPPLY=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_GOWNING_FEMALE",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_GOWNING_FEMALE=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_GOWNING_MALE",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_GOWNING_MALE=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_AUX_CORRIDOR",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_AUX_CORRIDOR=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_MATERIAL_INLET",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_MATERIAL_INLET=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_WASTE_OUTLET",
+      "decision": "Grade CNC (color=Stone-300 + dotted (Controlled Non-Classified))",
+      "reason": "KB default_grade for R_WASTE_OUTLET=CNC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_MONITORING",
+      "decision": "Grade NC (color=Stone-200 (Non-Classified))",
+      "reason": "KB default_grade for R_MONITORING=NC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_OFFICE",
+      "decision": "Grade NC (color=Stone-200 (Non-Classified))",
+      "reason": "KB default_grade for R_OFFICE=NC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_TOILET_FEMALE",
+      "decision": "Grade NC (color=Stone-200 (Non-Classified))",
+      "reason": "KB default_grade for R_TOILET_FEMALE=NC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_TOILET_MALE",
+      "decision": "Grade NC (color=Stone-200 (Non-Classified))",
+      "reason": "KB default_grade for R_TOILET_MALE=NC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_4_clean_grade",
+      "target": "R_LOBBY",
+      "decision": "Grade NC (color=Stone-200 (Non-Classified))",
+      "reason": "KB default_grade for R_LOBBY=NC",
+      "source": "GMP Layout Logic_0510 §4 + EU GMP Annex 1"
+    },
+    {
+      "rule_id": "rule_5_arrangement",
+      "target": "zones",
+      "decision": "process=12, auxiliary=12, NC=4",
+      "reason": "카테고리별 zoning. 보조구역은 입구 가까운 쪽, NC는 별도 영역.",
+      "source": "GMP Layout Logic_0510 §5 Room 배열"
+    },
+    {
+      "rule_id": "rule_5_arrangement",
+      "target": "product_process_order",
+      "decision": "R_MEDIA_PREP → R_BUFFER_PREP → R_INOCULATION → R_CELL_CULTURE → R_HARVEST → R_PURIFICATION_1 → R_PURIFICATION_2 → R_DS_STORAGE",
+      "reason": "mAb 공정 순서 (KB.process_order). Drawing Agent가 supply corridor 따라 정렬.",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_5_arrangement",
+      "target": "flow_paths",
+      "decision": "4종 동선 1차 시퀀스 채움 (Phase 6에서 airlock 삽입 후 정제)",
+      "reason": "공정 Room 진입 전 보조구역·갱의·복도 거치는 원칙 (§1 전체 배열 컨셉).",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_6_airlocks",
+      "target": "R_INOCULATION",
+      "decision": "AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
+      "reason": "Grade C + one-way + 공간 여유 (process ratio=40%) → 풀세트",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_6_airlocks",
+      "target": "R_CELL_CULTURE",
+      "decision": "AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
+      "reason": "Grade C + one-way + 공간 여유 (process ratio=40%) → 풀세트",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_6_airlocks",
+      "target": "R_HARVEST",
+      "decision": "AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
+      "reason": "Grade C + one-way + 공간 여유 (process ratio=40%) → 풀세트",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_6_airlocks",
+      "target": "R_PURIFICATION_1",
+      "decision": "AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
+      "reason": "Grade C + one-way + 공간 여유 (process ratio=40%) → 풀세트",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_6_airlocks",
+      "target": "R_PURIFICATION_2",
+      "decision": "AL 1개 (CAL)",
+      "reason": "Grade C + both-way → 단일 AL",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_001",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_002",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_003",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_004",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_005",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_006",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_007",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_008",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_009",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_010",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_011",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_012",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_013",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_014",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_015",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_016",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "rule_7_al_flow_type",
+      "target": "AL_017",
+      "decision": "cascade",
+      "reason": "default flow_type=cascade (cascade)",
+      "source": "GMP Layout Logic_0510 §6"
+    },
+    {
+      "rule_id": "adjacency_build",
+      "target": "adjacency",
+      "decision": "39개 인접 관계 생성",
+      "reason": "AL ↔ 공정 Room ↔ corridor 도어 페어 + both-way Room 직접 연결",
+      "source": "GMP Layout Logic_0510"
+    },
+    {
+      "rule_id": "rule_8_corridor",
+      "target": "corridors",
+      "decision": "supply + return 분리, 폭 2000~3000mm (최소 1500mm)",
+      "reason": "공급↔리턴 직접 연결 금지 (교차오염 차단). HARD constraint C1.",
+      "source": "GMP Layout Logic_0510 §8 복도 배열"
+    },
+    {
+      "rule_id": "rule_9_door",
+      "target": "adjacency",
+      "decision": "도어 default=1000mm, MAL door≥1500mm. swing 방향은 룰 13(차압) 후 보정. MAL 폭 상향 0건.",
+      "reason": "MAL은 큰 물품 통과 → 1500~2000mm. swing은 차압 cascade에 따라 자연 폐쇄 방향.",
+      "source": "GMP Layout Logic_0510 §9 도어의 위치"
+    },
+    {
+      "rule_id": "rule_10_equipment",
+      "target": "all_process_rooms",
+      "decision": "장비 간격 ≥1000mm, 장비-벽 600~1200mm. 13 Room / 66 장비, process_step 정렬.",
+      "reason": "작업/청소 간섭 방지 + 유틸리티 공급 공간 확보. Drawing Agent가 이 constraint를 hard check.",
+      "source": "GMP Layout Logic_0510 §10 제조 장비의 배치"
+    },
+    {
+      "rule_id": "rule_11_wash_prep",
+      "target": "wash_prep",
+      "decision": "세척실↔리턴, 준비실↔공급, 세척실⇌준비실=passthrough(장비만)",
+      "reason": "Pass-through COP 공유, 사람 직접 왕래 물리 차단 (HARD constraint C2).",
+      "source": "GMP Layout Logic_0510 §11 세척실과 준비실"
+    },
+    {
+      "rule_id": "rule_12_nc",
+      "target": "nc_zone",
+      "decision": "NC 구역 4개: R_OFFICE, R_TOILET_FEMALE, R_TOILET_MALE, R_LOBBY",
+      "reason": "별도 영역으로 분리. 공정·보조구역 형태에 방해되지 않도록 외곽 또는 별도 층 권장. 활성화된 NC 기능: 로비, 사무실, 모니터링실, 화장실(여), 화장실(남)",
+      "source": "GMP Layout Logic_0510 §12 NC 구역"
+    },
+    {
+      "rule_id": "rule_13_pressure",
+      "target": "R_PURIFICATION_2",
+      "decision": "DP=15.5 Pa (P1 + 0.5)",
+      "reason": "Virus Removal 후 공정 중요도 ↑ → 정제2가 정제1보다 +0.5 Pa.",
+      "source": "GMP Layout Logic_0510 §13"
+    },
+    {
+      "rule_id": "rule_13_pressure",
+      "target": "all_rooms",
+      "decision": "등급별 DP: A=45.0, B=30.0, C=15.0, D=5.0, CNC=0, NC=0. AL DP는 flow_type에 따라.",
+      "reason": "인접 등급 간 ≥ 10.0 Pa (HARD C5), 등급 순서 B>C>D>CNC>NC (HARD C6). ACPH + gowning_type/method 도 KB 등급 매핑으로 일괄 attach.",
+      "source": "GMP Layout Logic_0510 §13 + EU GMP Annex 1"
+    }
+  ]
+}

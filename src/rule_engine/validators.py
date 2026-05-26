@@ -12,6 +12,9 @@ Violation = dict  # {"id": "C3", "message": "..."}
 
 
 def validate_hard_constraints(state: WorkingState) -> list[Violation]:
+    """안전·규제 직결 룰만 hard.
+    C9(주공정 비율)는 효율 권장사항이라 soft로 분류(rule_03_size가 rationale에 WARNING 로깅).
+    """
     out: list[Violation] = []
     out.extend(c1_supply_return_no_direct(state))
     out.extend(c2_wash_prep_no_personnel(state))
@@ -21,9 +24,13 @@ def validate_hard_constraints(state: WorkingState) -> list[Violation]:
     out.extend(c6_grade_pressure_order(state))
     out.extend(c7_corridor_width_min(state))
     out.extend(c8_equipment_clearance(state))
-    out.extend(c9_process_area_ratio(state))
     out.extend(c10_door_swing(state))
     return out
+
+
+def validate_soft_constraints(state: WorkingState) -> list[Violation]:
+    """효율/품질 권장. Reward function이 사용."""
+    return c9_process_area_ratio(state)
 
 
 # C1: Supply ↔ Return 직접 연결 금지
