@@ -1,0 +1,13 @@
+[project]
+name = "layout-generator"
+version = "0.1.0"
+description = "GMP-compliant biopharmaceutical (mAb) facility layout generator with rule engine + RL"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
