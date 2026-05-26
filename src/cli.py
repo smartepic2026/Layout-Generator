@@ -38,6 +38,19 @@ def cmd_rule_engine(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_draw(args: argparse.Namespace) -> int:
+    from src.drawing_agent.floorplan import generate_floorplan
+
+    spec = RuleEngineOutput.model_validate_json(Path(args.spec).read_text())
+    svg, layout = generate_floorplan(spec, building_w_mm=args.width, building_h_mm=args.height)
+    out = Path(args.svg)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(svg)
+    print(f"[OK]  {args.spec} → {out}")
+    print(f"      rooms placed: {len(layout.rooms)}, airlocks: {len(layout.airlocks)}, doors: {len(layout.doors)}")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     """저장된 spec.json을 다시 로드해서 (deserialization sanity)."""
     p = Path(args.spec)
@@ -74,6 +87,13 @@ def main(argv: list[str] | None = None) -> int:
     p_val = sub.add_parser("validate", help="spec.json 재로드 & 요약")
     p_val.add_argument("spec", help="output spec.json")
     p_val.set_defaults(func=cmd_validate)
+
+    p_draw = sub.add_parser("draw", help="spec.json → SVG floorplan")
+    p_draw.add_argument("spec", help="input spec.json")
+    p_draw.add_argument("svg", help="output svg path")
+    p_draw.add_argument("--width", type=int, default=78500, help="building width (mm)")
+    p_draw.add_argument("--height", type=int, default=42500, help="building depth (mm)")
+    p_draw.set_defaults(func=cmd_draw)
 
     args = parser.parse_args(argv)
     return args.func(args)
