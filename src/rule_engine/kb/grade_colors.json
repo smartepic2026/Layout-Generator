@@ -1,43 +1,91 @@
 {
-  "_source": "GMP Layout Logic_0510 §4 (Room 청정등급 부여)",
-  "_note": "도면 표시 시 50% 투명도 적용. 장비가 잘 보이도록 함.",
+  "_source": "GMP Layout Logic_0510 §4 + DESIGN.md v0.1 (refined palette)",
+  "_note": "Tailwind-grade tokens. Fill은 50% opacity 권장. Border/label은 100%. 색맹/B&W에서도 구분되도록 패턴 병행.",
+  "_design_doc": "DESIGN.md §2.2",
   "grades": {
     "A": {
-      "background": "#00A85A",
-      "pattern": "diagonal-black",
+      "fill": "#A7F3D0",
+      "border": "#047857",
+      "label": "#064E3B",
+      "pattern": "diagonal",
+      "pattern_color": "#064E3B",
       "transparency_pct": 50,
-      "description": "Green-diagonal Black"
+      "description": "Emerald-200 + diagonal Black (Sterile Barrier)"
     },
     "B": {
-      "background": "#00A85A",
+      "fill": "#6EE7B7",
+      "border": "#059669",
+      "label": "#064E3B",
       "pattern": "solid",
+      "pattern_color": null,
       "transparency_pct": 50,
-      "description": "Green"
+      "description": "Emerald-300 (Barrier Surround)"
     },
     "C": {
-      "background": "#FFD93D",
+      "fill": "#FCD34D",
+      "border": "#D97706",
+      "label": "#78350F",
       "pattern": "solid",
+      "pattern_color": null,
       "transparency_pct": 50,
-      "description": "Yellow"
+      "description": "Amber-300 (Main Process — default)"
     },
     "D": {
-      "background": "#4A90E2",
+      "fill": "#93C5FD",
+      "border": "#2563EB",
+      "label": "#1E3A8A",
       "pattern": "solid",
+      "pattern_color": null,
       "transparency_pct": 50,
-      "description": "Blue"
+      "description": "Blue-300 (Support / Closed Process)"
     },
     "CNC": {
-      "background": "#9E9E9E",
-      "pattern": "dotted-black",
+      "fill": "#D6D3D1",
+      "border": "#78716C",
+      "label": "#1C1917",
+      "pattern": "dotted",
+      "pattern_color": "#44403C",
       "transparency_pct": 50,
-      "description": "Gray-dotted Black"
+      "description": "Stone-300 + dotted (Controlled Non-Classified)"
     },
     "NC": {
-      "background": "#BDBDBD",
+      "fill": "#E7E5E4",
+      "border": "#A8A29E",
+      "label": "#44403C",
       "pattern": "solid",
+      "pattern_color": null,
       "transparency_pct": 50,
-      "description": "Gray"
+      "description": "Stone-200 (Non-Classified)"
     }
   },
-  "order_high_to_low": ["A", "B", "C", "D", "CNC", "NC"]
+  "order_high_to_low": ["A", "B", "C", "D", "CNC", "NC"],
+  "flow_colors": {
+    "personnel": {"hex": "#4F46E5", "name": "Indigo-600"},
+    "material":  {"hex": "#0D9488", "name": "Teal-600"},
+    "waste":     {"hex": "#E11D48", "name": "Rose-600"},
+    "product":   {"hex": "#7C3AED", "name": "Violet-600"}
+  },
+  "neutral_scale": {
+    "0":   "#FFFFFF",
+    "50":  "#FAFAF9",
+    "100": "#F5F5F4",
+    "200": "#E7E5E4",
+    "400": "#A8A29E",
+    "600": "#57534E",
+    "800": "#292524",
+    "900": "#1C1917"
+  },
+  "pressure_scale": [
+    "#EFF6FF",
+    "#DBEAFE",
+    "#93C5FD",
+    "#3B82F6",
+    "#1D4ED8"
+  ],
+  "semantic": {
+    "ok":          "#10B981",
+    "warning":     "#F59E0B",
+    "violation":   "#DC2626",
+    "info":        "#3B82F6"
+  }
 }

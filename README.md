@@ -2,6 +2,8 @@
 
 **스마트팩토리 캡스톤 디자인 — 바이오의약품(mAb) 제조시설 GMP Layout 자동 생성**
 
+> 시각 산출물 디자인은 [DESIGN.md](DESIGN.md) (Silicon Valley creative-director-grade 디자인 시스템) 룰을 따릅니다.
+
 URS(User Requirements Specification)를 입력받아 EU GMP Annex 1과 사내 Layout 설계 원리 13조를 준수하는
 바이오 제조시설 도면을 자동 생성합니다. 이후 강화학습으로 도면 품질을 진화시키고, 결과를 연구논문으로 정리합니다.
 
@@ -162,3 +164,4 @@ python -m src.cli rl-rollout output/best_policy.zip --n 20
 - **[Step 0] 2026-05-26** — 자료 인수, 메모리/계획 수립. README + ARCHITECTURE 작성.
 - **[Step 1] 2026-05-26** — Knowledge Base 6종 작성 (rooms_mab, equipment, grade_colors, acph_table, gowning_table, flow_policy_defaults). URS PDF + Layout Logic 표를 그대로 JSON화. 룰 코드와 데이터 분리 — modality 확장 시 KB만 추가.
 - **[Step 2] 2026-05-26** — Pydantic v2 스키마 작성 (`src/rule_engine/schemas.py`). URSInput(5 sub-spec) + RuleEngineOutput(7 블록). 테스트 4/4 통과. extra='forbid'로 오타 방지.
+- **[Step 3] 2026-05-26** — DESIGN.md 작성 (Silicon Valley creative-director-grade UI/UX 시스템). 컬러/타이포/그리드/Z-order/컴포넌트/접근성 단일 정의. `grade_colors.json`을 Tailwind-grade 토큰(fill/border/label/pattern)으로 업그레이드. 동선 4색·차압 sequential·neutral scale·semantic state 토큰 추가. Drawing Agent가 이 토큰만 참조.
