@@ -58,9 +58,9 @@ CANVAS_PAD = 64
 # Stroke weights (DESIGN.md §5) — 단위 px (SVG user units)
 # ──────────────────────────────────────────────────────────────────────
 STROKE = {
-    "building_outline": 3.0,
-    "outer_wall": 2.5,
-    "inner_wall": 1.5,
+    "building_outline": 5.0,   # ↑ from 3.0 — heavy black outline
+    "outer_wall": 4.0,         # ↑ from 2.5
+    "inner_wall": 3.5,         # ↑ from 1.5 — match GMP convention thick walls
     "door": 1.5,
     "door_swing": 0.75,
     "equipment": 1.0,

@@ -67,6 +67,7 @@ def render(spec: RuleEngineOutput, layout: Layout) -> str:
     _emit_z8_equipment(s, ox, oy, layout)
 
     _emit_z10_labels(s, ox, oy, layout)
+    _emit_z11_boundary_flow(s, ox, oy, layout, spec)
 
     # 우측 범례
     legend_x = ox + T.mm(layout.building_w_mm) + 24
@@ -184,105 +185,101 @@ def _emit_z2_major_grid(s: StringIO, ox: float, oy: float, layout: Layout) -> No
 # ──────────────────────────────────────────────────────────────────────
 # z2b architectural grid axes (X1..Xn top, Y1..Yn left)
 # ──────────────────────────────────────────────────────────────────────
-def _emit_z2b_axes(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    """Architectural grid axes outside building bbox (top X, left Y)
-    with dimension chains showing inter-axis distances in meters.
+def _collect_axis_lines(layout: Layout) -> tuple[list[float], list[float]]:
+    """Room/AL 경계에서 실측 축선 좌표 추출 (중복 제거, 정렬).
+    반환: (X mm 위치 리스트, Y mm 위치 리스트). 양 끝은 건물 외곽선 포함.
     """
+    xs_mm: set[float] = {0.0, float(layout.building_w_mm)}
+    ys_mm: set[float] = {0.0, float(layout.building_h_mm)}
+    TOL = 100  # mm tolerance — 100mm 미만 차이는 합침
+
+    def _add_unique(s: set, v: float):
+        for existing in s:
+            if abs(existing - v) < TOL:
+                return
+        s.add(v)
+
+    for pr in layout.rooms.values():
+        _add_unique(xs_mm, pr.rect.x)
+        _add_unique(xs_mm, pr.rect.x2)
+        _add_unique(ys_mm, pr.rect.y)
+        _add_unique(ys_mm, pr.rect.y2)
+
+    return sorted(xs_mm), sorted(ys_mm)
+
+
+def _emit_z2b_axes(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
+    """건축 표준 축선 — Room 경계에서 실측 추출, 인접 축간 실측 거리 표기."""
     bw = T.mm(layout.building_w_mm)
     bh = T.mm(layout.building_h_mm)
-    step = T.mm(T.MM_MAJOR)
-    step_m = T.MM_MAJOR / 1000  # meters between adjacent axes
-    R = 9   # circle radius for axis bubble
-    OFF = 36  # distance from building edge to axis bubble center
+    R = 9
+    OFF = 36
 
     axis_stroke = T.NEUTRAL["600"]
     text_fill = T.NEUTRAL["800"]
     tick_stroke = T.NEUTRAL["400"]
 
+    xs_mm, ys_mm = _collect_axis_lines(layout)
+
     s.write('<g>\n')
 
     # ── X axis (top) ──
     axis_y = oy - OFF
-    dim_y = oy - 14  # dimension chain just above building outline
-    xs = []
-    x = ox
-    n = 1
-    while x <= ox + bw + 0.5:
-        xs.append(x)
-        # tick line: bubble bottom → dim chain → building top edge
+    dim_y = oy - 14
+    xs_units = [T.mm(v) + ox for v in xs_mm]
+    for i, x in enumerate(xs_units):
+        n = i + 1
         s.write(
             f'<line x1="{x:.2f}" y1="{axis_y + R}" x2="{x:.2f}" y2="{oy}" '
             f'stroke="{tick_stroke}" stroke-width="0.5" stroke-dasharray="2 2"/>\n'
-        )
-        # bubble
-        s.write(
             f'<circle cx="{x:.2f}" cy="{axis_y}" r="{R}" fill="{T.NEUTRAL["0"]}" '
             f'stroke="{axis_stroke}" stroke-width="0.8"/>\n'
-        )
-        s.write(
             f'<text x="{x:.2f}" y="{axis_y + 3.5:.2f}" text-anchor="middle" '
             f'font-size="9" font-family={_q(T.FONT_MONO)} fill="{text_fill}">X{n}</text>\n'
         )
-        n += 1
-        x += step
-
-    # dimension chain between adjacent X axes
-    for i in range(len(xs) - 1):
-        x1, x2 = xs[i], xs[i + 1]
+    for i in range(len(xs_units) - 1):
+        x1, x2 = xs_units[i], xs_units[i + 1]
         mid = (x1 + x2) / 2
+        dist_m = (xs_mm[i + 1] - xs_mm[i]) / 1000
+        if x2 - x1 < 16:
+            continue  # 너무 좁으면 치수 라벨 생략
         s.write(
             f'<line x1="{x1 + 2:.2f}" y1="{dim_y}" x2="{x2 - 2:.2f}" y2="{dim_y}" '
             f'stroke="{tick_stroke}" stroke-width="0.5"/>\n'
-        )
-        # arrowheads (small triangles at both ends)
-        s.write(
             f'<path d="M {x1:.2f} {dim_y} l 4 -2 l 0 4 z" fill="{tick_stroke}"/>\n'
             f'<path d="M {x2:.2f} {dim_y} l -4 -2 l 0 4 z" fill="{tick_stroke}"/>\n'
-        )
-        s.write(
             f'<text x="{mid:.2f}" y="{dim_y - 3:.2f}" text-anchor="middle" '
-            f'font-size="8" font-family={_q(T.FONT_MONO)} fill="{text_fill}">{step_m:.2f}m</text>\n'
+            f'font-size="8" font-family={_q(T.FONT_MONO)} fill="{text_fill}">{dist_m:.2f}m</text>\n'
         )
 
     # ── Y axis (left) ──
     axis_x = ox - OFF
     dim_x = ox - 14
-    ys = []
-    y = oy
-    n = 1
-    while y <= oy + bh + 0.5:
-        ys.append(y)
+    ys_units = [T.mm(v) + oy for v in ys_mm]
+    for i, y in enumerate(ys_units):
+        n = i + 1
         s.write(
             f'<line x1="{axis_x + R}" y1="{y:.2f}" x2="{ox}" y2="{y:.2f}" '
             f'stroke="{tick_stroke}" stroke-width="0.5" stroke-dasharray="2 2"/>\n'
-        )
-        s.write(
             f'<circle cx="{axis_x}" cy="{y:.2f}" r="{R}" fill="{T.NEUTRAL["0"]}" '
             f'stroke="{axis_stroke}" stroke-width="0.8"/>\n'
-        )
-        s.write(
             f'<text x="{axis_x}" y="{y + 3.5:.2f}" text-anchor="middle" '
             f'font-size="9" font-family={_q(T.FONT_MONO)} fill="{text_fill}">Y{n}</text>\n'
         )
-        n += 1
-        y += step
-
-    for i in range(len(ys) - 1):
-        y1, y2 = ys[i], ys[i + 1]
+    for i in range(len(ys_units) - 1):
+        y1, y2 = ys_units[i], ys_units[i + 1]
         mid = (y1 + y2) / 2
+        dist_m = (ys_mm[i + 1] - ys_mm[i]) / 1000
+        if y2 - y1 < 16:
+            continue
         s.write(
             f'<line x1="{dim_x}" y1="{y1 + 2:.2f}" x2="{dim_x}" y2="{y2 - 2:.2f}" '
             f'stroke="{tick_stroke}" stroke-width="0.5"/>\n'
-        )
-        s.write(
             f'<path d="M {dim_x} {y1:.2f} l -2 4 l 4 0 z" fill="{tick_stroke}"/>\n'
             f'<path d="M {dim_x} {y2:.2f} l -2 -4 l 4 0 z" fill="{tick_stroke}"/>\n'
-        )
-        # rotated text so it reads vertically
-        s.write(
             f'<text x="{dim_x - 3:.2f}" y="{mid:.2f}" text-anchor="middle" '
             f'font-size="8" font-family={_q(T.FONT_MONO)} fill="{text_fill}" '
-            f'transform="rotate(-90 {dim_x - 3:.2f} {mid:.2f})">{step_m:.2f}m</text>\n'
+            f'transform="rotate(-90 {dim_x - 3:.2f} {mid:.2f})">{dist_m:.2f}m</text>\n'
         )
 
     s.write('</g>\n')
@@ -400,8 +397,10 @@ def _emit_z6_doors(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
 # z7 airlocks
 # ──────────────────────────────────────────────────────────────────────
 def _airlock_triangle_path(x: float, y: float, w: float, h: float, side: str) -> str:
-    """Solid swing-direction triangle pointing INTO the connected room."""
-    size = min(w, h) * 0.55
+    """Solid swing-direction triangle pointing INTO the connected room.
+    Triangle fills ~85% of AL slot to match GMP drawing convention.
+    """
+    size = min(w, h) * 0.85
     if side == "north":
         # AL above room → tip points down (south)
         cx = x + w / 2
@@ -490,17 +489,22 @@ def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> Non
                 continue
             name = pe.equipment.name
             area_m2 = pe.equipment.footprint_m2
-            # Name (top line)
+            # 라벨이 박스 폭을 넘지 않도록 truncate
+            # 약 1 char ≈ 5 SVG units at font-size 9
+            max_chars = max(int(w / 5) - 1, 4)
+            short_name = name if len(name) <= max_chars else name[:max_chars - 1] + "."
+
+            # ─ 1행: 이름 (중앙) ─
             s.write(
-                f'<text x="{x + 3:.2f}" y="{y + 9:.2f}" font-size="{T.TEXT["xs"]}" '
-                f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="600">'
-                f'{_esc(name)}</text>\n'
+                f'<text x="{x + w/2:.2f}" y="{y + h/2 - 1:.2f}" text-anchor="middle" '
+                f'font-size="9" fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} '
+                f'font-weight="600">{_esc(short_name)}</text>\n'
             )
-            # Area (bottom line) — only if box tall enough
-            if h >= 22 and area_m2 > 0:
+            # ─ 2행: 면적 (중앙, 빨간색) ─ 박스가 충분히 크면
+            if h >= 18 and area_m2 > 0:
                 s.write(
-                    f'<text x="{x + 3:.2f}" y="{y + h - 4:.2f}" font-size="9" '
-                    f'fill="{EQUIPMENT_STROKE}" font-family={_q(T.FONT_MONO)}>'
+                    f'<text x="{x + w/2:.2f}" y="{y + h/2 + 8:.2f}" text-anchor="middle" '
+                    f'font-size="8" fill="{EQUIPMENT_STROKE}" font-family={_q(T.FONT_MONO)}>'
                     f'{area_m2:.1f} m²</text>\n'
                 )
         s.write('</g>\n')
@@ -510,55 +514,110 @@ def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> Non
 # z10 labels (Room name + grade chip + DP + area)
 # ──────────────────────────────────────────────────────────────────────
 def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
+    """평문 룸 라벨 (GMP 도면 스타일) — grade chip/박스 제거, 텍스트만.
+
+    레이아웃: 큰 방은 영문명 + 한글 부제. 좁은 방은 영문명만.
+    DP/Area 같은 메타데이터는 small grey, 우측 하단.
+    """
     s.write('<g>\n')
     for pr in layout.rooms.values():
         x, y, w, h = _r(pr.rect, ox, oy)
         room = pr.room
+        label_color = T.NEUTRAL["900"]
+
         if w < 40 or h < 30:
             # 너무 좁으면 ID만
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{y + h/2 + 4:.2f}" text-anchor="middle" '
-                f'font-size="{T.TEXT["xs"]}" fill="{T.GRADE[room.clean_grade]["label"]}" font-family={_q(T.FONT_MONO)}>'
-                f'{_esc(room.id.replace("R_", ""))}</text>\n'
+                f'font-size="{T.TEXT["xs"]}" fill="{label_color}" font-weight="600">'
+                f'{_esc(room.id.replace("R_", "")[:14])}</text>\n'
             )
             continue
-        # Room name (Korean + English on next line for big rooms)
+
+        # ─ 메인 라벨: 영문명 (Room 중앙 상단) ─
         s.write(
-            f'<text x="{x + 8:.2f}" y="{y + 16:.2f}" font-size="{T.TEXT["sm"]}" '
-            f'fill="{T.GRADE[room.clean_grade]["label"]}" font-weight="600">'
+            f'<text x="{x + w/2:.2f}" y="{y + 16:.2f}" text-anchor="middle" '
+            f'font-size="{T.TEXT["sm"]}" fill="{label_color}" font-weight="700">'
             f'{_esc(room.name_en)}</text>\n'
         )
-        s.write(
-            f'<text x="{x + 8:.2f}" y="{y + 30:.2f}" font-size="{T.TEXT["xs"]}" '
-            f'fill="{T.NEUTRAL["600"]}">'
-            f'{_esc(room.name_ko)}</text>\n'
-        )
-        # Grade chip (top-right corner)
-        chip_x, chip_y, chip_w, chip_h = x + w - 30, y + 6, 22, 16
-        s.write(
-            f'<rect x="{chip_x:.2f}" y="{chip_y:.2f}" width="{chip_w}" height="{chip_h}" rx="3" '
-            f'fill="{T.GRADE[room.clean_grade]["border"]}"/>\n'
-        )
-        s.write(
-            f'<text x="{chip_x + chip_w/2:.2f}" y="{chip_y + chip_h - 4:.2f}" text-anchor="middle" '
-            f'font-size="{T.TEXT["xs"]}" fill="white" font-weight="700" font-family={_q(T.FONT_MONO)}>'
-            f'{room.clean_grade}</text>\n'
-        )
-        # DP badge (bottom-right)
-        dp = room.differential_pressure_Pa
-        sign = "+" if dp > 0 else ""
-        dp_label = f"{sign}{dp:g} Pa"
-        s.write(
-            f'<text x="{x + w - 6:.2f}" y="{y + h - 8:.2f}" text-anchor="end" '
-            f'font-size="{T.TEXT["xs"]}" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)}>'
-            f'{dp_label}</text>\n'
-        )
-        # Area
-        s.write(
-            f'<text x="{x + 8:.2f}" y="{y + h - 8:.2f}" '
-            f'font-size="{T.TEXT["xs"]}" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)}>'
-            f'{room.area_m2:.0f} m²</text>\n'
-        )
+        if h >= 50:
+            # 한글 부제 (작게)
+            s.write(
+                f'<text x="{x + w/2:.2f}" y="{y + 29:.2f}" text-anchor="middle" '
+                f'font-size="9" fill="{T.NEUTRAL["600"]}">'
+                f'{_esc(room.name_ko)}</text>\n'
+            )
+
+        # ─ DP / Area 메타 (작게, 우측 하단) ─
+        if h >= 40:
+            dp = room.differential_pressure_Pa
+            sign = "+" if dp > 0 else ""
+            s.write(
+                f'<text x="{x + w - 4:.2f}" y="{y + h - 5:.2f}" text-anchor="end" '
+                f'font-size="8" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)}>'
+                f'{room.clean_grade} · {sign}{dp:g}Pa · {room.area_m2:.0f}m²</text>\n'
+            )
+    s.write('</g>\n')
+
+
+# ──────────────────────────────────────────────────────────────────────
+# z11 boundary flow labels (Visitors, Material entry, Waste exit ...)
+# ──────────────────────────────────────────────────────────────────────
+def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, spec: RuleEngineOutput) -> None:
+    """건물 외곽선에 동선 진입/출입 라벨 표기 (Visitors, Material, Waste 등).
+
+    URS building.{personnel/material/waste}_clock 위치에 맞추는 게 정확하지만,
+    spec에서는 그 정보가 휘발되므로 기본 4방위 정형 배치를 사용:
+      - 좌측: Personnel ↔ (Visitors)
+      - 상단: Material entry ↓
+      - 우측: Visitors ↔
+      - 하단: Waste exit ↑
+    """
+    bw = T.mm(layout.building_w_mm)
+    bh = T.mm(layout.building_h_mm)
+    arrow_color = T.NEUTRAL["900"]
+
+    labels = [
+        # (side, label, y_or_x_position_fraction)
+        ("left", "Personnel", 0.5),
+        ("top", "Material ↓", 0.5),
+        ("right", "Visitors", 0.4),
+        ("right", "Visitors", 0.7),
+        ("bottom", "Waste ↑", 0.5),
+    ]
+
+    s.write('<g>\n')
+    for side, label, frac in labels:
+        if side == "left":
+            tx = ox - 50
+            ty = oy + bh * frac
+            s.write(
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
+                f'fill="{arrow_color}" font-weight="600" '
+                f'transform="rotate(-90 {tx:.2f} {ty:.2f})">↔ {label}</text>\n'
+            )
+        elif side == "right":
+            tx = ox + bw + 56
+            ty = oy + bh * frac
+            s.write(
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
+                f'fill="{arrow_color}" font-weight="600" '
+                f'transform="rotate(90 {tx:.2f} {ty:.2f})">↔ {label}</text>\n'
+            )
+        elif side == "top":
+            tx = ox + bw * frac
+            ty = oy - 50
+            s.write(
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
+                f'fill="{arrow_color}" font-weight="600">{label}</text>\n'
+            )
+        elif side == "bottom":
+            tx = ox + bw * frac
+            ty = oy + bh + 16
+            s.write(
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
+                f'fill="{arrow_color}" font-weight="600">{label}</text>\n'
+            )
     s.write('</g>\n')
 
 
