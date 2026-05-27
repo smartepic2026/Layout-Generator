@@ -343,37 +343,55 @@ def _emit_z5_room_borders(s: StringIO, ox: float, oy: float, layout: Layout) -> 
 # z6 doors
 # ──────────────────────────────────────────────────────────────────────
 def _emit_z6_doors(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    s.write(f'<g stroke="{T.NEUTRAL["900"]}" fill="none">\n')
+    """건축 표준 도어 심볼: 90° 호(arc) + door leaf 선.
+
+    수평벽(rot=0): 호는 위/아래로 펼침, swing_to_xy의 y가 문 위치보다 크면 아래로
+    수직벽(rot=90): 호는 좌/우로 펼침, swing_to_xy의 x로 결정
+    """
+    s.write(f'<g stroke="{T.NEUTRAL["900"]}" fill="none" stroke-linecap="round">\n')
     for d in layout.doors:
         cx = T.mm(d.x) + ox
         cy = T.mm(d.y) + oy
-        half = T.mm(d.width_mm) / 2
+        leaf = T.mm(d.width_mm)  # door leaf length = full door width
+        half = leaf / 2
+
         if d.rotation_deg == 0:
-            # 가로문
+            # ── 가로벽 도어 ──
+            # 벽 라인 끊김(opening)
             s.write(
                 f'<line x1="{cx - half:.2f}" y1="{cy:.2f}" x2="{cx + half:.2f}" y2="{cy:.2f}" '
+                f'stroke="{T.NEUTRAL["0"]}" stroke-width="{T.STROKE["door"] + 2}"/>\n'
+            )
+            # swing 방향 결정 (아래 swing이면 +1, 위면 -1)
+            arc_dir = 1 if (d.swing_to_xy and d.swing_to_xy[1] > d.y) else -1
+            # door leaf (heavier solid line) — hinge at 왼쪽
+            leaf_end_y = cy + arc_dir * leaf
+            s.write(
+                f'<line x1="{cx - half:.2f}" y1="{cy:.2f}" x2="{cx - half:.2f}" y2="{leaf_end_y:.2f}" '
                 f'stroke-width="{T.STROKE["door"]}"/>\n'
             )
-            # swing arc (간단히 위/아래로)
-            arc_dir = 1 if (d.swing_to_xy and d.swing_to_xy[1] > d.y) else -1
-            ax2 = cx + half
-            ay2 = cy + arc_dir * (half * 0.8)
+            # swing arc (90° quarter-circle, 실선)
+            sweep = 1 if arc_dir > 0 else 0
             s.write(
-                f'<path d="M {cx - half:.2f} {cy:.2f} A {2*half:.2f} {2*half:.2f} 0 0 {1 if arc_dir>0 else 0} {ax2:.2f} {ay2:.2f}" '
-                f'stroke-dasharray="2 3" stroke-width="{T.STROKE["door_swing"]}"/>\n'
+                f'<path d="M {cx - half:.2f} {leaf_end_y:.2f} A {leaf:.2f} {leaf:.2f} 0 0 {sweep} {cx + half:.2f} {cy:.2f}" '
+                f'stroke-width="{T.STROKE["door_swing"]}"/>\n'
             )
         else:
-            # 세로문
+            # ── 세로벽 도어 ──
             s.write(
                 f'<line x1="{cx:.2f}" y1="{cy - half:.2f}" x2="{cx:.2f}" y2="{cy + half:.2f}" '
-                f'stroke-width="{T.STROKE["door"]}"/>\n'
+                f'stroke="{T.NEUTRAL["0"]}" stroke-width="{T.STROKE["door"] + 2}"/>\n'
             )
             arc_dir = 1 if (d.swing_to_xy and d.swing_to_xy[0] > d.x) else -1
-            ax2 = cx + arc_dir * (half * 0.8)
-            ay2 = cy + half
+            leaf_end_x = cx + arc_dir * leaf
             s.write(
-                f'<path d="M {cx:.2f} {cy - half:.2f} A {2*half:.2f} {2*half:.2f} 0 0 {1 if arc_dir>0 else 0} {ax2:.2f} {ay2:.2f}" '
-                f'stroke-dasharray="2 3" stroke-width="{T.STROKE["door_swing"]}"/>\n'
+                f'<line x1="{cx:.2f}" y1="{cy - half:.2f}" x2="{leaf_end_x:.2f}" y2="{cy - half:.2f}" '
+                f'stroke-width="{T.STROKE["door"]}"/>\n'
+            )
+            sweep = 0 if arc_dir > 0 else 1
+            s.write(
+                f'<path d="M {leaf_end_x:.2f} {cy - half:.2f} A {leaf:.2f} {leaf:.2f} 0 0 {sweep} {cx:.2f} {cy + half:.2f}" '
+                f'stroke-width="{T.STROKE["door_swing"]}"/>\n'
             )
     s.write('</g>\n')
 
@@ -448,33 +466,42 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
 # ──────────────────────────────────────────────────────────────────────
 # z8 equipment
 # ──────────────────────────────────────────────────────────────────────
+EQUIPMENT_STROKE = "#DC2626"  # red-600 — architectural-drawing convention
+
+
 def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    """장비는 각 Room의 clipPath 안에서만 그려서 밖으로 새지 않게."""
+    """Equipment as red-bordered boxes with name + area label (matches GMP
+    floorplan convention). Clipped to each Room so they never leak out."""
     for pr in layout.rooms.values():
         if not pr.equipment:
             continue
         s.write(
             f'<g clip-path="url(#clip_{pr.room.id})" '
-            f'fill="{T.NEUTRAL["0"]}" stroke="{T.NEUTRAL["600"]}" '
-            f'stroke-width="{T.STROKE["equipment"]}">\n'
+            f'fill="{T.NEUTRAL["0"]}" stroke="{EQUIPMENT_STROKE}" '
+            f'stroke-width="{T.STROKE["equipment"] + 0.3}">\n'
         )
         for pe in pr.equipment:
             x, y, w, h = _r(pe.rect, ox, oy)
             s.write(
                 f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}"/>\n'
             )
-            label = pe.equipment.name
-            if w > 30:
+            if w < 22 or h < 14:
+                # Too small for label — show only the box
+                continue
+            name = pe.equipment.name
+            area_m2 = pe.equipment.footprint_m2
+            # Name (top line)
+            s.write(
+                f'<text x="{x + 3:.2f}" y="{y + 9:.2f}" font-size="{T.TEXT["xs"]}" '
+                f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="600">'
+                f'{_esc(name)}</text>\n'
+            )
+            # Area (bottom line) — only if box tall enough
+            if h >= 22 and area_m2 > 0:
                 s.write(
-                    f'<text x="{x + 3:.2f}" y="{y + 9:.2f}" font-size="{T.TEXT["xs"]}" '
-                    f'fill="{T.NEUTRAL["800"]}" font-family={_q(T.FONT_MONO)}>'
-                    f'{_esc(label)}</text>\n'
-                )
-            if pe.equipment.process_step and w > 30:
-                s.write(
-                    f'<text x="{x + w - 3:.2f}" y="{y + 9:.2f}" text-anchor="end" font-size="8" '
-                    f'fill="{T.NEUTRAL["400"]}" font-family={_q(T.FONT_MONO)}>'
-                    f'{_esc(pe.equipment.process_step)}</text>\n'
+                    f'<text x="{x + 3:.2f}" y="{y + h - 4:.2f}" font-size="9" '
+                    f'fill="{EQUIPMENT_STROKE}" font-family={_q(T.FONT_MONO)}>'
+                    f'{area_m2:.1f} m²</text>\n'
                 )
         s.write('</g>\n')
 

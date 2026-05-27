@@ -251,8 +251,18 @@ def _place_process_row(layout, room_by_id, row_ids, x0, y0, w, h):
         x += w_room
 
 
+def _is_grade_b_four_al(room, all_als) -> bool:
+    """C4 rule: Grade B + one-way → exactly 4 ALs (PAL_in/out + MAL_in/out)."""
+    if room.clean_grade != "B":
+        return False
+    als = [a for a in all_als if a.connects_higher == room.id]
+    return len(als) == 4
+
+
 def _place_al_row(layout, spec, row_room_ids, suffix, x0, y0, w, h):
-    """주어진 Process row의 각 Room에 대해 _in/_out AL을 상단/하단 stripe에 배치."""
+    """주어진 Process row의 각 Room에 대해 _in/_out AL을 상단/하단 stripe에 배치.
+    Grade B + 4-AL Room은 좌/우 corner로 분산해 4-AL 룰 시각화 (Phase B).
+    """
     for rid in row_room_ids:
         if rid not in layout.rooms:
             continue
@@ -264,12 +274,32 @@ def _place_al_row(layout, spec, row_room_ids, suffix, x0, y0, w, h):
         ]
         if not als:
             continue
+
+        side = "north" if y0 < proom.rect.y else "south"
+
+        # ─── Phase B: Grade B 4-AL Room — corner placement ───
+        if _is_grade_b_four_al(proom.room, spec.airlocks) and len(als) == 2:
+            # 2개 AL을 Room 좌측 corner와 우측 corner에 배치
+            slot_w = proom.rect.w * 0.30
+            # PAL은 좌측 corner, MAL은 우측 corner (personnel/material 분리 시각화)
+            sorted_als = sorted(als, key=lambda a: 0 if a.type.startswith("PAL") else 1)
+            for i, al in enumerate(sorted_als):
+                if i == 0:  # PAL → 좌측 corner
+                    ax = proom.rect.x + proom.rect.w * 0.05
+                else:        # MAL → 우측 corner
+                    ax = proom.rect.x + proom.rect.w * 0.65
+                rect = Rect(ax, y0, slot_w, h)
+                layout.airlocks[al.id] = PlacedAirlock(
+                    airlock=al, rect=rect, attached_room_id=rid, side=side
+                )
+            continue
+
+        # ─── 기본: 가로 균등 분할 ───
         slot_w = proom.rect.w / len(als)
         for i, al in enumerate(als):
             ax = proom.rect.x + i * slot_w + slot_w * 0.1
             aw = slot_w * 0.8
             rect = Rect(ax, y0, aw, h)
-            side = "north" if y0 < proom.rect.y else "south"
             layout.airlocks[al.id] = PlacedAirlock(
                 airlock=al, rect=rect, attached_room_id=rid, side=side
             )
@@ -361,11 +391,42 @@ def _place_equipment_grid(layout):
             row_h = max(row_h, eh)
 
 
-def _place_doors(layout, adjacency: list[Adjacency]):
-    """Adjacency 기반으로 도어 위치 결정.
-    AL ↔ Room: AL 사각형의 Room 쪽 변 중앙.
-    Room ↔ Corridor: 두 사각형의 공유 변 중앙.
+def _pressure_of(layout, node_id: str) -> float:
+    """Room/AL의 differential_pressure_Pa. 못 찾으면 0."""
+    if node_id in layout.rooms:
+        return layout.rooms[node_id].room.differential_pressure_Pa
+    if node_id in layout.airlocks:
+        return layout.airlocks[node_id].airlock.differential_pressure_Pa
+    return 0.0
+
+
+def _resolve_swing(layout, adj: Adjacency) -> tuple[Optional[str], list[dict]]:
+    """C10 룰: 도어는 차압 흐름 방향(= 낮은 압력 쪽)으로 열림.
+
+    1. adj.door_swing_to 가 있으면 그대로 사용
+    2. 없으면 from/to Room의 차압 차이로 fallback (높은 → 낮은 쪽으로 swing)
+    3. 둘 다 같으면 None + annotation 경고
     """
+    annotations = []
+    if adj.door_swing_to:
+        return adj.door_swing_to, annotations
+
+    p_from = _pressure_of(layout, adj.from_id)
+    p_to = _pressure_of(layout, adj.to_id)
+    if abs(p_from - p_to) < 1e-6:
+        annotations.append({
+            "type": "door_swing_ambiguous",
+            "edge": f"{adj.from_id}↔{adj.to_id}",
+            "reason": f"equal pressure ({p_from}Pa) — C10 cannot resolve",
+        })
+        return None, annotations
+    # 차압이 큰 쪽이 → 낮은 쪽으로 도어가 열림
+    lower_id = adj.to_id if p_from > p_to else adj.from_id
+    return lower_id, annotations
+
+
+def _place_doors(layout, adjacency: list[Adjacency]):
+    """Adjacency 기반으로 도어 위치 + C10 차압 기반 swing 방향 결정 (Phase C)."""
     for adj in adjacency:
         if adj.relationship == "passthrough_only":
             continue  # passthrough는 도어 아님
@@ -375,13 +436,18 @@ def _place_doors(layout, adjacency: list[Adjacency]):
         if a is None or b is None:
             continue
 
-        # 가장 가까운 공유 변 추정
+        # 공유 변 추정
         x, y, rot = _door_pos(a, b)
+
+        # Phase C: swing 방향 결정 (adj.door_swing_to → 차압 fallback → 모호 경고)
+        swing_target_id, warnings = _resolve_swing(layout, adj)
+        layout.annotations.extend(warnings)
         swing_xy = None
-        if adj.door_swing_to:
-            target = _lookup_rect(layout, adj.door_swing_to)
+        if swing_target_id:
+            target = _lookup_rect(layout, swing_target_id)
             if target:
                 swing_xy = (target.cx, target.cy)
+
         layout.doors.append(
             PlacedDoor(
                 adj=adj,
