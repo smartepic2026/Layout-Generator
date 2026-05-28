@@ -106,7 +106,18 @@ Layout-Generator/
 │   │   ├── rules/               # 13개 룰 (rule_01 ~ rule_13)
 │   │   └── kb/                  # Knowledge base JSON
 │   ├── drawing_agent/           # 7블록 → SVG floorplan
-│   ├── reward/                  # 점수 함수
+│   │   ├── data/                # 4-tier 데이터 어댑터 (Phase A1)
+│   │   │   ├── adapter.py       # SourceTracker + enrich_spec orchestrator
+│   │   │   ├── tier1_ruleengine.py
+│   │   │   ├── tier2_urs.py
+│   │   │   ├── tier3_derive.py  # sort_order / bbox_m / same-room connects_to
+│   │   │   └── tier4_manual_stub.py
+│   │   ├── kb/                  # 수기 보충 데이터 (Phase B 부터 cross_room_links 등)
+│   │   ├── design_tokens.py
+│   │   ├── layout_solver.py     # 현재 strip-band; Phase C 에서 CP-SAT 으로 교체
+│   │   ├── renderer.py          # z0~z12 SVG layer
+│   │   └── floorplan.py         # 파이프라인 entry (enrich → solve → render)
+│   ├── reward/                  # 점수 함수 (P1~P8 골격, P3·P5·P8 보류)
 │   └── rl/                      # Gym env + 학습 스크립트
 ├── examples/
 │   └── urs_mab_8000L.json       # 표준 예제 (URS_ConceptualDesign 기준)
@@ -173,3 +184,20 @@ python -m src.cli rl-rollout output/best_policy.zip --n 20
 - **[Step 8] 2026-05-26** — Drawing Agent v1 (deterministic SVG floorplan). `design_tokens.py`가 DESIGN.md 토큰을 코드로 단일 정의 (NEUTRAL/GRADE/FLOW/PRESSURE/SEMANTIC + Typography + 8pt grid + stroke). `layout_solver.py`가 BIG/SOM 컨셉 다이어그램 풍 토폴로지(Aux-left / Core-stripes / NC-right + supply 중앙복도 + 양측 process row + AL stripe + return 상하)로 결정론적 배치. `renderer.py`가 z0~z12 layer 순서로 SVG 생성 — Grade A diagonal/CNC dotted pattern, Grade chip, DP badge, equipment with process-step, swing-arc door, AL type 표기, legend, title block. CLI에 `draw` 서브커맨드. **첫 산출물: examples/floorplan_v1.svg** (28 Room + 17 AL + 40 door, 411 lines SVG). 의존성 0 (raw SVG). 테스트 17/17 통과 (5 신규 drawing).
 - **[Step 9] 2026-05-26** — Reward Function (`src/reward/scorer.py`). 3계층 점수: Hard penalty(C1~C10, -50/건) + Soft penalty(C9 등, -5/건) + Geometric quality 6종(flow_separation 8 / pressure_smoothness 6 / corridor_efficiency 4 / equipment_margin 5 / area_ratio_fit 3 / aesthetics 4). 베이스라인 도면 채점 결과 119.91점 (C9 -5, area_ratio_fit 0, 나머지 만점), hard 0건. RL의 step reward로 직접 사용 가능. 테스트 21/21 통과 (4 신규 reward).
 - **[Step 10] 2026-05-26** — **RL 환경 스켈레톤 + 학습 가이드 완료** (마지막 단계). `src/rl/env.py` `LayoutEnv` (gymnasium 인터페이스, 5-d obs / 3-d continuous action / score-delta reward), `src/rl/train.py` PPO train + rollout 서브커맨드, `docs/rl_guide.md` 7-section 한국어 가이드 (MDP 정식화 / 알고리즘 비교 / 학습 절차 / 디버깅 / 확장 / 논문 그래프 권장). gymnasium 미설치 시에도 import 안 깨지도록 lazy guard. 테스트 22 passed + 1 skipped (gym optional).
+- **[2026-05-29 / f665353]** Phase A1+A2 — 건축 도면 스타일 (그리드 축선 + Airlock swing 삼각형).
+- **[2026-05-29 / 35d385a]** A3+A4+B+C+D — 도면 스타일 완성, 허들 3·4 해결, RL Colab 가이드.
+- **[2026-05-29 / f4da244]** 장비 박스 빨간 테두리 두께 절반 (1.3 → 0.65).
+- **[2026-05-29 / 6a0171b]** Stage 1 — 도면 스타일 GMP 컨벤션 6종 적용.
+- **[2026-05-29 / f2a7820]** Z9 corridor flow arrows + 색상 코딩 동선 + floorplan_v2.
+- **[2026-05-29 / 46b1da1, 076ed71]** floorplan_v3 — demo 템플릿 + KB Grade 색 (Grade D 추가).
+- **[2026-05-29 / a3f9832]** SPEC v0.1 + PATCH v0.2 §1·§6 — Equipment/Room 스키마 확장 (Optional, 하위호환).
+- **[2026-05-29 / 5f091cc]** SPEC §2 P1~P8 채점 골격 (P1·P2·P6·P7 active, P3·P5·P8 보류 — epistemic honesty).
+- **[2026-05-29 / f583eb4]** floorplan_v4 — 스키마 확장 후 회귀 없음 검증.
+- **[2026-05-29 / 6e2908f]** 모노톤 (선=검정, AL 세모/▼▲ 제거).
+- **[2026-05-29 / 7c509f0]** 장비 빨강 복원 + AL 라벨 중앙 정렬.
+- **[2026-05-29 / 0eeeed9, ea7ce77, 27aedc4]** AL drop 화살표 — 길이/굵기/머리 비율/refX 정렬 미세조정.
+- **[2026-05-29 / a0f1db9]** 방 메타정보-장비 텍스트 충돌 해결 (메타 우측상단 + halo).
+- **[2026-05-29 / 6dfff6c]** 메타를 방 이름 아래 중앙 정렬 + 장비 박스 안쪽 마진 확대.
+- **[2026-05-29 / 92bf501]** 장비 박스 빨강 단색 + 20% 축소 + 자동축소로 전부 배치 (66/66).
+- **[2026-05-29 / fc216ee]** **Phase A1 완료** — 4-tier 데이터 어댑터 (`src/drawing_agent/data/`) + tier3 derive (sort_order/bbox_m/same-room connects_to). 32 passed, 1 skipped. docs/decisions.md D-001·D-002 기록.
+- **[2026-05-29 / (이 커밋)]** CLAUDE.md 기록 규칙 반영 — `docs/PROGRESS.md` 신설, `prompts.md` 에 사용자 주요 방향 M1~M7 누적.
