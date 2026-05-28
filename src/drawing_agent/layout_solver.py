@@ -357,40 +357,76 @@ def _place_right_stack(layout, room_by_id, ids, x, y, w, h):
         yy += room_h
 
 
+EQUIPMENT_VISUAL_SCALE = 0.80   # 사용자 요청: 박스 시각 표시 기본 20% 축소
+                                # (실제 W_mm/D_mm 데이터는 무변경)
+EQUIPMENT_MIN_SCALE = 0.25      # 자동 축소 하한 (아래로는 안 줄임)
+
+
+def _pack_row_major(equips, inner_w, inner_h, scale, eq_gap):
+    """row-major 로 패킹 시도. 모두 들어가면 placement 리스트 반환, 못 들어가면 None."""
+    placed = []  # [(eq, rel_x, rel_y, ew, eh), ...]
+    cx, cy, row_h = 0.0, 0.0, 0.0
+    for eq in equips:
+        ew = eq.W_mm * scale
+        eh = eq.D_mm * scale
+        # 한 장비가 가로폭보다 크면 이 scale 로는 불가
+        if ew > inner_w:
+            return None
+        if cx + ew > inner_w:
+            cx = 0.0
+            cy += row_h + eq_gap
+            row_h = 0.0
+        if cy + eh > inner_h:
+            return None  # 세로 초과 → scale 더 줄여야
+        placed.append((eq, cx, cy, ew, eh))
+        cx += ew + eq_gap
+        row_h = max(row_h, eh)
+    return placed
+
+
 def _place_equipment_grid(layout):
     """Room 내부에 장비를 process_step 순서대로 grid 배치.
-    장비-벽 마진 + 위쪽 라벨(영문+한글+메타 3줄)·아래쪽 여백 확보.
+    장비가 모두 방 안에 들어가도록 scale 을 자동 조정 (사용자 요청).
     """
-    wall_margin = 2200    # 좌/우 — 사용자 요청: 더 안쪽으로
-    top_label = 6000      # 위쪽 — 라벨 3줄 (영문+한글+메타) 공간
-    bottom_pad = 2500     # 아래쪽 — 벽에 붙지 않게
-    eq_gap = 1000
+    wall_margin = 2200    # 좌/우
+    top_label = 6000      # 위쪽 — 라벨 3줄 공간
+    bottom_pad = 2500     # 아래쪽
+    eq_gap = 800
     for proom in layout.rooms.values():
         equips = list(proom.room.equipment)
         if not equips:
             continue
 
-        # 사용 가능 영역
         inner_x = proom.rect.x + wall_margin
         inner_y = proom.rect.y + top_label
         inner_w = max(proom.rect.w - 2 * wall_margin, 1000)
         inner_h = max(proom.rect.h - top_label - bottom_pad, 1000)
 
-        # row 단위로 packing — 너비가 모자라면 줄바꿈
-        cx, cy, row_h = inner_x, inner_y, 0.0
-        for eq in equips:
-            ew, eh = eq.W_mm, eq.D_mm
-            if cx + ew > inner_x + inner_w:
-                cx = inner_x
-                cy += row_h + eq_gap
-                row_h = 0.0
-            if cy + eh > inner_y + inner_h:
-                # 영역 초과 — 더 이상 못 그리면 skip하지만 그래도 marker로 기록
-                proom.equipment.append(PlacedEquipment(eq, Rect(cx, cy, ew, eh)))
+        # 기본 scale 부터 시작해, 다 들어갈 때까지 점진 축소
+        scale = EQUIPMENT_VISUAL_SCALE
+        placed = None
+        while scale >= EQUIPMENT_MIN_SCALE:
+            placed = _pack_row_major(equips, inner_w, inner_h, scale, eq_gap)
+            if placed is not None:
                 break
-            proom.equipment.append(PlacedEquipment(eq, Rect(cx, cy, ew, eh)))
-            cx += ew + eq_gap
-            row_h = max(row_h, eh)
+            scale *= 0.9   # 10% 씩 줄여가며 재시도
+        if placed is None:
+            # 하한까지 줄여도 안 들어감 → 강제로 하한 scale 로 packing(잘릴 수 있음)
+            scale = EQUIPMENT_MIN_SCALE
+            placed = []
+            cx, cy, row_h = 0.0, 0.0, 0.0
+            for eq in equips:
+                ew, eh = eq.W_mm * scale, eq.D_mm * scale
+                if cx + ew > inner_w:
+                    cx, cy, row_h = 0.0, cy + row_h + eq_gap, 0.0
+                placed.append((eq, cx, cy, ew, eh))
+                cx += ew + eq_gap
+                row_h = max(row_h, eh)
+
+        for eq, rx, ry, ew, eh in placed:
+            proom.equipment.append(
+                PlacedEquipment(eq, Rect(inner_x + rx, inner_y + ry, ew, eh))
+            )
 
 
 def _pressure_of(layout, node_id: str) -> float:
