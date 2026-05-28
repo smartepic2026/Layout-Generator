@@ -492,31 +492,36 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
             )
             continue
 
-        # ─ 메인 라벨: 영문명 (Room 중앙 상단) — 흰색 halo로 가독성 확보 ─
+        # 라벨 스택 (모두 중앙 정렬, 흰색 halo) — 사용자 요청: 메타를 방 이름 바로 아래
+        #   y+16 : 영문명 (큰 글씨, bold)
+        #   y+29 : 한글 부제 (작게)  ← 있을 때만
+        #   y+42 : 메타 (Grade · DP · Area, 모노스페이스)  ← 한글 있을 때
+        #   y+29 : 메타  ← 한글 없을 때 영문 바로 아래
+        ko_visible = h >= 50
+        meta_y = (y + 42) if ko_visible else (y + 29)
+
+        # ─ 영문명 ─
         s.write(
             f'<text x="{x + w/2:.2f}" y="{y + 16:.2f}" text-anchor="middle" '
             f'font-size="{T.TEXT["sm"]}" fill="{label_color}" font-weight="700" '
             f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
             f'{_esc(room.name_en)}</text>\n'
         )
-        if h >= 50:
-            # 한글 부제 (작게)
+        # ─ 한글 부제 ─
+        if ko_visible:
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{y + 29:.2f}" text-anchor="middle" '
                 f'font-size="9" fill="{T.NEUTRAL["600"]}" '
                 f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
                 f'{_esc(room.name_ko)}</text>\n'
             )
-
-        # ─ DP / Area 메타 (작게, 우측 상단) ─
-        # 우측 상단에 두면 장비 박스(주로 중앙/하단)와 거의 안 겹침.
-        # 흰색 halo (paint-order=stroke fill) 로 어떤 배경 위에서도 가독성 확보.
-        if h >= 30:
+        # ─ 메타 (Grade · DP · Area) ─ 방 이름 바로 아래
+        if h >= 35:
             dp = room.differential_pressure_Pa
             sign = "+" if dp > 0 else ""
             meta_text = f"{room.clean_grade} · {sign}{dp:g}Pa · {room.area_m2:.0f}m²"
             s.write(
-                f'<text x="{x + w - 4:.2f}" y="{y + 11:.2f}" text-anchor="end" '
+                f'<text x="{x + w/2:.2f}" y="{meta_y:.2f}" text-anchor="middle" '
                 f'font-size="8" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)} '
                 f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
                 f'{_esc(meta_text)}</text>\n'

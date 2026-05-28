@@ -359,9 +359,11 @@ def _place_right_stack(layout, room_by_id, ids, x, y, w, h):
 
 def _place_equipment_grid(layout):
     """Room 내부에 장비를 process_step 순서대로 grid 배치.
-    장비-벽 800mm 마진, 장비-장비 1000mm 마진 (룰 10).
+    장비-벽 마진 + 위쪽 라벨(영문+한글+메타 3줄)·아래쪽 여백 확보.
     """
-    wall_margin = 1500   # SVG에서 라벨 공간도 고려해 1.5m
+    wall_margin = 2200    # 좌/우 — 사용자 요청: 더 안쪽으로
+    top_label = 6000      # 위쪽 — 라벨 3줄 (영문+한글+메타) 공간
+    bottom_pad = 2500     # 아래쪽 — 벽에 붙지 않게
     eq_gap = 1000
     for proom in layout.rooms.values():
         equips = list(proom.room.equipment)
@@ -370,9 +372,9 @@ def _place_equipment_grid(layout):
 
         # 사용 가능 영역
         inner_x = proom.rect.x + wall_margin
-        inner_y = proom.rect.y + wall_margin + 4000  # 라벨용 4m 더 비움
+        inner_y = proom.rect.y + top_label
         inner_w = max(proom.rect.w - 2 * wall_margin, 1000)
-        inner_h = max(proom.rect.h - 2 * wall_margin - 4000, 1000)
+        inner_h = max(proom.rect.h - top_label - bottom_pad, 1000)
 
         # row 단위로 packing — 너비가 모자라면 줄바꿈
         cx, cy, row_h = inner_x, inner_y, 0.0
