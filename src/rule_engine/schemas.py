@@ -93,7 +93,33 @@ class URSInput(StrictModel):
 # ============================================================================
 
 # ---- Block 1: rooms[] ----
+
+# SPEC v0.1 §1.1 + PATCH v0.2 §1·§3·§6 — Equipment 확장 필드용 nested 모델.
+# 모두 Optional. 1차 작업에서는 채워지지 않으며 (PATCH §6.2),
+# 2차 단계에서 엑셀 `단위공정`/`rule_equipment_layout` 시트 매핑으로 채워진다.
+class ClearanceM(StrictModel):
+    """장비 4면 청소/유지보수 통로 (m). SPEC §1.1 / PATCH §3."""
+    front: Optional[float] = None
+    back: Optional[float] = None
+    left: Optional[float] = None
+    right: Optional[float] = None
+
+
+class EquipmentNeeds(StrictModel):
+    """배치 위치 요구사항. SPEC §1.1 needs{}. 2차 채움(보류)."""
+    wall_adjacent: Optional[bool] = None
+    near_supply_airlock: Optional[bool] = None
+    near_return_airlock: Optional[bool] = None
+    downflow_booth: Optional[bool] = None
+    biosafety_level: Optional[str] = None  # "BSL-1".."BSL-4"
+
+
 class Equipment(StrictModel):
+    """장비 스펙. 기존 필드는 그대로 두고, SPEC v0.1 §1.1 + PATCH v0.2 §1·§6 확장 필드를
+    모두 Optional 로 추가. 1차/2차 분리 기준은 PATCH §6.2.
+
+    [PATCH §1 #1] sort_order: 공정 순서 정렬용 정수. process_step(문자열)은 라벨로 유지.
+    """
     name: str
     W_mm: int
     D_mm: int
@@ -103,8 +129,51 @@ class Equipment(StrictModel):
     process_step: Optional[str] = None
     footprint_m2: float = 0  # computed: W*D / 1e6
 
+    # ── PATCH §1 충돌 결정 ──
+    sort_order: Optional[int] = None  # 공정 순서 정수 (P1 단조성 계산용)
+
+    # ── 1차 채울 필드 (PATCH §6.2 — 엑셀에서 직접 도출 가능) ──
+    grade: Optional[Grade] = None
+    bbox_m: Optional[list[float]] = None  # [width_m, depth_m]
+    rotatable: Optional[bool] = None
+    clearance_m: Optional[ClearanceM] = None
+    utilities: list[str] = Field(default_factory=list)
+    connects_to: list[str] = Field(default_factory=list)
+    incompatible_with: list[str] = Field(default_factory=list)
+
+    # ── 2차 보류 필드 (PATCH §6.2 — 도메인 검수자 부재로 null 유지) ──
+    # P3·P5·P8 scoring에서 null이면 skip되도록 scorer가 가드함.
+    open_closed: Optional[Literal["open", "closed"]] = None
+    contamination_class: list[str] = Field(
+        default_factory=list,
+        description="raw|crossover|carryover|env (다중). 2차 채움 전엔 빈 리스트.",
+    )
+    needs: Optional[EquipmentNeeds] = None
+    heat_kw: Optional[float] = None
+    noise_dba: Optional[float] = None
+    flammable: Optional[bool] = None
+
+
+# SPEC v0.1 §1.2 — Room 확장용 nested 모델. 모두 Optional. 2차 채움.
+class RoomAirflow(StrictModel):
+    """방 공기 흐름. SPEC §1.2 airflow{}."""
+    type: Optional[Literal["unidirectional", "non_unidirectional"]] = None
+    supply_points: list[list[float]] = Field(default_factory=list)  # [[x,y], ...]
+    return_points: list[list[float]] = Field(default_factory=list)
+    direction_vector: Optional[list[float]] = None  # [dx, dy]
+
+
+class RoomBoundary(StrictModel):
+    """방 경계별 인접 zone + 에어록 매핑. SPEC §1.2 boundaries[]."""
+    edge: Literal["N", "S", "E", "W"]
+    abuts: Optional[str] = None  # 예: "SUPPLY_CORRIDOR" | "RETURN_CORRIDOR" | "PAL"
+    airlock: Optional[str] = None  # 예: "MAL_in" | "WAL_out" | "PAL_in"
+
 
 class Room(StrictModel):
+    """방 스펙. 기존 필드는 그대로 두고, SPEC v0.1 §1.2 확장 필드를 Optional 로 추가.
+    polygon_m/airflow/boundaries/iso_class 는 PATCH §6.2 기준 2차 채움(보류).
+    """
     id: str
     name_ko: str
     name_en: str
@@ -128,6 +197,12 @@ class Room(StrictModel):
     corridor_role: Optional[Literal["supply", "return", "auxiliary", "visitor"]] = None
     process_step_ids: list[str] = Field(default_factory=list)
     notes: str = ""
+
+    # ── SPEC v0.1 §1.2 확장 (2차 채움) ──
+    polygon_m: Optional[list[list[float]]] = None  # [[x,y], ...] 방 외곽 좌표 (m)
+    airflow: Optional[RoomAirflow] = None
+    boundaries: list[RoomBoundary] = Field(default_factory=list)
+    iso_class: Optional[int] = None  # 5|7|8 (ISO 14644-1 매핑)
 
 
 # ---- Block 2: airlocks[] ----
