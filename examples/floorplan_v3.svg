@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial, Helvetica, sans-serif">
+<defs>
+  <style>
+    .outer       { fill: none; stroke: #000; stroke-width: 5; }
+    .wall        { fill: none; stroke: #000; stroke-width: 3.2; }
+    .part        { fill: none; stroke: #000; stroke-width: 2; }
+    .thin        { fill: none; stroke: #000; stroke-width: 1.2; }
+    .diag        { fill: none; stroke: #000; stroke-width: 3.2; }     /* ★ AL diagonal = wall thickness */
+    .dim         { fill: none; stroke: #555; stroke-width: 0.7; }
+    /* KB Grade colors (src/rule_engine/kb/grade_colors.json) at 50% opacity */
+    .room-a      { fill: #A7F3D0; fill-opacity: 0.5; }
+    .room-b      { fill: #6EE7B7; fill-opacity: 0.5; }
+    .room-c      { fill: #FCD34D; fill-opacity: 0.5; }
+    .room-d      { fill: #93C5FD; fill-opacity: 0.5; }
+    .room-cnc    { fill: #D6D3D1; fill-opacity: 0.5; }
+    .room-nc     { fill: #E7E5E4; fill-opacity: 0.5; }
+    .corridor    { fill: #FFFFFF; }
+    .ante        { fill: #FCD34D; fill-opacity: 0.35; }
+    .label       { font-weight: 700; font-size: 12px; fill: #000; }
+    .label-sm    { font-weight: 600; font-size: 10px; fill: #000; }
+    .label-mini  { font-size: 8px; fill: #333; }
+    .al-text     { font-weight: 700; font-size: 7.5px; fill: #000; }
+    .pb-text     { font-weight: 700; font-size: 7px; fill: #1E40AF; }
+    .eq          { fill: #FFFFFF; stroke: #DC2626; stroke-width: 0.65; }
+    .eq-name     { font-size: 6.5px; fill: #1a1a1a; font-weight: 600; }
+    .eq-area     { font-size: 5.5px; fill: #DC2626; }
+    .arr-p       { stroke: #2563EB; stroke-width: 1.6; fill: none; }  /* personnel */
+    .arr-m       { stroke: #D97706; stroke-width: 1.6; fill: none; }  /* material */
+    .arr-w       { stroke: #B91C1C; stroke-width: 1.6; fill: none; }  /* waste */
+    .arr-c       { stroke: #000; stroke-width: 1.6; fill: none; }     /* corridor / generic */
+    .axis-text   { font-size: 10px; font-weight: 700; }
+    .dim-text    { font-size: 10px; fill: #333; font-weight: 600; }
+    .vis-text    { font-size: 11px; font-weight: 700; fill: #000; }
+    .label-bg    { fill: rgba(255,255,255,0.92); stroke: none; }
+  </style>
+  <marker id="arr-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+  </marker>
+  <marker id="arr-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#D97706"/>
+  </marker>
+  <marker id="arr-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#B91C1C"/>
+  </marker>
+  <marker id="arr-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#000"/>
+  </marker>
+</defs>
+
+<rect width="1400" height="720" fill="#FFFFFF"/>
+
+<!-- ═══ DIMENSION CHAIN ON LEFT (proper architectural notation) ═══ -->
+<g id="dimensions_left">
+  <!-- 3 segments: Y3-Y2 (9.50m), Y2-Y1 (8.70m), Y1-bottom (8.30m) -->
+  <!-- segment 1: Y3(80) → Y2(305) -->
+  <!-- extension lines (building corner → dim line at x=22) -->
+  <line class="dim" x1="80" y1="80"  x2="15" y2="80"/>
+  <line class="dim" x1="80" y1="305" x2="15" y2="305"/>
+  <!-- dim chain line + arrows + text -->
+  <line class="dim" x1="22" y1="80"  x2="22" y2="305"/>
+  <path d="M 22 80  l -3 6 l 6 0 z" fill="#555"/>
+  <path d="M 22 305 l -3 -6 l 6 0 z" fill="#555"/>
+  <text x="22" y="192" text-anchor="middle" class="dim-text" transform="rotate(-90 22 192)">9.50 m</text>
+
+  <!-- segment 2: Y2(305) → Y1(490) -->
+  <line class="dim" x1="80" y1="490" x2="15" y2="490"/>
+  <line class="dim" x1="22" y1="305" x2="22" y2="490"/>
+  <path d="M 22 305 l -3 6 l 6 0 z" fill="#555"/>
+  <path d="M 22 490 l -3 -6 l 6 0 z" fill="#555"/>
+  <text x="22" y="397" text-anchor="middle" class="dim-text" transform="rotate(-90 22 397)">8.70 m</text>
+
+  <!-- segment 3: Y1(490) → bottom(660) -->
+  <line class="dim" x1="80" y1="660" x2="15" y2="660"/>
+  <line class="dim" x1="22" y1="490" x2="22" y2="660"/>
+  <path d="M 22 490 l -3 6 l 6 0 z" fill="#555"/>
+  <path d="M 22 660 l -3 -6 l 6 0 z" fill="#555"/>
+  <text x="22" y="575" text-anchor="middle" class="dim-text" transform="rotate(-90 22 575)">8.30 m</text>
+
+  <!-- overall building height (outer chain, far left) -->
+  <line class="dim" x1="80" y1="80"  x2="2" y2="80"/>
+  <line class="dim" x1="80" y1="660" x2="2" y2="660"/>
+  <line class="dim" x1="6"  y1="80"  x2="6"  y2="660"/>
+  <path d="M 6 80  l -3 6 l 6 0 z" fill="#555"/>
+  <path d="M 6 660 l -3 -6 l 6 0 z" fill="#555"/>
+  <text x="6" y="370" text-anchor="middle" class="dim-text" transform="rotate(-90 6 370)">42.00 m (overall)</text>
+
+  <!-- Y axis bubbles -->
+  <circle cx="55" cy="80"  r="11" fill="#fff" stroke="#666"/>
+  <text x="55" y="84"  text-anchor="middle" class="axis-text">Y3</text>
+  <circle cx="55" cy="305" r="11" fill="#fff" stroke="#666"/>
+  <text x="55" y="309" text-anchor="middle" class="axis-text">Y2</text>
+  <circle cx="55" cy="490" r="11" fill="#fff" stroke="#666"/>
+  <text x="55" y="494" text-anchor="middle" class="axis-text">Y1</text>
+</g>
+
+<!-- ═══ TOP DIMENSION CHAIN ═══ -->
+<g id="dimensions_top">
+  <g font-size="9" fill="#333">
+    <text x="180" y="68" text-anchor="middle">8.10m</text>
+    <text x="380" y="68" text-anchor="middle">8.12m</text>
+    <text x="580" y="68" text-anchor="middle">7.80m</text>
+    <text x="780" y="68" text-anchor="middle">7.20m</text>
+    <text x="980" y="68" text-anchor="middle">7.80m</text>
+    <text x="1130" y="68" text-anchor="middle">3.90m</text>
+    <text x="1250" y="68" text-anchor="middle">5.60m</text>
+  </g>
+  <!-- X axis ticks + bubbles -->
+  <g class="dim">
+    <line x1="80" y1="60" x2="1320" y2="60"/>
+    <line x1="80"   y1="55" x2="80"   y2="65"/>
+    <line x1="280"  y1="55" x2="280"  y2="65"/>
+    <line x1="480"  y1="55" x2="480"  y2="65"/>
+    <line x1="680"  y1="55" x2="680"  y2="65"/>
+    <line x1="880"  y1="55" x2="880"  y2="65"/>
+    <line x1="1080" y1="55" x2="1080" y2="65"/>
+    <line x1="1180" y1="55" x2="1180" y2="65"/>
+    <line x1="1320" y1="55" x2="1320" y2="65"/>
+  </g>
+  <g font-weight="700" font-size="10" fill="#000">
+    <circle cx="80"   cy="38" r="11" fill="#fff" stroke="#666"/><text x="80"   y="42" text-anchor="middle">X4</text>
+    <circle cx="280"  cy="38" r="11" fill="#fff" stroke="#666"/><text x="280"  y="42" text-anchor="middle">X5</text>
+    <circle cx="480"  cy="38" r="11" fill="#fff" stroke="#666"/><text x="480"  y="42" text-anchor="middle">X6</text>
+    <circle cx="680"  cy="38" r="11" fill="#fff" stroke="#666"/><text x="680"  y="42" text-anchor="middle">X7</text>
+    <circle cx="880"  cy="38" r="11" fill="#fff" stroke="#666"/><text x="880"  y="42" text-anchor="middle">X8</text>
+    <circle cx="1080" cy="38" r="11" fill="#fff" stroke="#666"/><text x="1080" y="42" text-anchor="middle">X9</text>
+    <circle cx="1180" cy="38" r="11" fill="#fff" stroke="#666"/><text x="1180" y="42" text-anchor="middle">X10</text>
+    <circle cx="1320" cy="38" r="11" fill="#fff" stroke="#666"/><text x="1320" y="42" text-anchor="middle">X11</text>
+  </g>
+</g>
+
+<rect class="outer" x="80" y="80" width="1240" height="580"/>
+
+<!-- ═══ ROOM FILLS ═══ -->
+<g id="room_fills">
+  <rect class="corridor" x="80" y="80" width="1100" height="28"/>
+  <path class="room-c" d="M 80 108 L 240 108 L 240 305 L 195 305 L 195 380 L 80 380 Z"/>
+  <path class="room-c" d="M 260 108 L 415 108 L 415 305 L 335 305 L 335 230 L 260 230 Z"/>
+  <rect class="ante" x="260" y="230" width="75" height="75"/>
+  <path class="room-c" d="M 415 108 L 595 108 L 595 305 L 478 305 L 478 240 L 415 240 Z"/>
+  <rect class="ante" x="415" y="240" width="63" height="65"/>
+  <rect class="room-cnc" x="608" y="108" width="65" height="78"/>
+  <rect class="room-cnc" x="608" y="198" width="65" height="107"/>
+  <path class="room-c" d="M 690 108 L 865 108 L 865 305 L 760 305 L 760 260 L 690 260 Z"/>
+  <rect class="ante" x="690" y="260" width="70" height="45"/>
+  <path class="room-c" d="M 885 108 L 1055 108 L 1055 305 L 950 305 L 950 260 L 885 260 Z"/>
+  <rect class="ante" x="885" y="260" width="65" height="45"/>
+  <rect class="room-c" x="1075" y="108" width="105" height="58"/>
+  <rect class="room-cnc" x="1075" y="188" width="105" height="115"/>
+  <rect class="room-nc" x="1200" y="80" width="120" height="580"/>
+  <rect class="corridor" x="195" y="320" width="985" height="28"/>
+  <rect class="room-nc" x="195" y="365" width="100" height="60"/>
+  <rect class="room-cnc" x="195" y="425" width="100" height="60"/>
+  <rect class="room-c" x="310" y="365" width="120" height="115"/>
+  <path class="room-c" d="M 450 365 L 595 365 L 595 480 L 545 480 L 545 445 L 450 445 Z"/>
+  <path class="room-cnc" d="M 615 365 L 720 365 L 720 425 L 685 425 L 685 480 L 615 480 Z"/>
+  <rect class="room-nc" x="685" y="425" width="55" height="55"/>
+  <path class="room-cnc" d="M 685 480 L 745 480 L 745 530 L 685 530 Z"/>
+  <path class="room-c" d="M 760 365 L 865 365 L 865 490 L 815 490 L 815 460 L 760 460 Z"/>
+  <path class="room-c" d="M 885 365 L 1055 365 L 1055 490 L 995 490 L 995 455 L 885 455 Z"/>
+  <rect class="ante" x="885" y="455" width="110" height="35"/>
+  <rect class="room-cnc" x="1075" y="320" width="105" height="170"/>
+
+  <!-- bottom band (sized for AL spaces between rooms) -->
+  <rect class="room-nc" x="80"  y="495" width="55" height="80"/>     <!-- Gowning F upper -->
+  <rect class="room-nc" x="80"  y="575" width="55" height="85"/>     <!-- Gowning F lower -->
+  <!-- PAL between Gowning F and Gowning M -->
+  <rect class="ante"    x="135" y="495" width="22" height="165"/>
+  <rect class="room-nc" x="157" y="495" width="60" height="165"/>    <!-- Gowning M (single block) -->
+  <!-- PAL between Gowning M and Ante -->
+  <rect class="ante"    x="217" y="495" width="22" height="155"/>
+  <rect class="room-nc" x="239" y="495" width="58" height="155"/>    <!-- Ante -->
+  <!-- PAL between Ante and Toilet -->
+  <rect class="ante"    x="297" y="495" width="20" height="155"/>
+  <path class="room-nc" d="M 317 495 L 395 495 L 395 615 L 360 615 L 360 660 L 317 660 Z"/>  <!-- Toilet -->
+  <rect class="room-nc" x="395" y="495" width="200" height="165"/>   <!-- Office -->
+  <rect class="room-nc" x="595" y="495" width="125" height="165"/>   <!-- Stair -->
+  <path class="room-cnc" d="M 720 495 L 790 495 L 790 600 L 770 600 L 770 660 L 720 660 Z"/>  <!-- Ante -->
+  <rect class="room-nc" x="790" y="495" width="60" height="65"/>     <!-- ELEV upper -->
+  <rect class="room-nc" x="790" y="560" width="60" height="100"/>    <!-- ELEV lower -->
+  <rect class="room-cnc" x="850" y="560" width="65" height="100"/>   <!-- Ante -->
+  <rect class="room-cnc" x="915" y="555" width="80" height="105"/>   <!-- Storage Bulk -->
+  <path class="room-cnc" d="M 995 495 L 1195 495 L 1195 660 L 1075 660 L 1075 540 L 995 540 Z"/>
+  <rect class="ante" x="995" y="540" width="80" height="120"/>
+  <rect class="corridor" x="595" y="495" width="400" height="32"/>
+</g>
+
+<!-- ═══ WALLS ═══ -->
+<g id="walls">
+  <rect class="wall corridor" x="80" y="80" width="1100" height="28" fill="none"/>
+  <path class="wall" d="M 80 108 L 240 108 L 240 305 L 195 305 L 195 380 L 80 380 Z"/>
+  <path class="wall" d="M 260 108 L 415 108 L 415 305 L 335 305 L 335 230 L 260 230 Z"/>
+  <rect class="part" x="260" y="230" width="75" height="75" fill="none"/>
+  <path class="wall" d="M 415 108 L 595 108 L 595 305 L 478 305 L 478 240 L 415 240 Z"/>
+  <rect class="part" x="415" y="240" width="63" height="65" fill="none"/>
+  <rect class="wall" x="608" y="108" width="65" height="78" fill="none"/>
+  <rect class="wall" x="608" y="198" width="65" height="107" fill="none"/>
+  <path class="wall" d="M 690 108 L 865 108 L 865 305 L 760 305 L 760 260 L 690 260 Z"/>
+  <rect class="part" x="690" y="260" width="70" height="45" fill="none"/>
+  <path class="wall" d="M 885 108 L 1055 108 L 1055 305 L 950 305 L 950 260 L 885 260 Z"/>
+  <rect class="part" x="885" y="260" width="65" height="45" fill="none"/>
+  <rect class="wall" x="1075" y="108" width="105" height="58" fill="none"/>
+  <rect class="wall" x="1075" y="188" width="105" height="115" fill="none"/>
+  <rect class="wall" x="1200" y="80" width="120" height="580" fill="none"/>
+  <line class="thin" x1="1200" y1="370" x2="1320" y2="370"/>
+  <rect class="wall corridor" x="195" y="320" width="985" height="28" fill="none"/>
+  <rect class="wall" x="195" y="365" width="100" height="60" fill="none"/>
+  <rect class="wall" x="195" y="425" width="100" height="60" fill="none"/>
+  <rect class="wall" x="310" y="365" width="120" height="115" fill="none"/>
+  <path class="wall" d="M 450 365 L 595 365 L 595 480 L 545 480 L 545 445 L 450 445 Z"/>
+  <path class="wall" d="M 615 365 L 720 365 L 720 425 L 685 425 L 685 480 L 615 480 Z"/>
+  <rect class="wall" x="685" y="425" width="55" height="55" fill="none"/>
+  <path class="wall" d="M 685 480 L 745 480 L 745 530 L 685 530 Z"/>
+  <line class="diag" x1="685" y1="480" x2="745" y2="530"/>
+  <polygon points="685,480 745,530 685,530" fill="#000"/>
+  <path class="wall" d="M 760 365 L 865 365 L 865 490 L 815 490 L 815 460 L 760 460 Z"/>
+  <path class="wall" d="M 885 365 L 1055 365 L 1055 490 L 995 490 L 995 455 L 885 455 Z"/>
+  <rect class="part" x="885" y="455" width="110" height="35" fill="none"/>
+  <rect class="wall" x="1075" y="320" width="105" height="170" fill="none"/>
+
+  <!-- bottom band walls -->
+  <rect class="wall" x="80" y="495" width="55" height="80" fill="none"/>
+  <rect class="wall" x="80" y="575" width="55" height="85" fill="none"/>
+  <rect class="wall" x="135" y="495" width="22" height="165" fill="none"/>
+  <rect class="wall" x="157" y="495" width="60" height="165" fill="none"/>
+  <rect class="wall" x="217" y="495" width="22" height="155" fill="none"/>
+  <rect class="wall" x="239" y="495" width="58" height="155" fill="none"/>
+  <rect class="wall" x="297" y="495" width="20" height="155" fill="none"/>
+  <path class="wall" d="M 317 495 L 395 495 L 395 615 L 360 615 L 360 660 L 317 660 Z"/>
+  <rect class="wall" x="395" y="495" width="200" height="165" fill="none"/>
+  <rect class="wall" x="595" y="495" width="125" height="165" fill="none"/>
+  <path class="wall" d="M 720 495 L 790 495 L 790 600 L 770 600 L 770 660 L 720 660 Z"/>
+  <rect class="wall" x="790" y="495" width="60" height="65" fill="none"/>
+  <rect class="wall" x="790" y="560" width="60" height="100" fill="none"/>
+  <rect class="wall" x="850" y="560" width="65" height="100" fill="none"/>
+  <rect class="wall" x="915" y="555" width="80" height="105" fill="none"/>
+  <path class="wall" d="M 995 495 L 1195 495 L 1195 660 L 1075 660 L 1075 540 L 995 540 Z"/>
+  <rect class="part" x="995" y="540" width="80" height="120" fill="none"/>
+  <rect class="wall corridor" x="595" y="495" width="400" height="32" fill="none"/>
+</g>
+
+<!-- ═══ AIRLOCKS — 단일 대각선 + 검은 채움 삼각형 + 라벨 (벽 두께 통일) ═══ -->
+<g id="airlocks">
+
+  <!-- top row: PAL/MAL at Supply Corridor↔process room interfaces -->
+  <g><line class="diag" x1="243" y1="118" x2="259" y2="152"/><polygon points="243,118 259,152 243,152" fill="#000"/><text x="251" y="162" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="243" y1="170" x2="259" y2="200"/><polygon points="243,170 259,200 243,200" fill="#000"/><text x="251" y="210" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="243" y1="255" x2="259" y2="285"/><polygon points="259,255 259,285 243,285" fill="#000"/><text x="251" y="295" text-anchor="middle" class="al-text">MAL</text></g>
+
+  <g><line class="diag" x1="418" y1="125" x2="436" y2="155"/><polygon points="418,125 436,155 418,155" fill="#000"/><text x="427" y="165" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="418" y1="172" x2="436" y2="200"/><polygon points="418,172 436,200 418,200" fill="#000"/><text x="427" y="210" text-anchor="middle" class="al-text">PAL</text></g>
+
+  <g><line class="diag" x1="595" y1="118" x2="609" y2="150"/><polygon points="595,118 609,150 595,150" fill="#000"/><text x="602" y="160" text-anchor="middle" class="al-text">MAL</text></g>
+  <g><line class="diag" x1="675" y1="118" x2="689" y2="150"/><polygon points="675,118 689,150 675,150" fill="#000"/><text x="682" y="160" text-anchor="middle" class="al-text">MAL</text></g>
+
+  <g><line class="diag" x1="867" y1="125" x2="885" y2="157"/><polygon points="867,125 885,157 867,157" fill="#000"/><text x="876" y="167" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="867" y1="175" x2="885" y2="203"/><polygon points="867,175 885,203 867,203" fill="#000"/><text x="876" y="213" text-anchor="middle" class="al-text">MAL</text></g>
+  <g><line class="diag" x1="867" y1="232" x2="885" y2="258"/><polygon points="885,232 885,258 867,258" fill="#000"/><text x="876" y="270" text-anchor="middle" class="al-text">PAL</text></g>
+
+  <g><line class="diag" x1="1058" y1="115" x2="1072" y2="147"/><polygon points="1058,115 1072,147 1058,147" fill="#000"/><text x="1065" y="157" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="1058" y1="170" x2="1072" y2="200"/><polygon points="1058,170 1072,200 1058,200" fill="#000"/><text x="1065" y="210" text-anchor="middle" class="al-text">MAL</text></g>
+
+  <!-- mid row ALs (return corridor ↔ lower process) -->
+  <g><line class="diag" x1="297" y1="370" x2="311" y2="398"/><polygon points="297,370 311,398 297,398" fill="#000"/><text x="304" y="408" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="432" y1="370" x2="446" y2="398"/><polygon points="432,370 446,398 432,398" fill="#000"/><text x="439" y="408" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="743" y1="370" x2="757" y2="398"/><polygon points="743,370 757,398 743,398" fill="#000"/><text x="750" y="408" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="867" y1="370" x2="881" y2="398"/><polygon points="867,370 881,398 867,398" fill="#000"/><text x="874" y="408" text-anchor="middle" class="al-text">MAL</text></g>
+  <g><line class="diag" x1="1058" y1="370" x2="1072" y2="398"/><polygon points="1058,370 1072,398 1058,398" fill="#000"/><text x="1065" y="408" text-anchor="middle" class="al-text">PAL</text></g>
+
+  <!-- ★ bottom band PAL/MAL — Gowning 사이 transition (이전 의미없는 대각선 대체) -->
+  <g><line class="diag" x1="135" y1="495" x2="157" y2="660"/><polygon points="135,495 157,660 135,660" fill="#000"/><text x="146" y="580" text-anchor="middle" class="al-text" transform="rotate(-90 146 580)">PAL</text></g>
+  <g><line class="diag" x1="217" y1="495" x2="239" y2="650"/><polygon points="217,495 239,650 217,650" fill="#000"/><text x="228" y="575" text-anchor="middle" class="al-text" transform="rotate(-90 228 575)">PAL</text></g>
+  <g><line class="diag" x1="297" y1="495" x2="317" y2="650"/><polygon points="297,495 317,650 297,650" fill="#000"/><text x="307" y="575" text-anchor="middle" class="al-text" transform="rotate(-90 307 575)">PAL</text></g>
+
+  <!-- bottom storage area AL between bottom corridor and Ante -->
+  <g><line class="diag" x1="775" y1="510" x2="789" y2="532"/><polygon points="775,510 789,532 775,532" fill="#000"/><text x="782" y="544" text-anchor="middle" class="al-text">PAL</text></g>
+  <g><line class="diag" x1="900" y1="510" x2="914" y2="532"/><polygon points="900,510 914,532 900,532" fill="#000"/><text x="907" y="544" text-anchor="middle" class="al-text">MAL</text></g>
+
+  <!-- PB pressure indicators -->
+  <g><rect x="528" y="278" width="18" height="10" fill="#FFFFFF" stroke="#1E40AF" stroke-width="0.8"/><text x="537" y="286" text-anchor="middle" class="pb-text">PB</text></g>
+  <g><rect x="345" y="285" width="18" height="10" fill="#FFFFFF" stroke="#1E40AF" stroke-width="0.8"/><text x="354" y="293" text-anchor="middle" class="pb-text">PB</text></g>
+  <g><rect x="800" y="285" width="18" height="10" fill="#FFFFFF" stroke="#1E40AF" stroke-width="0.8"/><text x="809" y="293" text-anchor="middle" class="pb-text">PB</text></g>
+  <g><rect x="985" y="285" width="18" height="10" fill="#FFFFFF" stroke="#1E40AF" stroke-width="0.8"/><text x="994" y="293" text-anchor="middle" class="pb-text">PB</text></g>
+</g>
+
+<!-- ═══ STAIRS ═══ -->
+<g id="stairs">
+  <rect x="603" y="540" width="55" height="115" fill="#FFFFFF" stroke="#000" stroke-width="1.2"/>
+  <g stroke="#000" stroke-width="0.8" fill="none">
+    <line x1="603" y1="555" x2="658" y2="555"/>
+    <line x1="603" y1="566" x2="658" y2="566"/>
+    <line x1="603" y1="577" x2="658" y2="577"/>
+    <line x1="603" y1="588" x2="658" y2="588"/>
+    <line x1="603" y1="599" x2="658" y2="599"/>
+    <line x1="603" y1="610" x2="658" y2="610"/>
+    <line x1="603" y1="621" x2="658" y2="621"/>
+    <line x1="603" y1="632" x2="658" y2="632"/>
+    <line x1="603" y1="643" x2="658" y2="643"/>
+  </g>
+  <line x1="630" y1="540" x2="630" y2="655" stroke="#000" stroke-width="1.2"/>
+  <line x1="630" y1="540" x2="626" y2="548" stroke="#000" stroke-width="1.5"/>
+  <line x1="630" y1="540" x2="634" y2="548" stroke="#000" stroke-width="1.5"/>
+</g>
+
+<!-- ═══ EQUIPMENT (room labels 자리 y=110-145 비움) ═══ -->
+<g id="equipment_annotations">
+  <g><rect class="eq" x="92" y="170" width="40" height="13"/><text x="112" y="176" text-anchor="middle" class="eq-name">Mob.cart</text><text x="112" y="182" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="140" y="170" width="48" height="13"/><text x="164" y="176" text-anchor="middle" class="eq-name">Weigh tbl</text><text x="164" y="182" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="192" y="170" width="42" height="13"/><text x="213" y="176" text-anchor="middle" class="eq-name">Mob.cart</text><text x="213" y="182" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="92" y="188" width="40" height="13"/><text x="112" y="194" text-anchor="middle" class="eq-name">Filter K</text><text x="112" y="200" text-anchor="middle" class="eq-area">0.5 m²</text></g>
+  <g><rect class="eq" x="192" y="188" width="42" height="13"/><text x="213" y="194" text-anchor="middle" class="eq-name">Floor Bal</text><text x="213" y="200" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="120" y="215" width="50" height="22"/><text x="145" y="225" text-anchor="middle" class="eq-name">Tank 500L</text><text x="145" y="234" text-anchor="middle" class="eq-area">3.9 m²</text></g>
+  <g><rect class="eq" x="180" y="245" width="40" height="13"/><text x="200" y="251" text-anchor="middle" class="eq-name">Mob.cart</text><text x="200" y="257" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="92" y="265" width="48" height="13"/><text x="116" y="271" text-anchor="middle" class="eq-name">Deep Frz</text><text x="116" y="277" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="148" y="278" width="46" height="13"/><text x="171" y="284" text-anchor="middle" class="eq-name">Deep Frz</text><text x="171" y="290" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="92" y="350" width="46" height="13"/><text x="115" y="356" text-anchor="middle" class="eq-name">Floor Bal</text><text x="115" y="362" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+  <g><rect class="eq" x="143" y="350" width="46" height="13"/><text x="166" y="356" text-anchor="middle" class="eq-name">Table</text><text x="166" y="362" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+
+  <g><rect class="eq" x="270" y="155" width="44" height="13"/><text x="292" y="161" text-anchor="middle" class="eq-name">BSC</text><text x="292" y="167" text-anchor="middle" class="eq-area">1.6 m²</text></g>
+  <g><rect class="eq" x="320" y="160" width="32" height="13"/><text x="336" y="166" text-anchor="middle" class="eq-name">Incub.</text><text x="336" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="362" y="155" width="42" height="13"/><text x="383" y="161" text-anchor="middle" class="eq-name">Frz 80°C</text><text x="383" y="167" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="280" y="190" width="44" height="13"/><text x="302" y="196" text-anchor="middle" class="eq-name">Shak.Inc</text><text x="302" y="202" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="340" y="200" width="50" height="22"/><text x="365" y="210" text-anchor="middle" class="eq-name">Fermenter 40L</text><text x="365" y="219" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="280" y="215" width="48" height="13"/><text x="304" y="221" text-anchor="middle" class="eq-name">Centrif.</text><text x="304" y="227" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="266" y="245" width="42" height="13"/><text x="287" y="251" text-anchor="middle" class="eq-name">Microsc.</text><text x="287" y="257" text-anchor="middle" class="eq-area">0.8 m²</text></g>
+  <g><rect class="eq" x="266" y="278" width="42" height="13"/><text x="287" y="284" text-anchor="middle" class="eq-name">Table</text><text x="287" y="290" text-anchor="middle" class="eq-area">1.7 m²</text></g>
+
+  <g><rect class="eq" x="478" y="200" width="58" height="28"/><text x="507" y="212" text-anchor="middle" class="eq-name">Fermenter 300L</text><text x="507" y="222" text-anchor="middle" class="eq-area">9.4 m²</text></g>
+  <g><rect class="eq" x="425" y="160" width="42" height="13"/><text x="446" y="166" text-anchor="middle" class="eq-name">Mob.cart</text><text x="446" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="472" y="160" width="40" height="13"/><text x="492" y="166" text-anchor="middle" class="eq-name">Filter K</text><text x="492" y="172" text-anchor="middle" class="eq-area">0.6 m²</text></g>
+  <g><rect class="eq" x="518" y="160" width="40" height="13"/><text x="538" y="166" text-anchor="middle" class="eq-name">Tester</text><text x="538" y="172" text-anchor="middle" class="eq-area">0.5 m²</text></g>
+  <g><rect class="eq" x="425" y="200" width="48" height="13"/><text x="449" y="206" text-anchor="middle" class="eq-name">Cont.Cent</text><text x="449" y="212" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="425" y="218" width="48" height="13"/><text x="449" y="224" text-anchor="middle" class="eq-name">Mob.CIP</text><text x="449" y="230" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="540" y="235" width="48" height="13"/><text x="564" y="241" text-anchor="middle" class="eq-name">UF/DF</text><text x="564" y="247" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="495" y="265" width="50" height="13"/><text x="520" y="271" text-anchor="middle" class="eq-name">HA Ads 200L</text><text x="520" y="277" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="545" y="285" width="42" height="13"/><text x="566" y="291" text-anchor="middle" class="eq-name">Refrig</text><text x="566" y="297" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="420" y="255" width="50" height="13"/><text x="445" y="261" text-anchor="middle" class="eq-name">Wash.B</text><text x="445" y="267" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="420" y="288" width="50" height="13"/><text x="445" y="294" text-anchor="middle" class="eq-name">Mob.tnk</text><text x="445" y="300" text-anchor="middle" class="eq-area">0.6 m²</text></g>
+
+  <g><rect class="eq" x="615" y="160" width="50" height="13"/><text x="640" y="166" text-anchor="middle" class="eq-name">Refrig</text><text x="640" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="615" y="240" width="50" height="13"/><text x="640" y="246" text-anchor="middle" class="eq-name">Refrig</text><text x="640" y="252" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="615" y="278" width="50" height="13"/><text x="640" y="284" text-anchor="middle" class="eq-name">Shelves</text><text x="640" y="290" text-anchor="middle" class="eq-area">0.6 m²</text></g>
+
+  <g><rect class="eq" x="775" y="200" width="60" height="22"/><text x="805" y="210" text-anchor="middle" class="eq-name">Chrom 1</text><text x="805" y="219" text-anchor="middle" class="eq-area">2.5 m²</text></g>
+  <g><rect class="eq" x="700" y="160" width="48" height="13"/><text x="724" y="166" text-anchor="middle" class="eq-name">Aria 11</text><text x="724" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="752" y="160" width="48" height="13"/><text x="776" y="166" text-anchor="middle" class="eq-name">UF/DF</text><text x="776" y="172" text-anchor="middle" class="eq-area">1.6 m²</text></g>
+  <g><rect class="eq" x="804" y="160" width="50" height="13"/><text x="829" y="166" text-anchor="middle" class="eq-name">Filter 0.2</text><text x="829" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="700" y="195" width="44" height="13"/><text x="722" y="201" text-anchor="middle" class="eq-name">HSpeed C</text><text x="722" y="207" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="700" y="230" width="50" height="13"/><text x="725" y="236" text-anchor="middle" class="eq-name">Refrig</text><text x="725" y="242" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="813" y="240" width="40" height="13"/><text x="833" y="246" text-anchor="middle" class="eq-name">Table</text><text x="833" y="252" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="695" y="278" width="42" height="13"/><text x="716" y="284" text-anchor="middle" class="eq-name">HA Ads</text><text x="716" y="290" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+
+  <g><rect class="eq" x="965" y="200" width="60" height="22"/><text x="995" y="210" text-anchor="middle" class="eq-name">Chrom 2</text><text x="995" y="219" text-anchor="middle" class="eq-area">2.5 m²</text></g>
+  <g><rect class="eq" x="893" y="160" width="48" height="13"/><text x="917" y="166" text-anchor="middle" class="eq-name">Aria 1</text><text x="917" y="172" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="945" y="160" width="48" height="13"/><text x="969" y="166" text-anchor="middle" class="eq-name">UF/DF 2</text><text x="969" y="172" text-anchor="middle" class="eq-area">1.6 m²</text></g>
+  <g><rect class="eq" x="997" y="160" width="50" height="13"/><text x="1022" y="166" text-anchor="middle" class="eq-name">Autoclv</text><text x="1022" y="172" text-anchor="middle" class="eq-area">2.5 m²</text></g>
+  <g><rect class="eq" x="893" y="195" width="44" height="13"/><text x="915" y="201" text-anchor="middle" class="eq-name">Incub 40°</text><text x="915" y="207" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="893" y="230" width="50" height="13"/><text x="918" y="236" text-anchor="middle" class="eq-name">Refrig</text><text x="918" y="242" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="1010" y="240" width="40" height="13"/><text x="1030" y="246" text-anchor="middle" class="eq-name">BSC</text><text x="1030" y="252" text-anchor="middle" class="eq-area">1.8 m²</text></g>
+  <g><rect class="eq" x="890" y="278" width="42" height="13"/><text x="911" y="284" text-anchor="middle" class="eq-name">DF Sys</text><text x="911" y="290" text-anchor="middle" class="eq-area">1.6 m²</text></g>
+
+  <g><rect class="eq" x="1085" y="148" width="80" height="13"/><text x="1125" y="154" text-anchor="middle" class="eq-name">Sterile rack</text><text x="1125" y="160" text-anchor="middle" class="eq-area">2.5 m²</text></g>
+  <g><rect class="eq" x="1085" y="218" width="42" height="14"/><text x="1106" y="225" text-anchor="middle" class="eq-name">Refrig</text><text x="1106" y="231" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="1130" y="218" width="42" height="14"/><text x="1151" y="225" text-anchor="middle" class="eq-name">BSC</text><text x="1151" y="231" text-anchor="middle" class="eq-area">1.8 m²</text></g>
+  <g><rect class="eq" x="1085" y="245" width="80" height="14"/><text x="1125" y="252" text-anchor="middle" class="eq-name">Autoclv 1000L</text><text x="1125" y="258" text-anchor="middle" class="eq-area">2.5 m²</text></g>
+  <g><rect class="eq" x="1085" y="275" width="60" height="13"/><text x="1115" y="281" text-anchor="middle" class="eq-name">Mob.tank</text><text x="1115" y="287" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+
+  <g><rect class="eq" x="200" y="395" width="50" height="13"/><text x="225" y="401" text-anchor="middle" class="eq-name">Storage</text><text x="225" y="407" text-anchor="middle" class="eq-area">0.5 m²</text></g>
+  <g><rect class="eq" x="200" y="455" width="50" height="13"/><text x="225" y="461" text-anchor="middle" class="eq-name">Mob.cart</text><text x="225" y="467" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="315" y="405" width="50" height="13"/><text x="340" y="411" text-anchor="middle" class="eq-name">HSpeed C</text><text x="340" y="417" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="372" y="405" width="50" height="13"/><text x="397" y="411" text-anchor="middle" class="eq-name">Refrig</text><text x="397" y="417" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="315" y="455" width="50" height="13"/><text x="340" y="461" text-anchor="middle" class="eq-name">Mob.tnk</text><text x="340" y="467" text-anchor="middle" class="eq-area">1.4 m²</text></g>
+  <g><rect class="eq" x="372" y="455" width="50" height="13"/><text x="397" y="461" text-anchor="middle" class="eq-name">Autoclv</text><text x="397" y="467" text-anchor="middle" class="eq-area">1000L</text></g>
+  <g><rect class="eq" x="455" y="405" width="60" height="13"/><text x="485" y="411" text-anchor="middle" class="eq-name">Clinical Area</text><text x="485" y="417" text-anchor="middle" class="eq-area">1.3 m²</text></g>
+  <g><rect class="eq" x="520" y="405" width="50" height="13"/><text x="545" y="411" text-anchor="middle" class="eq-name">BSC</text><text x="545" y="417" text-anchor="middle" class="eq-area">1.8 m²</text></g>
+  <g><rect class="eq" x="455" y="455" width="60" height="13"/><text x="485" y="461" text-anchor="middle" class="eq-name">Mob.CIP</text><text x="485" y="467" text-anchor="middle" class="eq-area">0.2 m²</text></g>
+  <g><rect class="eq" x="625" y="455" width="50" height="13"/><text x="650" y="461" text-anchor="middle" class="eq-name">Storage</text><text x="650" y="467" text-anchor="middle" class="eq-area">0.4 m²</text></g>
+
+  <g><rect class="eq" x="770" y="430" width="48" height="13"/><text x="794" y="436" text-anchor="middle" class="eq-name">BSC</text><text x="794" y="442" text-anchor="middle" class="eq-area">1.8 m²</text></g>
+  <g><rect class="eq" x="822" y="430" width="40" height="13"/><text x="842" y="436" text-anchor="middle" class="eq-name">Refrig</text><text x="842" y="442" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="770" y="465" width="48" height="13"/><text x="794" y="471" text-anchor="middle" class="eq-name">Table DF</text><text x="794" y="477" text-anchor="middle" class="eq-area">1.6 m²</text></g>
+
+  <g><rect class="eq" x="895" y="425" width="48" height="13"/><text x="919" y="431" text-anchor="middle" class="eq-name">Dryer</text><text x="919" y="437" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+  <g><rect class="eq" x="945" y="425" width="48" height="13"/><text x="969" y="431" text-anchor="middle" class="eq-name">Reactor</text><text x="969" y="437" text-anchor="middle" class="eq-area">3.0 m²</text></g>
+  <g><rect class="eq" x="997" y="425" width="48" height="13"/><text x="1021" y="431" text-anchor="middle" class="eq-name">Tank</text><text x="1021" y="437" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="895" y="470" width="100" height="13"/><text x="945" y="476" text-anchor="middle" class="eq-name">Wash sink + drain</text><text x="945" y="482" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+
+  <g><rect class="eq" x="1085" y="360" width="80" height="13"/><text x="1125" y="366" text-anchor="middle" class="eq-name">Wash sink</text><text x="1125" y="372" text-anchor="middle" class="eq-area">1.5 m²</text></g>
+  <g><rect class="eq" x="1085" y="430" width="80" height="13"/><text x="1125" y="436" text-anchor="middle" class="eq-name">Shoe wash</text><text x="1125" y="442" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+  <g><rect class="eq" x="1085" y="455" width="80" height="13"/><text x="1125" y="461" text-anchor="middle" class="eq-name">Disinf D</text><text x="1125" y="467" text-anchor="middle" class="eq-area">2.0 m²</text></g>
+
+  <g><rect class="eq" x="1005" y="575" width="55" height="13"/><text x="1032" y="581" text-anchor="middle" class="eq-name">Rack A</text><text x="1032" y="587" text-anchor="middle" class="eq-area">3.5 m²</text></g>
+  <g><rect class="eq" x="1080" y="575" width="55" height="13"/><text x="1107" y="581" text-anchor="middle" class="eq-name">Rack B</text><text x="1107" y="587" text-anchor="middle" class="eq-area">3.5 m²</text></g>
+  <g><rect class="eq" x="1140" y="575" width="50" height="13"/><text x="1165" y="581" text-anchor="middle" class="eq-name">Rack C</text><text x="1165" y="587" text-anchor="middle" class="eq-area">3.5 m²</text></g>
+  <g><rect class="eq" x="920" y="595" width="65" height="13"/><text x="952" y="601" text-anchor="middle" class="eq-name">Refrig</text><text x="952" y="607" text-anchor="middle" class="eq-area">1.0 m²</text></g>
+</g>
+
+<!-- ═══ FLOW ARROWS — 컬러 코딩 (Personnel=blue / Material=orange / Waste=red / Generic=black) ═══ -->
+<g id="arrows">
+
+  <!-- MATERIAL FLOW (orange): top entry → Supply Corridor → MAL → process room → Storage -->
+  <line class="arr-m" x1="280" y1="55" x2="280" y2="78" marker-end="url(#arr-m)"/>
+  <line class="arr-m" x1="600" y1="55" x2="600" y2="78" marker-end="url(#arr-m)"/>
+  <line class="arr-m" x1="880" y1="55" x2="880" y2="78" marker-end="url(#arr-m)"/>
+  <!-- material enters via MAL into process rooms -->
+  <line class="arr-m" x1="602" y1="135" x2="602" y2="155" marker-end="url(#arr-m)"/>
+  <line class="arr-m" x1="876" y1="190" x2="876" y2="225" marker-end="url(#arr-m)"/>
+  <!-- material to Unload / Storage -->
+  <line class="arr-m" x1="1065" y1="135" x2="1065" y2="180" marker-end="url(#arr-m)"/>
+
+  <!-- PERSONNEL FLOW (blue): left entry → Gowning F/M → PAL → Supply Corridor → process rooms via PAL -->
+  <line class="arr-p" x1="2" y1="535" x2="80" y2="535" marker-end="url(#arr-p)"/>      <!-- entry from outside -->
+  <line class="arr-p" x1="100" y1="540" x2="100" y2="570" marker-end="url(#arr-p)"/>   <!-- F upper → F lower -->
+  <line class="arr-p" x1="120" y1="575" x2="145" y2="575" marker-end="url(#arr-p)"/>   <!-- F → PAL -->
+  <line class="arr-p" x1="170" y1="575" x2="190" y2="575" marker-end="url(#arr-p)"/>   <!-- PAL → Gowning M -->
+  <line class="arr-p" x1="222" y1="575" x2="246" y2="575" marker-end="url(#arr-p)"/>   <!-- PAL → Ante -->
+  <line class="arr-p" x1="270" y1="575" x2="300" y2="575" marker-end="url(#arr-p)"/>   <!-- Ante → PAL -->
+  <!-- personnel up to Supply Corridor (vertical) -->
+  <line class="arr-p" x1="260" y1="500" x2="260" y2="115" marker-end="url(#arr-p)"/>
+  <!-- personnel into each process room via PAL -->
+  <line class="arr-p" x1="251" y1="155" x2="251" y2="175" marker-end="url(#arr-p)"/>
+  <line class="arr-p" x1="427" y1="160" x2="427" y2="180" marker-end="url(#arr-p)"/>
+  <line class="arr-p" x1="876" y1="160" x2="876" y2="180" marker-end="url(#arr-p)"/>
+
+  <!-- SUPPLY CORRIDOR flow (black, generic clean direction) -->
+  <line class="arr-c" x1="120" y1="94" x2="1150" y2="94" marker-end="url(#arr-c)"/>
+
+  <!-- RETURN CORRIDOR flow (black, exit direction, right → left) -->
+  <line class="arr-c" x1="1150" y1="334" x2="220" y2="334" marker-end="url(#arr-c)"/>
+
+  <!-- WASTE FLOW (red): process rooms → MAL → Return Corridor → Killtank → exit -->
+  <line class="arr-w" x1="876" y1="260" x2="876" y2="285" marker-end="url(#arr-w)"/>   <!-- Purif II exit -->
+  <line class="arr-w" x1="427" y1="270" x2="427" y2="300" marker-end="url(#arr-w)"/>   <!-- Ferm exit -->
+  <!-- to Killtank -->
+  <line class="arr-w" x1="667" y1="350" x2="667" y2="370" marker-end="url(#arr-w)"/>
+  <!-- waste exit at bottom -->
+  <line class="arr-w" x1="667" y1="500" x2="667" y2="690" marker-end="url(#arr-w)"/>
+
+  <!-- Bottom return corridor sub-flow -->
+  <line class="arr-c" x1="1000" y1="511" x2="650" y2="511" marker-end="url(#arr-c)"/>
+
+  <!-- VISITORS (right HVAC bay only — no entry into clean area) -->
+  <line class="arr-c" x1="1230" y1="200" x2="1300" y2="200"/>
+  <line class="arr-c" x1="1300" y1="200" x2="1230" y2="200" marker-end="url(#arr-c)"/>
+  <line class="arr-c" x1="1230" y1="430" x2="1300" y2="430"/>
+  <line class="arr-c" x1="1300" y1="430" x2="1230" y2="430" marker-end="url(#arr-c)"/>
+</g>
+
+<!-- ═══ BOUNDARY LABELS ═══ -->
+<g id="utilities">
+  <text x="1340" y="200" text-anchor="middle" class="vis-text" transform="rotate(-90 1340 200)">↔ Visitors</text>
+  <text x="1340" y="430" text-anchor="middle" class="vis-text" transform="rotate(-90 1340 430)">↔ Visitors</text>
+  <text x="62" y="500" text-anchor="middle" class="vis-text" transform="rotate(-90 62 500)" fill="#2563EB">Personnel →</text>
+  <text x="500" y="30" text-anchor="middle" class="vis-text" fill="#D97706">Material ↓</text>
+  <text x="900" y="700" text-anchor="middle" class="vis-text" fill="#B91C1C">↑ Waste exit</text>
+
+  <!-- Flow legend (top-left badges) -->
+  <g transform="translate(70, 685)">
+    <rect x="0" y="0" width="260" height="22" fill="#fff" stroke="#888" stroke-width="0.5"/>
+    <line x1="6" y1="11" x2="22" y2="11" class="arr-p" marker-end="url(#arr-p)"/>
+    <text x="28" y="14" font-size="9" fill="#000">Personnel</text>
+    <line x1="80" y1="11" x2="96" y2="11" class="arr-m" marker-end="url(#arr-m)"/>
+    <text x="102" y="14" font-size="9" fill="#000">Material</text>
+    <line x1="148" y1="11" x2="164" y2="11" class="arr-w" marker-end="url(#arr-w)"/>
+    <text x="170" y="14" font-size="9" fill="#000">Waste</text>
+    <line x1="206" y1="11" x2="222" y2="11" class="arr-c" marker-end="url(#arr-c)"/>
+    <text x="228" y="14" font-size="9" fill="#000">Corridor</text>
+  </g>
+</g>
+
+<!-- ═══ ROOM LABELS — LAST (overlay everything) ═══ -->
+<g id="labels">
+  <text x="630" y="98" text-anchor="middle" class="label-sm">Supply Corridor →</text>
+
+  <rect class="label-bg" x="100" y="115" width="120" height="14"/>
+  <text x="160" y="127" text-anchor="middle" class="label">Media &amp; Buffer Prep.</text>
+  <rect class="label-bg" x="290" y="115" width="100" height="14"/>
+  <text x="340" y="127" text-anchor="middle" class="label">Seed Lab</text>
+  <rect class="label-bg" x="460" y="115" width="120" height="14"/>
+  <text x="520" y="127" text-anchor="middle" class="label">Fermentation</text>
+  <rect class="label-bg" x="612" y="115" width="58" height="14"/>
+  <text x="640" y="127" text-anchor="middle" class="label-sm">Coldroom</text>
+  <rect class="label-bg" x="740" y="115" width="120" height="14"/>
+  <text x="800" y="127" text-anchor="middle" class="label">Purification I</text>
+  <rect class="label-bg" x="925" y="115" width="120" height="14"/>
+  <text x="985" y="127" text-anchor="middle" class="label">Purification II</text>
+  <rect class="label-bg" x="1085" y="115" width="80" height="14"/>
+  <text x="1125" y="127" text-anchor="middle" class="label-sm">Sterile Storage</text>
+  <rect class="label-bg" x="1085" y="195" width="80" height="14"/>
+  <text x="1125" y="207" text-anchor="middle" class="label-sm">Unload</text>
+  <text x="1260" y="225" text-anchor="middle" class="label" transform="rotate(-90 1260 225)">HVAC</text>
+  <text x="1260" y="500" text-anchor="middle" class="label-sm" transform="rotate(-90 1260 500)">Service Bay</text>
+
+  <rect class="label-bg" x="278" y="232" width="40" height="11"/><text x="297" y="241" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="425" y="242" width="40" height="11"/><text x="446" y="251" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="702" y="262" width="40" height="11"/><text x="722" y="271" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="895" y="262" width="40" height="11"/><text x="915" y="271" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="612" y="205" width="58" height="14"/><text x="640" y="217" text-anchor="middle" class="label-sm">Coldroom</text>
+  <text x="138" y="350" text-anchor="middle" class="label-sm">Weighing</text>
+
+  <text x="690" y="338" text-anchor="middle" class="label-sm">Return Corridor ←</text>
+
+  <rect class="label-bg" x="210" y="370" width="70" height="14"/><text x="245" y="382" text-anchor="middle" class="label-sm">Janitor</text>
+  <rect class="label-bg" x="210" y="430" width="70" height="14"/><text x="245" y="442" text-anchor="middle" class="label-sm">Ante</text>
+  <rect class="label-bg" x="325" y="370" width="90" height="14"/><text x="370" y="382" text-anchor="middle" class="label-sm">Technical Area</text>
+  <rect class="label-bg" x="455" y="370" width="80" height="14"/><text x="495" y="382" text-anchor="middle" class="label-sm">Clinical</text>
+  <rect class="label-bg" x="625" y="370" width="80" height="14"/><text x="665" y="382" text-anchor="middle" class="label-sm">Killtank</text>
+  <rect class="label-bg" x="688" y="430" width="48" height="11"/><text x="712" y="440" text-anchor="middle" class="label-mini">Janitor</text>
+  <text x="715" y="510" text-anchor="middle" class="al-text" fill="#fff">AL</text>
+  <rect class="label-bg" x="760" y="370" width="100" height="14"/><text x="810" y="382" text-anchor="middle" class="label">Purification III</text>
+  <rect class="label-bg" x="900" y="370" width="120" height="14"/><text x="960" y="382" text-anchor="middle" class="label">Preparation</text>
+  <rect class="label-bg" x="905" y="460" width="60" height="11"/><text x="935" y="469" text-anchor="middle" class="label-mini">Washing</text>
+  <rect class="label-bg" x="1085" y="325" width="80" height="14"/><text x="1125" y="337" text-anchor="middle" class="label-sm">Cleaning</text>
+
+  <!-- Bottom band -->
+  <rect class="label-bg" x="78" y="525" width="58" height="12"/><text x="107" y="534" text-anchor="middle" class="label-mini">Gowning F</text>
+  <rect class="label-bg" x="78" y="610" width="58" height="12"/><text x="107" y="619" text-anchor="middle" class="label-mini">Gowning F</text>
+  <rect class="label-bg" x="159" y="555" width="56" height="12"/><text x="187" y="564" text-anchor="middle" class="label-mini">Gowning M</text>
+  <rect class="label-bg" x="241" y="555" width="54" height="12"/><text x="268" y="564" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="320" y="525" width="70" height="12"/><text x="355" y="534" text-anchor="middle" class="label-sm">Toilet</text>
+  <text x="338" y="645" text-anchor="middle" class="label-mini">Ante</text>
+  <rect class="label-bg" x="450" y="525" width="100" height="14"/><text x="500" y="537" text-anchor="middle" class="label">Office</text>
+  <rect class="label-bg" x="655" y="555" width="60" height="12"/><text x="685" y="564" text-anchor="middle" class="label-sm">Stair</text>
+  <text x="635" y="650" font-size="9" font-weight="700" fill="#000">Up</text>
+  <rect class="label-bg" x="790" y="525" width="60" height="12"/><text x="820" y="534" text-anchor="middle" class="label-sm">ELEV</text>
+  <rect class="label-bg" x="790" y="610" width="60" height="12"/><text x="820" y="619" text-anchor="middle" class="label-sm">ELEV</text>
+  <rect class="label-bg" x="850" y="600" width="60" height="12"/><text x="882" y="609" text-anchor="middle" class="label-sm">Ante</text>
+  <rect class="label-bg" x="918" y="595" width="76" height="12"/><text x="955" y="604" text-anchor="middle" class="label-sm">Storage Bulk</text>
+  <rect class="label-bg" x="998" y="510" width="74" height="12"/><text x="1035" y="519" text-anchor="middle" class="label-sm">Storage Mat'l</text>
+  <rect class="label-bg" x="1080" y="555" width="120" height="12"/><text x="1135" y="564" text-anchor="middle" class="label-sm">WFI · PW · Electrical · Server</text>
+
+  <text x="795" y="512" text-anchor="middle" class="label-sm">Return Corridor ←</text>
+</g>
+
+</svg>

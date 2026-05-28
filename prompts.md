@@ -51,3 +51,30 @@
 
 main 브랜치 push 후 → `feature/rl-env-graph` 새 브랜치 생성 → `B_OPTION_SPEC.md` 8단계 작업 진행 예정.
 
+---
+
+## 2026-05-29 (continued) — Phase 0.5: floorplan_v3 (demo 템플릿 + KB Grade 색)
+
+### 사용자 피드백
+> Phase 0 결과(floorplan_v2)는 layout topology가 demo와 완전 다름. demo는 수작업, v2는 strip-band 알고리즘 — **근본적으로 다른 출력**.
+> 옵션 A 선택: **demo를 정적 템플릿으로 쓰고 KB Grade 색만 입히기**.
+
+### 작업
+1. [x] `output/reference_style_demo.svg` → `output/floorplan_v3.svg` 복사
+2. [x] `<style>` 블록의 CSS class 업데이트:
+   - `.room-c` : `#FBF1D9` → `#FCD34D` (KB Grade C, 50% opacity)
+   - `.room-cnc`: `#F2F2F2` → `#D6D3D1` (KB CNC)
+   - `.room-nc` : `#FFFFFF` → `#E7E5E4` (KB NC)
+   - `.ante` : `#F7E8C2` → `#FCD34D` @ 35% (C 톤다운)
+   - **신규**: `.room-a` `.room-b` `.room-d` 추가 (개별 룸을 다른 Grade로 바꿀 때 클래스만 갈아끼우면 됨)
+3. [x] `examples/floorplan_v3.svg` 동기
+
+### 결과물
+- `output/floorplan_v3.svg` (49 KB) — demo 구조 + KB Grade 색
+- 비교: v1 (60 KB auto) / v2 (81 KB auto + 화살표) / v3 (49 KB demo+KB color)
+
+### 한계 (사용자 인지)
+- v3는 **정적 템플릿** — 다른 URS 넣어도 layout 변하지 않음
+- 진정한 URS-driven 출력은 `layout_solver.py` 재작성 필요 (옵션 B, Phase 1 끝나고 별도)
+
+
