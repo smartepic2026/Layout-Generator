@@ -109,7 +109,7 @@ def _emit_defs(s: StringIO) -> None:
     s.write(
         '<pattern id="patA" patternUnits="userSpaceOnUse" width="6" height="6">'
         f'<rect width="6" height="6" fill="{a["fill"]}" fill-opacity="{a["transparency_pct"]/100}"/>'
-        f'<path d="M -1 7 l 8 -8 M -1 3 l 4 -4 M 3 7 l 4 -4" stroke="{a["pattern_color"]}" stroke-width="0.6"/>'
+        f'<path d="M -1 7 l 8 -8 M -1 3 l 4 -4 M 3 7 l 4 -4" stroke="#000000" stroke-width="0.6"/>'
         '</pattern>\n'
     )
     # CNC dotted hatch
@@ -120,12 +120,12 @@ def _emit_defs(s: StringIO) -> None:
         f'<circle cx="3" cy="3" r="0.7" fill="{c["pattern_color"]}"/>'
         '</pattern>\n'
     )
-    # Arrowhead markers (4 flow colors)
-    for k, hexc in T.FLOW.items():
+    # Arrowhead markers — 모두 검정 (사용자 요청)
+    for k in T.FLOW.keys():
         s.write(
             f'<marker id="arrow-{k}" viewBox="0 0 10 10" refX="9" refY="5" '
             f'markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
-            f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{hexc}"/>'
+            f'<path d="M 0 0 L 10 5 L 0 10 z" fill="#000000"/>'
             '</marker>\n'
         )
     s.write("</defs>\n")
@@ -323,16 +323,14 @@ def _emit_z4_room_fills(s: StringIO, ox: float, oy: float, layout: Layout) -> No
 
 
 def _emit_z5_room_borders(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    s.write('<g fill="none">\n')
+    # 모노톤 — 모든 방 테두리 검정 (사용자 요청). Grade 식별은 fill 색으로 유지.
+    s.write('<g fill="none" stroke="#000000">\n')
     for pr in layout.rooms.values():
         x, y, w, h = _r(pr.rect, ox, oy)
-        border = T.GRADE[pr.room.clean_grade]["border"]
         weight = T.STROKE["inner_wall"]
-        if pr.room.is_corridor:
-            weight = T.STROKE["inner_wall"]
         s.write(
             f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" '
-            f'stroke="{border}" stroke-width="{weight}"/>\n'
+            f'stroke-width="{weight}"/>\n'
         )
     s.write('</g>\n')
 
@@ -397,32 +395,6 @@ def _emit_z6_doors(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
 # ──────────────────────────────────────────────────────────────────────
 # z7 airlocks
 # ──────────────────────────────────────────────────────────────────────
-def _airlock_triangle_path(x: float, y: float, w: float, h: float, side: str) -> str:
-    """Solid swing-direction triangle pointing INTO the connected room.
-    Triangle fills ~85% of AL slot to match GMP drawing convention.
-    """
-    size = min(w, h) * 0.85
-    if side == "north":
-        # AL above room → tip points down (south)
-        cx = x + w / 2
-        return f"M {cx - size:.2f} {y + h - size * 1.4:.2f} L {cx + size:.2f} {y + h - size * 1.4:.2f} L {cx:.2f} {y + h - 1:.2f} Z"
-    if side == "south":
-        # AL below room → tip points up (north)
-        cx = x + w / 2
-        return f"M {cx - size:.2f} {y + size * 1.4:.2f} L {cx + size:.2f} {y + size * 1.4:.2f} L {cx:.2f} {y + 1:.2f} Z"
-    if side == "east":
-        # AL right of room → tip points left (west)
-        cy = y + h / 2
-        return f"M {x + size * 1.4:.2f} {cy - size:.2f} L {x + size * 1.4:.2f} {cy + size:.2f} L {x + 1:.2f} {cy:.2f} Z"
-    if side == "west":
-        # AL left of room → tip points right (east)
-        cy = y + h / 2
-        return f"M {x + w - size * 1.4:.2f} {cy - size:.2f} L {x + w - size * 1.4:.2f} {cy + size:.2f} L {x + w - 1:.2f} {cy:.2f} Z"
-    # inline (CAL/PAL/MAL in supply corridor) — diagonal east-pointing
-    cx, cy = x + w / 2, y + h / 2
-    return f"M {cx - size:.2f} {cy - size:.2f} L {cx - size:.2f} {cy + size:.2f} L {cx + size:.2f} {cy:.2f} Z"
-
-
 def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
     s.write('<g>\n')
     for pa in layout.airlocks.values():
@@ -430,43 +402,25 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
         grade = pa.airlock.clean_grade
         fill = _fill_for(grade)
         opacity = T.GRADE[grade]["transparency_pct"] / 100 if grade not in ("A", "CNC") else 1.0
-        border = T.GRADE[grade]["border"]
-        # AL box (solid border, no dashes — architectural style)
+        # AL box (solid black border)
         s.write(
             f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" '
             f'fill="{fill}" fill-opacity="{opacity:.2f}" '
             f'stroke="{T.NEUTRAL["900"]}" stroke-width="{T.STROKE["inner_wall"]}"/>\n'
         )
-        # Solid black swing triangle pointing into connected room
-        tri_path = _airlock_triangle_path(x, y, w, h, pa.side)
-        s.write(
-            f'<path d="{tri_path}" fill="{T.NEUTRAL["900"]}" '
-            f'stroke="{T.NEUTRAL["900"]}" stroke-width="0.5" stroke-linejoin="miter"/>\n'
-        )
-        # AL type label (top-left, small)
+        # AL type label (top-left, small) — swing triangle 제거됨
         s.write(
             f'<text x="{x + 2:.2f}" y="{y + 9:.2f}" font-size="{T.TEXT["xs"]}" '
             f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="600">'
             f'{_esc(pa.airlock.type)}</text>\n'
         )
-        # flow_type indicator (sink ▼ / bubble ▲) for non-cascade
-        if pa.airlock.flow_type == "sink":
-            s.write(
-                f'<text x="{x + w - 2:.2f}" y="{y + 9:.2f}" text-anchor="end" font-size="8" '
-                f'fill="{T.SEMANTIC["info"]}">▼</text>\n'
-            )
-        elif pa.airlock.flow_type == "bubble":
-            s.write(
-                f'<text x="{x + w - 2:.2f}" y="{y + 9:.2f}" text-anchor="end" font-size="8" '
-                f'fill="{T.SEMANTIC["info"]}">▲</text>\n'
-            )
     s.write('</g>\n')
 
 
 # ──────────────────────────────────────────────────────────────────────
 # z8 equipment
 # ──────────────────────────────────────────────────────────────────────
-EQUIPMENT_STROKE = "#DC2626"  # red-600 — architectural-drawing convention
+EQUIPMENT_STROKE = "#000000"  # black — 사용자 요청 (단색 모노톤)
 
 
 def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
@@ -583,7 +537,7 @@ def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, s
 
     s.write('<g font-weight="700" font-size="11">\n')
     for side, label, frac, color_key in labels:
-        color = T.FLOW[color_key] if color_key else T.NEUTRAL["900"]
+        color = T.NEUTRAL["900"]  # 모노톤 — 사용자 요청
         if side == "left":
             tx = ox - 50
             ty = oy + bh * frac
@@ -628,60 +582,52 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
     supply_id = "R_SUPPLY_CORRIDOR"
     return_id = "R_RETURN_CORRIDOR"
 
+    BLACK = "#000000"
+
     if supply_id in layout.rooms:
         r = layout.rooms[supply_id].rect
         x0, y0, w, h = _r(r, ox, oy)
-        # 좌→우 (personnel 색)
+        # 좌→우
         y_mid = y0 + h / 2
         s.write(
             f'<line x1="{x0 + 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + w - 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
+            f'stroke="{BLACK}" stroke-width="2.2" fill="none" '
             f'marker-end="url(#arrow-personnel)"/>\n'
         )
 
     if return_id in layout.rooms:
         r = layout.rooms[return_id].rect
         x0, y0, w, h = _r(r, ox, oy)
-        # 우→좌 (waste 색)
+        # 우→좌
         y_mid = y0 + h / 2
         s.write(
             f'<line x1="{x0 + w - 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{T.FLOW["waste"]}" stroke-width="2.2" fill="none" '
+            f'stroke="{BLACK}" stroke-width="2.2" fill="none" '
             f'marker-end="url(#arrow-waste)"/>\n'
         )
 
     # ── 2. 각 AL의 drop 화살표 (corridor 측 → AL 안으로 살짝) ──
-    # AL side에 따라 화살표 방향 결정
     for pa in layout.airlocks.values():
         x, y, w, h = _r(pa.rect, ox, oy)
-        cx, cy = x + w / 2, y + h / 2
+        cx = x + w / 2
         al_type = pa.airlock.type
-        # personnel (PAL) vs material (MAL) vs CAL
-        if al_type.startswith("PAL"):
-            color = T.FLOW["personnel"]
-            marker = "arrow-personnel"
-        elif al_type.startswith("MAL"):
-            color = T.FLOW["material"]
-            marker = "arrow-material"
-        else:
-            color = T.NEUTRAL["600"]
-            marker = "arrow-product"
-
-        # 화살표는 side 방향으로 (북/남)
+        marker = (
+            "arrow-personnel" if al_type.startswith("PAL")
+            else "arrow-material" if al_type.startswith("MAL")
+            else "arrow-product"
+        )
         if pa.side == "north":
-            # AL이 룸 위 → 화살표 위→아래 (corridor에서 룸으로)
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y - 2:.2f}" x2="{cx:.2f}" y2="{y + h + 2:.2f}" '
-                f'stroke="{color}" stroke-width="1.3" fill="none" '
+                f'stroke="{BLACK}" stroke-width="1.3" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
         elif pa.side == "south":
-            # AL이 룸 아래 → 화살표 아래→위
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y + h + 2:.2f}" x2="{cx:.2f}" y2="{y - 2:.2f}" '
-                f'stroke="{color}" stroke-width="1.3" fill="none" '
+                f'stroke="{BLACK}" stroke-width="1.3" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
 
@@ -711,7 +657,7 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) ->
         s.write(
             f'<rect x="{x + 12}" y="{yy - 11}" width="20" height="14" '
             f'fill="{fill}" fill-opacity="{opacity:.2f}" '
-            f'stroke="{meta["border"]}" stroke-width="1"/>\n'
+            f'stroke="#000000" stroke-width="1"/>\n'
         )
         s.write(
             f'<text x="{x + 40}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" '
@@ -733,7 +679,7 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) ->
     for k, label in [("personnel", "Personnel"), ("material", "Material"), ("waste", "Waste"), ("product", "Product")]:
         s.write(
             f'<line x1="{x + 14}" y1="{yy - 4}" x2="{x + 40}" y2="{yy - 4}" '
-            f'stroke="{T.FLOW[k]}" stroke-width="1.5" marker-end="url(#arrow-{k})"/>\n'
+            f'stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-{k})"/>\n'
         )
         s.write(
             f'<text x="{x + 50}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" '
