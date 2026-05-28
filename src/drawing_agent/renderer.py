@@ -408,10 +408,12 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
             f'fill="{fill}" fill-opacity="{opacity:.2f}" '
             f'stroke="{T.NEUTRAL["900"]}" stroke-width="{T.STROKE["inner_wall"]}"/>\n'
         )
-        # AL type label (top-left, small) — swing triangle 제거됨
+        # AL type label — 영역 중앙 (사용자 요청)
+        cx, cy = x + w / 2, y + h / 2
         s.write(
-            f'<text x="{x + 2:.2f}" y="{y + 9:.2f}" font-size="{T.TEXT["xs"]}" '
-            f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="600">'
+            f'<text x="{cx:.2f}" y="{cy:.2f}" text-anchor="middle" '
+            f'dominant-baseline="middle" font-size="{T.TEXT["xs"]}" '
+            f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="700">'
             f'{_esc(pa.airlock.type)}</text>\n'
         )
     s.write('</g>\n')
@@ -420,7 +422,7 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
 # ──────────────────────────────────────────────────────────────────────
 # z8 equipment
 # ──────────────────────────────────────────────────────────────────────
-EQUIPMENT_STROKE = "#000000"  # black — 사용자 요청 (단색 모노톤)
+EQUIPMENT_STROKE = "#DC2626"  # red-600 — 건축 도면 관례 (사용자 요청 복원)
 
 
 def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
