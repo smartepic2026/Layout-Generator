@@ -120,11 +120,11 @@ def _emit_defs(s: StringIO) -> None:
         f'<circle cx="3" cy="3" r="0.7" fill="{c["pattern_color"]}"/>'
         '</pattern>\n'
     )
-    # Arrowhead markers — 검정, 15% 작게, 폭:길이 비율 길쭉하게 (사용자 요청)
-    # path: 길이 10 × 베이스 4 → 2.5:1 비율 (정삼각형 아닌 가늘고 긴 형태)
+    # Arrowhead markers — 검정, 길쭉(2.5:1), refX=0 → 선이 머리 시작점에서 멈춤
+    # (refX=9였을 때 좁은 tip 부근에서 선이 삼각형보다 두꺼워져 삐져나오던 문제 해결)
     for k in T.FLOW.keys():
         s.write(
-            f'<marker id="arrow-{k}" viewBox="0 0 10 10" refX="9" refY="5" '
+            f'<marker id="arrow-{k}" viewBox="0 0 10 10" refX="0" refY="5" '
             f'markerWidth="8" markerHeight="8" orient="auto-start-reverse">'
             f'<path d="M 0 3 L 10 5 L 0 7 z" fill="#000000"/>'
             '</marker>\n'
