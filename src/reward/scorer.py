@@ -229,3 +229,156 @@ def _rect_gap(a: Rect, b: Rect) -> float:
     dx = max(0, max(a.x, b.x) - min(a.x2, b.x2))
     dy = max(0, max(a.y, b.y) - min(a.y2, b.y2))
     return (dx ** 2 + dy ** 2) ** 0.5
+
+
+# ══════════════════════════════════════════════════════════════════════
+# SPEC scoring skeleton — P1~P8 (GMP_Layout_Engine_SPEC v0.1 §2 + PATCH v0.2 §6)
+# ══════════════════════════════════════════════════════════════════════
+#
+# 활성/보류 (PATCH v0.2 §6.1):
+#   ACTIVE   : P1 flow_monotonicity, P2 adjacency, P6 cleaning_access, P7 compactness
+#              → 엑셀 `단위공정`/`rule_equipment_layout`/`spec` 시트에서 데이터 도출 가능.
+#   DEFERRED : P3 environmental_protection_open, P5 airflow_contaminant_alignment, P8 HSE
+#              → 도메인 검수자 부재. 1차에서는 가중치 0 + 데이터 null이면 skip.
+#
+# 정규화 분모 = 활성 가중치 합 = 23 (PATCH §6.2).
+# **이 함수군은 score()에 아직 연결되어 있지 않다 (skeleton).** Phase 1.1에서 수식 채움.
+#
+# 모든 P_*() 함수는 다음 계약을 따른다:
+#   - 반환값 None    = 입력 데이터 부족(또는 미구현) → 가중치 기여 0, breakdown에 null.
+#   - 반환값 float   = 0.0~1.0 정규화 점수.
+P_WEIGHTS: dict[str, float] = {
+    "P1_flow_monotonicity": 10.0,            # ACTIVE
+    "P2_adjacency": 6.0,                     # ACTIVE
+    "P3_environmental_protection_open": 0.0, # DEFERRED — PATCH §6.2
+    "P5_airflow_contaminant_alignment": 0.0, # DEFERRED — PATCH §6.2
+    "P6_cleaning_access": 4.0,               # ACTIVE
+    "P7_compactness": 3.0,                   # ACTIVE
+    "P8_hse": 0.0,                           # DEFERRED — PATCH §6.2
+}
+P_DEFERRED: frozenset = frozenset({
+    "P3_environmental_protection_open",
+    "P5_airflow_contaminant_alignment",
+    "P8_hse",
+})
+P_ACTIVE_DENOMINATOR: float = sum(P_WEIGHTS[k] for k in P_WEIGHTS if k not in P_DEFERRED)
+# = 10 + 6 + 4 + 3 = 23 (PATCH §6.2 분모)
+
+
+def _equipment_iter(spec: RuleEngineOutput):
+    for room in spec.rooms:
+        for eq in room.equipment:
+            yield eq
+
+
+def _p1_flow_monotonicity(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P1 [ACTIVE]. SPEC §2 P1. 공정 단조성: proj(stepᵢ) ≤ proj(stepⱼ) for stepᵢ<stepⱼ.
+    필요 데이터: equipment.sort_order + layout 좌표 + room.airflow.direction_vector.
+    1차 1단계 작업에서는 수식 미구현 → None.
+    """
+    return None  # TODO Phase 1.1
+
+
+def _p2_adjacency(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P2 [ACTIVE]. SPEC §2 P2. connects_to 가까이, incompatible_with 멀리.
+    필요 데이터: equipment.connects_to / incompatible_with + layout.
+    """
+    return None  # TODO Phase 1.1
+
+
+def _p3_environmental_protection_open(
+    spec: RuleEngineOutput, layout: Optional[Layout]
+) -> Optional[float]:
+    """P3 [DEFERRED]. SPEC §2 P3. open 장비 환경보호 (HEPA 근접, 통로 회피).
+    필요 데이터: equipment.open_closed + needs.downflow_booth.
+    PATCH §6.2: null 가드 → 데이터 없으면 skip.
+    """
+    has_data = any(eq.open_closed is not None for eq in _equipment_iter(spec))
+    if not has_data:
+        return None
+    return None  # 데이터 있더라도 1차에서는 수식 미구현
+
+
+def _p5_airflow_contaminant_alignment(
+    spec: RuleEngineOutput, layout: Optional[Layout]
+) -> Optional[float]:
+    """P5 [DEFERRED]. SPEC §2 P5. 기능-오염 정렬: env 장비는 return쪽으로.
+    필요 데이터: equipment.contamination_class + room.airflow.direction_vector.
+    """
+    has_contam = any(eq.contamination_class for eq in _equipment_iter(spec))
+    has_airflow = any(r.airflow is not None for r in spec.rooms)
+    if not (has_contam and has_airflow):
+        return None
+    return None  # 1차 미구현
+
+
+def _p6_cleaning_access(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P6 [ACTIVE]. SPEC §2 P6. 청소/유지보수 통로 연속성.
+    필요 데이터: equipment.clearance_m + layout.
+    """
+    return None  # TODO Phase 1.1
+
+
+def _p7_compactness(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P7 [ACTIVE]. SPEC §2 P7. bbox 최소화 (IPS §1: optimal ft²)."""
+    return None  # TODO Phase 1.1
+
+
+def _p8_hse(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P8 [DEFERRED]. SPEC §2 P8. 소음/발열/가연성 격리.
+    필요 데이터: equipment.heat_kw / noise_dba / flammable.
+    """
+    has_data = any(
+        (eq.heat_kw is not None) or (eq.noise_dba is not None) or (eq.flammable is not None)
+        for eq in _equipment_iter(spec)
+    )
+    if not has_data:
+        return None
+    return None
+
+
+def score_spec_p_series(spec: RuleEngineOutput, layout: Optional[Layout] = None) -> dict:
+    """SPEC §2 P1~P8 채점 골격. **score()에 미연결.** Phase 1.1에서 수식 채움.
+
+    Returns:
+        {
+          "P1_flow_monotonicity": {"raw": float|None, "weight": 10, "contrib": float|None,
+                                   "status": "active"|"deferred"|"skipped"},
+          ...,
+          "_normalized": float,            # contrib합 / 활성 가중치 합(23). PATCH §6.2
+          "_active_denominator": 23.0,
+        }
+    """
+    fns = {
+        "P1_flow_monotonicity": _p1_flow_monotonicity,
+        "P2_adjacency": _p2_adjacency,
+        "P3_environmental_protection_open": _p3_environmental_protection_open,
+        "P5_airflow_contaminant_alignment": _p5_airflow_contaminant_alignment,
+        "P6_cleaning_access": _p6_cleaning_access,
+        "P7_compactness": _p7_compactness,
+        "P8_hse": _p8_hse,
+    }
+    out: dict = {}
+    weighted_sum = 0.0
+    for key, fn in fns.items():
+        raw = fn(spec, layout)
+        w = P_WEIGHTS[key]
+        deferred = key in P_DEFERRED
+        if raw is None:
+            status = "deferred" if deferred else "skipped"
+            contrib: Optional[float] = None
+        else:
+            status = "deferred" if deferred else "active"
+            contrib = w * raw
+            weighted_sum += contrib
+        out[key] = {
+            "raw": raw,
+            "weight": w,
+            "contrib": round(contrib, 4) if contrib is not None else None,
+            "status": status,
+        }
+    out["_normalized"] = (
+        round(weighted_sum / P_ACTIVE_DENOMINATOR, 4) if P_ACTIVE_DENOMINATOR else 0.0
+    )
+    out["_active_denominator"] = P_ACTIVE_DENOMINATOR
+    return out
