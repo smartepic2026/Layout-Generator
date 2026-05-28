@@ -120,11 +120,11 @@ def _emit_defs(s: StringIO) -> None:
         f'<circle cx="3" cy="3" r="0.7" fill="{c["pattern_color"]}"/>'
         '</pattern>\n'
     )
-    # Arrowhead markers — 모두 검정 (사용자 요청)
+    # Arrowhead markers — 모두 검정 + 굵게 (사용자 요청)
     for k in T.FLOW.keys():
         s.write(
             f'<marker id="arrow-{k}" viewBox="0 0 10 10" refX="9" refY="5" '
-            f'markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+            f'markerWidth="9" markerHeight="9" orient="auto-start-reverse">'
             f'<path d="M 0 0 L 10 5 L 0 10 z" fill="#000000"/>'
             '</marker>\n'
         )
@@ -620,16 +620,20 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
             else "arrow-material" if al_type.startswith("MAL")
             else "arrow-product"
         )
+        # AL drop: corridor 안쪽에서 출발 → AL 통과 → 룸 안쪽까지 (좀 더 길고 굵게)
+        ext = 30  # AL 양쪽으로 30px 연장
         if pa.side == "north":
+            # AL 위쪽 corridor에서 룸 쪽(아래)로
             s.write(
-                f'<line x1="{cx:.2f}" y1="{y - 2:.2f}" x2="{cx:.2f}" y2="{y + h + 2:.2f}" '
-                f'stroke="{BLACK}" stroke-width="1.3" fill="none" '
+                f'<line x1="{cx:.2f}" y1="{y - ext:.2f}" x2="{cx:.2f}" y2="{y + h + ext:.2f}" '
+                f'stroke="{BLACK}" stroke-width="2.5" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
         elif pa.side == "south":
+            # AL 아래쪽 corridor에서 룸 쪽(위)로
             s.write(
-                f'<line x1="{cx:.2f}" y1="{y + h + 2:.2f}" x2="{cx:.2f}" y2="{y - 2:.2f}" '
-                f'stroke="{BLACK}" stroke-width="1.3" fill="none" '
+                f'<line x1="{cx:.2f}" y1="{y + h + ext:.2f}" x2="{cx:.2f}" y2="{y - ext:.2f}" '
+                f'stroke="{BLACK}" stroke-width="2.5" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
 
