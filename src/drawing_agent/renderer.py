@@ -65,6 +65,7 @@ def render(spec: RuleEngineOutput, layout: Layout) -> str:
     _emit_z6_doors(s, ox, oy, layout)
     _emit_z7_airlocks(s, ox, oy, layout)
     _emit_z8_equipment(s, ox, oy, layout)
+    _emit_z9_flow_arrows(s, ox, oy, layout)
 
     _emit_z10_labels(s, ox, oy, layout)
     _emit_z11_boundary_flow(s, ox, oy, layout, spec)
@@ -564,60 +565,126 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
 # z11 boundary flow labels (Visitors, Material entry, Waste exit ...)
 # ──────────────────────────────────────────────────────────────────────
 def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, spec: RuleEngineOutput) -> None:
-    """건물 외곽선에 동선 진입/출입 라벨 표기 (Visitors, Material, Waste 등).
+    """건물 외곽선에 동선 진입/출입 라벨 표기 — FLOW 색상 코딩.
 
-    URS building.{personnel/material/waste}_clock 위치에 맞추는 게 정확하지만,
-    spec에서는 그 정보가 휘발되므로 기본 4방위 정형 배치를 사용:
-      - 좌측: Personnel ↔ (Visitors)
-      - 상단: Material entry ↓
-      - 우측: Visitors ↔
-      - 하단: Waste exit ↑
+    Personnel=indigo, Material=teal, Waste=rose, Visitors=neutral.
     """
     bw = T.mm(layout.building_w_mm)
     bh = T.mm(layout.building_h_mm)
-    arrow_color = T.NEUTRAL["900"]
 
+    # (side, label, fraction, color_key)
     labels = [
-        # (side, label, y_or_x_position_fraction)
-        ("left", "Personnel", 0.5),
-        ("top", "Material ↓", 0.5),
-        ("right", "Visitors", 0.4),
-        ("right", "Visitors", 0.7),
-        ("bottom", "Waste ↑", 0.5),
+        ("left",   "Personnel ↔",  0.5,  "personnel"),
+        ("top",    "Material ↓",   0.5,  "material"),
+        ("right",  "Visitors ↔",   0.4,  None),
+        ("right",  "Visitors ↔",   0.7,  None),
+        ("bottom", "Waste ↑",      0.5,  "waste"),
     ]
 
-    s.write('<g>\n')
-    for side, label, frac in labels:
+    s.write('<g font-weight="700" font-size="11">\n')
+    for side, label, frac, color_key in labels:
+        color = T.FLOW[color_key] if color_key else T.NEUTRAL["900"]
         if side == "left":
             tx = ox - 50
             ty = oy + bh * frac
             s.write(
-                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
-                f'fill="{arrow_color}" font-weight="600" '
-                f'transform="rotate(-90 {tx:.2f} {ty:.2f})">↔ {label}</text>\n'
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" '
+                f'fill="{color}" transform="rotate(-90 {tx:.2f} {ty:.2f})">{label}</text>\n'
             )
         elif side == "right":
             tx = ox + bw + 56
             ty = oy + bh * frac
             s.write(
-                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
-                f'fill="{arrow_color}" font-weight="600" '
-                f'transform="rotate(90 {tx:.2f} {ty:.2f})">↔ {label}</text>\n'
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" '
+                f'fill="{color}" transform="rotate(90 {tx:.2f} {ty:.2f})">{label}</text>\n'
             )
         elif side == "top":
             tx = ox + bw * frac
             ty = oy - 50
             s.write(
-                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
-                f'fill="{arrow_color}" font-weight="600">{label}</text>\n'
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" '
+                f'fill="{color}">{label}</text>\n'
             )
         elif side == "bottom":
             tx = ox + bw * frac
             ty = oy + bh + 16
             s.write(
-                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" font-size="10" '
-                f'fill="{arrow_color}" font-weight="600">{label}</text>\n'
+                f'<text x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" '
+                f'fill="{color}">{label}</text>\n'
             )
+    s.write('</g>\n')
+
+
+def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
+    """Supply Corridor / Return Corridor 내부에 방향 화살표 + 각 AL에 drop 화살표.
+
+    - Supply (양압, 좌→우): personnel 색
+    - Return (음압, 우→좌): waste 색
+    - AL drop: 외부 boundary → corridor → AL 위치까지 짧은 수직 화살표
+    """
+    s.write('<g>\n')
+
+    # ── 1. Corridor 메인 흐름 ──
+    supply_id = "R_SUPPLY_CORRIDOR"
+    return_id = "R_RETURN_CORRIDOR"
+
+    if supply_id in layout.rooms:
+        r = layout.rooms[supply_id].rect
+        x0, y0, w, h = _r(r, ox, oy)
+        # 좌→우 (personnel 색)
+        y_mid = y0 + h / 2
+        s.write(
+            f'<line x1="{x0 + 20:.2f}" y1="{y_mid:.2f}" '
+            f'x2="{x0 + w - 20:.2f}" y2="{y_mid:.2f}" '
+            f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
+            f'marker-end="url(#arrow-personnel)"/>\n'
+        )
+
+    if return_id in layout.rooms:
+        r = layout.rooms[return_id].rect
+        x0, y0, w, h = _r(r, ox, oy)
+        # 우→좌 (waste 색)
+        y_mid = y0 + h / 2
+        s.write(
+            f'<line x1="{x0 + w - 20:.2f}" y1="{y_mid:.2f}" '
+            f'x2="{x0 + 20:.2f}" y2="{y_mid:.2f}" '
+            f'stroke="{T.FLOW["waste"]}" stroke-width="2.2" fill="none" '
+            f'marker-end="url(#arrow-waste)"/>\n'
+        )
+
+    # ── 2. 각 AL의 drop 화살표 (corridor 측 → AL 안으로 살짝) ──
+    # AL side에 따라 화살표 방향 결정
+    for pa in layout.airlocks.values():
+        x, y, w, h = _r(pa.rect, ox, oy)
+        cx, cy = x + w / 2, y + h / 2
+        al_type = pa.airlock.type
+        # personnel (PAL) vs material (MAL) vs CAL
+        if al_type.startswith("PAL"):
+            color = T.FLOW["personnel"]
+            marker = "arrow-personnel"
+        elif al_type.startswith("MAL"):
+            color = T.FLOW["material"]
+            marker = "arrow-material"
+        else:
+            color = T.NEUTRAL["600"]
+            marker = "arrow-product"
+
+        # 화살표는 side 방향으로 (북/남)
+        if pa.side == "north":
+            # AL이 룸 위 → 화살표 위→아래 (corridor에서 룸으로)
+            s.write(
+                f'<line x1="{cx:.2f}" y1="{y - 2:.2f}" x2="{cx:.2f}" y2="{y + h + 2:.2f}" '
+                f'stroke="{color}" stroke-width="1.3" fill="none" '
+                f'marker-end="url(#{marker})"/>\n'
+            )
+        elif pa.side == "south":
+            # AL이 룸 아래 → 화살표 아래→위
+            s.write(
+                f'<line x1="{cx:.2f}" y1="{y + h + 2:.2f}" x2="{cx:.2f}" y2="{y - 2:.2f}" '
+                f'stroke="{color}" stroke-width="1.3" fill="none" '
+                f'marker-end="url(#{marker})"/>\n'
+            )
+
     s.write('</g>\n')
 
 
