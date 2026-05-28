@@ -159,8 +159,9 @@
   <path class="room-cnc" d="M 685 480 L 745 480 L 745 530 L 685 530 Z"/>
   <path class="room-c" d="M 760 365 L 865 365 L 865 490 L 815 490 L 815 460 L 760 460 Z"/>
   <path class="room-c" d="M 885 365 L 1055 365 L 1055 490 L 995 490 L 995 455 L 885 455 Z"/>
-  <rect class="ante" x="885" y="455" width="110" height="35"/>
-  <rect class="room-cnc" x="1075" y="320" width="105" height="170"/>
+  <rect class="room-d" x="885" y="455" width="110" height="35"/>  <!-- Washing → Grade D -->
+  <rect class="room-d" x="1075" y="320" width="105" height="170"/>  <!-- Cleaning → Grade D -->
+
 
   <!-- bottom band (sized for AL spaces between rooms) -->
   <rect class="room-nc" x="80"  y="495" width="55" height="80"/>     <!-- Gowning F upper -->
@@ -181,8 +182,9 @@
   <rect class="room-nc" x="790" y="560" width="60" height="100"/>    <!-- ELEV lower -->
   <rect class="room-cnc" x="850" y="560" width="65" height="100"/>   <!-- Ante -->
   <rect class="room-cnc" x="915" y="555" width="80" height="105"/>   <!-- Storage Bulk -->
-  <path class="room-cnc" d="M 995 495 L 1195 495 L 1195 660 L 1075 660 L 1075 540 L 995 540 Z"/>
-  <rect class="ante" x="995" y="540" width="80" height="120"/>
+  <path class="room-d" d="M 995 495 L 1195 495 L 1195 660 L 1075 660 L 1075 540 L 995 540 Z"/>  <!-- Storage Material → Grade D -->
+  <rect class="room-d" x="995" y="540" width="80" height="120"/>  <!-- inner sub-zone also Grade D -->
+
   <rect class="corridor" x="595" y="495" width="400" height="32"/>
 </g>
 
