@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "engine_version": "0.1.0",
+    "knowledge_base_version": "GMP_Layout_Logic_0510.xlsx",
+    "input_hash": "cba2bc09d96f",
+    "rooms": 48, "airlocks": 18, "adjacency_edges": 23,
+    "rationale_entries": 399,
+    "flag_counts": {"info": 4, "suspected_violation": 20, "warning": 4}
+  },
+  "project_name": "URS_ConceptualDesign teammate output",
+  "modality": "mAb",
+  "rooms": [
+    {"room_id": "R_MEDIA_PREPARATION", "name_ko": "배지조제실", "name_en": "Media preparation", "cat": "process", "grade": "C", "flow": "Both-way", "gowning": "무진복", "area_m2": 100.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Weigh booth", "name": "Weigh booth", "W×D×H(mm)": "3500×3000×3000", "weight": 500, "max_op": 600},
+       {"instance_id": "Mixing Tank-1 100L", "name": "Mixing Tank-1 100L", "W×D×H(mm)": "2000×2000×2000", "weight": 1000, "max_op": 1100},
+       {"instance_id": "Mixing Tank-2 500L", "name": "Mixing Tank-2 500L", "W×D×H(mm)": "2500×2000×3000", "weight": 1500, "max_op": 2000},
+       {"instance_id": "Mixing Tank-3 2,000L", "name": "Mixing Tank-3 2,000L", "W×D×H(mm)": "3000×2500×4000", "weight": 2000, "max_op": 4000},
+       {"instance_id": "Mixing Tank-4 10,000L", "name": "Mixing Tank-4 10,000L", "W×D×H(mm)": "4000×3000×5000", "weight": 3000, "max_op": 13000}
+     ]},
+    {"room_id": "R_BUFFER_PREPARATION", "name_ko": "버퍼조제실", "name_en": "Buffer preparation", "cat": "process", "grade": "C", "flow": "Both-way", "gowning": "무진복", "area_m2": 200.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Weigh booth", "name": "Weigh booth", "W×D×H(mm)": "3500×3000×3000", "weight": 500, "max_op": 600},
+       {"instance_id": "Mixing Tank-5 500L", "name": "Mixing Tank-5 500L", "W×D×H(mm)": "2500×2000×3000", "weight": 1500, "max_op": 2000},
+       {"instance_id": "Mixing Tank-6 2,000L", "name": "Mixing Tank-6 2,000L", "W×D×H(mm)": "3000×2500×4000", "weight": 2000, "max_op": 4000},
+       {"instance_id": "Mixing Tank-7 4,000L", "name": "Mixing Tank-7 4,000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 6000},
+       {"instance_id": "Mixing Tank-8 10,000L", "name": "Mixing Tank-8 10,000L", "W×D×H(mm)": "4000×3000×5000", "weight": 4000, "max_op": 14000}
+     ]},
+    {"room_id": "R_INOCULATION", "name_ko": "Seed 접종실", "name_en": "Inoculation", "cat": "process", "grade": "C", "flow": "One-way", "gowning": "무진복", "area_m2": 40.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Centrifuge", "name": "Centrifuge", "W×D×H(mm)": "1000×600×500", "weight": 60, "max_op": 60},
+       {"instance_id": "Isolator", "name": "Isolator", "W×D×H(mm)": "4000×2000×3000", "weight": 1000, "max_op": 1000},
+       {"instance_id": "Cleanbench", "name": "Cleanbench", "W×D×H(mm)": "2000×800×2000", "weight": 200, "max_op": 200},
+       {"instance_id": "Incubator", "name": "Incubator", "W×D×H(mm)": "1200×800×600", "weight": 150, "max_op": 150}
+     ]},
+    {"room_id": "R_CELL_CULTURE", "name_ko": "배양실", "name_en": "Cell Culture ", "cat": "process", "grade": "C", "flow": "One-way", "gowning": "무진복", "area_m2": 96.1, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Wave Reactor 20L", "name": "Wave Reactor 20L", "W×D×H(mm)": "1200×600×800", "weight": 200, "max_op": 220},
+       {"instance_id": "BioReactor 100L", "name": "BioReactor 100L", "W×D×H(mm)": "2000×2000×2500", "weight": 1000, "max_op": 1100},
+       {"instance_id": "BioReactor 500L", "name": "BioReactor 500L", "W×D×H(mm)": "2500×2000×3500", "weight": 1500, "max_op": 2000},
+       {"instance_id": "BioReactor 2,000L", "name": "BioReactor 2,000L", "W×D×H(mm)": "3000×2500×4500", "weight": 2000, "max_op": 4000},
+       {"instance_id": "BioReactor 10,000L", "name": "BioReactor 10,000L", "W×D×H(mm)": "4000×3000×5500", "weight": 3000, "max_op": 11000},
+       {"instance_id": "Storage tank-1 2,000L", "name": "Storage tank-1 2,000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 3500}
+     ]},
+    {"room_id": "R_HARVEST", "name_ko": "회수실", "name_en": "Harvest", "cat": "process", "grade": "C", "flow": "One-way", "gowning": "무진복", "area_m2": 60.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Continuous centrifuge", "name": "Continuous centrifuge", "W×D×H(mm)": "3000×3000×3000", "weight": 2000, "max_op": 2500},
+       {"instance_id": "Depth filer system *2", "name": "Depth filer system *2", "W×D×H(mm)": "2000×600×1800", "weight": 300, "max_op": 500},
+       {"instance_id": "Storage tank-2 10,000L", "name": "Storage tank-2 10,000L", "W×D×H(mm)": "3000×3000×5000", "weight": 1500, "max_op": 11500}
+     ]},
+    {"room_id": "R_PURIFICATION_1", "name_ko": "정제실1", "name_en": "Purification 1", "cat": "process", "grade": "C", "flow": "One-way", "gowning": "무진복", "area_m2": 300.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Buffer tank-1 2000L", "name": "Buffer tank-1 2000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 3500},
+       {"instance_id": "Buffer tank-2 2000L", "name": "Buffer tank-2 2000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 3500},
+       {"instance_id": "Buffer tank-3 2000L", "name": "Buffer tank-3 2000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 3500},
+       {"instance_id": "Buffer tank-4 4000L", "name": "Buffer tank-4 4000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 6000},
+       {"instance_id": "Buffer tank-5 4000L", "name": "Buffer tank-5 4000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 6000},
+       {"instance_id": "Buffer tank-6 4000L", "name": "Buffer tank-6 4000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 6000},
+       {"instance_id": "Chromatography system 1", "name": "Chromatography system 1", "W×D×H(mm)": "2000×1200×2000", "weight": 500, "max_op": 500},
+       {"instance_id": "Column 1500mm", "name": "Column 1500mm", "W×D×H(mm)": "2500×2000×3000", "weight": 2000, "max_op": 2200},
+       {"instance_id": "Storage tank-3 4000L", "name": "Storage tank-3 4000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 2000},
+       {"instance_id": "Storage tank-4 3000L", "name": "Storage tank-4 3000L", "W×D×H(mm)": "3000×2500×4500", "weight": 2000, "max_op": 5000},
+       {"instance_id": "Acid tank 200L", "name": "Acid tank 200L", "W×D×H(mm)": "2000×2000×2500", "weight": 500, "max_op": 700},
+       {"instance_id": "Base tank 200L", "name": "Base tank 200L", "W×D×H(mm)": "2000×2000×2500", "weight": 500, "max_op": 700},
+       {"instance_id": "Depth filer system", "name": "Depth filer system", "W×D×H(mm)": "2000×600×1800", "weight": 300, "max_op": 500},
+       {"instance_id": "Reactor 5000L", "name": "Reactor 5000L", "W×D×H(mm)": "3000×2500×5000", "weight": 1500, "max_op": 1500},
+       {"instance_id": "Storage tank-5 5000L", "name": "Storage tank-5 5000L", "W×D×H(mm)": "3000×2500×5000", "weight": 1500, "max_op": 1500},
+       {"instance_id": "Chromatography system 2", "name": "Chromatography system 2", "W×D×H(mm)": "2000×1200×2000", "weight": 500, "max_op": 500},
+       {"instance_id": "Column 1000mm", "name": "Column 1000mm", "W×D×H(mm)": "2000×2000×2500", "weight": 1800, "max_op": 2000},
+       {"instance_id": "Storage tank-6 8000L", "name": "Storage tank-6 8000L", "W×D×H(mm)": "3500×3000×5500", "weight": 2500, "max_op": 10000},
+       {"instance_id": "Chromatography system 3", "name": "Chromatography system 3", "W×D×H(mm)": "2000×1200×2000", "weight": 500, "max_op": 500},
+       {"instance_id": "Column 800mm", "name": "Column 800mm", "W×D×H(mm)": "2000×2000×2500", "weight": 1500, "max_op": 1600},
+       {"instance_id": "Storage tank-7 2000L", "name": "Storage tank-7 2000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 3500},
+       {"instance_id": "Nano filtration system", "name": "Nano filtration system", "W×D×H(mm)": "2000×800×1500", "weight": 500, "max_op": 500}
+     ]},
+    {"room_id": "R_PURIFICATION_2", "name_ko": "정제실2", "name_en": "Purification 2", "cat": "process", "grade": "C", "flow": "One-way", "gowning": "무진복", "area_m2": 100.0, "DP": 30, "ACPH": 30, "color": "yellow", "투명%": 50,
+     "equipment": [
+       {"instance_id": "Storage tank-8 2000L", "name": "Storage tank-8 2000L", "W×D×H(mm)": "3000×2500×4000", "weight": 1500, "max_op": 1500},
+       {"instance_id": "Buffer tank-7 5000L", "name": "Buffer tank-7 5000L", "W×D×H(mm)": "3500×2500×5000", "weight": 2000, "max_op": 7000},
+       {"instance_id": "Holding tank 500L", "name": "Holding tank 500L", "W×D×H(mm)": "2500×2000×3000", "weight": 800, "max_op": 1300},
+       {"instance_id": "Storage tank-9 500L", "name": "Storage tank-9 500L", "W×D×H(mm)": "2500×2000×3000", "weight": 800, "max_op": 800},
+       {"instance_id": "TFF system", "name": "TFF system", "W×D×H(mm)": "2500×2000×2500", "weight": 1000, "max_op": 1000},
+       {"instance_id": "Fitration system", "name": "Fitration system", "W×D×H(mm)": "2000×800×1500", "weight": 200, "max_op": 200},
+       {"instance_id": "Bulk fill system", "name": "Bulk fill system", "W×D×H(mm)": "2000×800×1500", "weight": 200, "max_op": 200}
+     ]},
+    {"room_id": "R_PREPARATION", "name_ko": "공정준비실", "name_en": "Preparation", "cat": "process", "grade": "C", "area_m2": 80.0, "DP": 30, "ACPH": 30, "color": "yellow",
+     "equipment": [
+       {"instance_id": "Autoclave", "name": "Autoclave", "W×D×H(mm)": "3000×2500×3000", "weight": 2000, "max_op": 2000},
+       {"instance_id": "Cleanbooth", "name": "Cleanbooth", "W×D×H(mm)": "3000×2500×3000", "weight": 500, "max_op": 600}
+     ]},
+    {"room_id": "R_WASHING", "name_ko": "세척실", "name_en": "Washing", "cat": "process", "grade": "D", "area_m2": 60.0, "DP": 15, "ACPH": 20, "color": "Blue",
+     "equipment": [
+       {"instance_id": "COP system", "name": "COP system", "W×D×H(mm)": "3000×2500×3000", "weight": 1500, "max_op": 1500}
+     ]},
+    {"room_id": "R_DS_STORAGE", "name_ko": "DS 보관실", "name_en": "DS storage", "cat": "auxiliary", "grade": "D", "area_m2": 50.0, "DP": 15, "ACPH": 20, "color": "Blue",
+     "equipment": [
+       {"instance_id": "Deep freezer 1", "name": "Deep freezer 1", "W×D×H(mm)": "1200×1000×2000", "weight": 200, "max_op": 250},
+       {"instance_id": "Deep freezer 2", "name": "Deep freezer 2", "W×D×H(mm)": "1200×1000×2000", "weight": 200, "max_op": 250},
+       {"instance_id": "Deep freezer 3", "name": "Deep freezer 3", "W×D×H(mm)": "1200×1000×2000", "weight": 200, "max_op": 250},
+       {"instance_id": "Deep freezer 4", "name": "Deep freezer 4", "W×D×H(mm)": "1200×1000×2000", "weight": 200, "max_op": 250}
+     ]},
+    {"room_id": "R_IPC", "name_ko": "IPC 실", "name_en": "IPC", "cat": "auxiliary", "grade": "D", "area_m2": 30.0, "DP": 15, "ACPH": 20, "color": "Blue",
+     "equipment": [
+       {"instance_id": "Deep freezer", "name": "Deep freezer", "W×D×H(mm)": "900×1000×2000", "weight": 150, "max_op": 200},
+       {"instance_id": "Freezer", "name": "Freezer", "W×D×H(mm)": "900×1000×2000", "weight": 150, "max_op": 200},
+       {"instance_id": "Refrigeator", "name": "Refrigeator", "W×D×H(mm)": "900×1000×2000", "weight": 150, "max_op": 200}
+     ]},
+    {"room_id": "R_CELL_BANK_STORAGE", "name_ko": "세포주 보관실", "name_en": "Cell bank storage", "cat": "auxiliary", "grade": "D", "area_m2": 20.0, "DP": 15, "ACPH": 20, "color": "Blue",
+     "equipment": [
+       {"instance_id": "Cell tank (nitrogen) 1", "name": "Cell tank (nitrogen) 1", "W×D×H(mm)": "1000×1000×1500", "weight": 200, "max_op": 200},
+       {"instance_id": "Cell tank (nitrogen) 2", "name": "Cell tank (nitrogen) 2", "W×D×H(mm)": "1000×1000×1500", "weight": 200, "max_op": 200}
+     ]},
+    {"room_id": "R_CIP_SUPPLY", "name_ko": "CIP 공급실", "name_en": "CIP supply", "cat": "auxiliary", "grade": "NC", "area_m2": 60.0, "DP": 0, "color": "Gray",
+     "equipment": [
+       {"instance_id": "CIP station", "name": "CIP station", "W×D×H(mm)": "5000×2000×4000", "weight": 2000, "max_op": 4000}
+     ]}
+  ],
+  "airlocks": [],
+  "adjacency": [],
+  "flow_paths": {
+    "personnel_entry": ["R_LOBBY", "R_GOWNING", "R_SUPPLY_CORRIDOR", "R_MEDIA_PREPARATION"],
+    "personnel_exit": ["R_PURIFICATION_2", "R_RETURN_CORRIDOR", "R_GOWNING", "R_LOBBY"],
+    "material_entry": ["ELEVATOR_MATERIAL_IN", "R_MATEIAL_IN", "R_SUPPLY_CORRIDOR", "R_MEDIA_PREPARATION"],
+    "waste_exit": ["R_PURIFICATION_2", "R_RETURN_CORRIDOR", "R_WASTE_OUT", "ELEVATOR_WASTE_OUT"],
+    "product_process_order": ["R_MEDIA_PREPARATION", "R_BUFFER_PREPARATION", "R_INOCULATION", "R_CELL_CULTURE", "R_HARVEST", "R_PURIFICATION_1", "R_PURIFICATION_2"]
+  },
+  "zones": {"process_zone": [], "auxiliary_zone": [], "nc_zone": []},
+  "constraints": {
+    "corridor_width_mm": {"min": 1500, "preferred_min": 2000, "max": 3000},
+    "process_zone_area_ratio": {"min": 0.4, "max": 0.7}
+  },
+  "rationale": []
+}

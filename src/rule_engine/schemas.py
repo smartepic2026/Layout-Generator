@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
 # ============================================================================
@@ -119,10 +119,16 @@ class EquipmentNeeds(StrictModel):
 
 
 class Equipment(StrictModel):
-    """장비 스펙. 기존 필드는 그대로 두고, SPEC v0.1 §1.1 + PATCH v0.2 §1·§6 확장 필드를
-    모두 Optional 로 추가. 1차/2차 분리 기준은 PATCH §6.2.
+    """장비 스펙. SPEC v0.1 §1.1 + PATCH v0.2 §1·§6 확장 필드를 모두 Optional 로 유지.
 
-    [PATCH §1 #1] sort_order: 공정 순서 정렬용 정수. process_step(문자열)은 라벨로 유지.
+    [D-005] `process_no` 가 정식 필드명 (팀원 정식 계약). 이전 `process_step`
+    명칭은 폐기. Pydantic alias 로 back-compat:
+      - JSON {"process_step": ...} 입력도 process_no 로 매핑 (validation_alias).
+      - 기존 rule_engine 코드가 `Equipment(process_step="X")` 식 kwarg 으로
+        생성하거나 `eq.process_step` 으로 읽는 경우는 본 schema 가 직접 보장
+        하지 않음 (팀원 영역 무수정 정책). 깨지면 알려야 함.
+
+    [PATCH §1 #1] sort_order: 공정 순서 정렬용 정수. process_no(문자열)는 라벨.
     """
     name: str
     W_mm: int
@@ -130,8 +136,19 @@ class Equipment(StrictModel):
     H_mm: int
     weight_kg: float = 0
     max_op_weight_kg: float = 0
-    process_step: Optional[str] = None
+    # D-005: process_no 정식. process_step (구명) 도 JSON/kwarg 입력 양쪽 허용 (back-compat).
+    process_no: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("process_no", "process_step"),
+    )
     footprint_m2: float = 0  # computed: W*D / 1e6
+
+    # D-006: rule_engine 코드 (rule_10_equipment.py:44 등) 가 `eq.process_step`
+    # 으로 Python 속성 접근. 팀원 영역 무수정 정책상 schema 가 back-compat 제공.
+    # 새 코드는 직접 `process_no` 사용.
+    @property
+    def process_step(self) -> Optional[str]:
+        return self.process_no
 
     # ── PATCH §1 충돌 결정 ──
     sort_order: Optional[int] = None  # 공정 순서 정수 (P1 단조성 계산용)
@@ -144,6 +161,10 @@ class Equipment(StrictModel):
     utilities: list[str] = Field(default_factory=list)
     connects_to: list[str] = Field(default_factory=list)
     incompatible_with: list[str] = Field(default_factory=list)
+
+    # D-007: 같은 방 안 병렬 그룹 — same-room 장비를 같은 sort_order 군집으로
+    # 묶는 라벨. tier3 가 product_process_order 기반으로 채움.
+    co_locate_group: Optional[str] = None
 
     # ── 2차 보류 필드 (PATCH §6.2 — 도메인 검수자 부재로 null 유지) ──
     # P3·P5·P8 scoring에서 null이면 skip되도록 scorer가 가드함.

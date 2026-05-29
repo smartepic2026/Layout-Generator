@@ -139,12 +139,11 @@ def _adapt_equipment(eq: dict) -> dict:
     if "max_op" in eq and "max_op_weight_kg" not in eq:
         eq["max_op_weight_kg"] = eq["max_op"]
 
-    # 3) process_no → process_step (팀원이 process_no 키 쓰는 경우 — 가능성).
-    #    process_step 키가 이미 있으면 그쪽 우선.
-    if "process_no" in eq and "process_step" not in eq:
-        eq["process_step"] = eq["process_no"]
+    # D-005: process_no 가 정식 필드명 (팀원 정식 계약). 별도 alias 변환 불필요.
+    #   - schemas.Equipment.process_no 가 validation_alias 로 "process_step" 도 받음 → 구 JSON 호환은 schema 가 처리.
+    #   - A1.5 에서 깔았던 process_no → process_step alias 는 D-005 에서 제거됨.
 
-    # 4) name trailing space strip
+    # name trailing space strip
     if "name" in eq:
         eq["name"] = _strip_name(eq["name"])
 

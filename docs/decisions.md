@@ -176,3 +176,101 @@ graceful 처리.
 **한계**: S5~S8 (조용히 빈 값 먹는 곳) 은 미수정. flow_separation_quality
 가 "R_RETURN_CORRIDOR" 같은 hard-coded id 를 가정하는 등 다른 silent
 경로 존재. Phase B (P-series 수식) 에서 일괄 정리 예정.
+
+---
+
+## D-005: `process_step` → `process_no` 통일 (필드명 + Pydantic alias)
+
+**날짜**: 2026-05-29
+
+**무엇**: `Equipment.process_step` (Optional[str]) 을 `Equipment.process_no` 로
+rename. JSON 입력은 Pydantic `validation_alias=AliasChoices("process_no",
+"process_step")` 로 양 이름 모두 허용 (back-compat). drawing_agent 코드
+(tier3_derive 등) 는 모두 `eq.process_no` 사용.
+
+**왜**:
+- 팀원이 정식 필드명을 `process_no` 로 확정 ("이름 안 바꾸기로 함"). 우리
+  내부도 같은 이름을 1급으로 두어 계약 정렬.
+- A1.5 에서 깔았던 `process_no → process_step` alias 는 의미가 반대 방향
+  이 되어 제거.
+
+**근거**:
+- 팀원 출력 `RuleEngine_Output_for_DocAgent.md` §1.1 / §7 — 정식 명칭 확인.
+- D-003 anti-corruption layer 원칙: 외부 계약명을 내부도 채택해 변환 폭 최소화.
+
+**한계**:
+- 본 결정만으로는 `rule_engine/` 코드가 `eq.process_step` (속성 접근) 으로
+  읽는 부분이 AttributeError. → D-006 으로 해결.
+
+---
+
+## D-006: rule_engine 무수정 호환을 위한 `process_step` @property
+
+**날짜**: 2026-05-29
+
+**무엇**: `Equipment` 에 `@property process_step` 추가. `self.process_no` 를
+그대로 반환하는 read-only alias. JSON 출력에는 영향 없음.
+
+**왜**:
+- D-005 rename 직후 15건 테스트가 `rule_10_equipment.py:44` 의
+  `e.process_step or "ZZZ"` 에서 AttributeError 로 깨짐. CLAUDE.md 의
+  "src/rule_engine/ 수정 금지" 원칙으로 rule_engine 코드를 못 고침.
+- @property 한 줄로 rule_engine 측 모든 read 액세스 회복. 새 코드는
+  `process_no` 직접 사용.
+- `Equipment(process_step="X")` kwarg 호출(예: rule_03_size.py:113) 도
+  validation_alias 가 처리 → 별도 처리 불필요.
+
+**근거**:
+- Pydantic v2: `@property` 는 모델 클래스에 정의 가능 — 필드명과 충돌
+  없으면 정상 동작.
+- 47→47 passed: 모든 회귀 회복 확인.
+
+**한계**:
+- Deprecated alias 이므로 신규 코드에서 `process_step` 쓰지 말 것.
+  팀원이 rule_engine 갱신 (process_step → process_no) 후 이 property 제거.
+
+---
+
+## D-007: `product_process_order` 기반 sort_order derive + `co_locate_group`
+
+**날짜**: 2026-05-29
+
+**무엇**:
+1. `Equipment.co_locate_group: Optional[str]` 필드 신설. 같은 방 안 장비를
+   동일 그룹 라벨 (`"GRP_{rank:02d}_{room_id}"`) 로 묶음. CP-SAT 의 group
+   constraint / cluster 입력.
+2. tier3 sort_order derive 전략 D-007 로 교체:
+    A) tier1 우선 (rule_engine 출력에 sort_order 있으면)
+    B) `eq.process_no` 정규식 파싱 ("P1-2" → 12)
+    C) `flow_paths.product_process_order` 기반 — `room_rank * 100 + idx + 1`
+    D) PPO 밖 보조 방도 `next_rank` 부여해 65/65 모두 채움
+3. 두 함수 공통 rank 소스 `_full_room_rank()` 분리 — sort_order /
+   co_locate_group 일관성 보장.
+
+**왜**:
+- **팀원 출력 진단 결과** (D-003 의 다음 단계): `process_no` 가 출력
+  JSON 에 컬럼으로 들어오지 않음 (마크다운 §1.1 컬럼 부재, §7 rationale
+  에서만 단어 언급). 65 장비 전부 `process_no = None` → tier3 sort_order
+  silent 0 건.
+- 팀원 출력 §4 `product_process_order` 는 명시된 공정순서 — 가장 신뢰
+  가능한 1차 신호.
+- `co_locate_group` 은 같은 방 안 병렬 공정 (예: 5개 Mixing Tank 가 1개의
+  Media Preparation 안에 있음) 을 CP-SAT 가 "한 클러스터로 배치" 제약으로
+  쓰게 함. ISPE §7.9 "process group adjacency".
+
+**근거**:
+- 팀원 출력 `RuleEngine_Output_for_DocAgent.md` §1.1: 65 장비, process_no
+  값 없음 확인.
+- 동 §4: `product_process_order` 7개 방 명시 (MEDIA_PREP → ... → PURIF_2).
+- tests/fixtures/teammate_output_sample.json (65 장비) 으로 검증:
+  - sort_order: 65/65 채움 (PPO 7 방 × 1~21 장비 + 보조 6 방 × 1~4 장비)
+  - co_locate_group: 65/65 채움, 13 그룹, 같은 방 동일 라벨, `^GRP_\d{2}_R_` 형식
+  - 단조 증가, 중복 없음
+  - tier1 우선 확인: process_no="P9-9" 주입 시 sort_order=99 (PPO rank 무시)
+
+**한계**:
+- 보조 방 rank (8~13) 의 등장 순서는 `spec.rooms` 의 정의 순서에 의존. PPO
+  뒤 정렬 의미는 도메인적으로 약함 (CP-SAT 가 이 차원으로 최적화하지 않게
+  Phase B P1 수식 설계 시 가중치 0 또는 mask 처리 예정).
+- cross-room link 는 여전히 미구현. Phase B 의 P2 수식 만들 때 검증과
+  함께 tier4 manual_stub 으로 채움.

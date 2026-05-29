@@ -72,6 +72,18 @@ Phase D  평가 + 산출물
 - process_no 매핑 — alias 만 깔아둠. 팀원 키 확정되면 정리
 - AL 이중표현 (rooms[] + airlocks[]) — 처리방식 결정 후
 
+### 2026-05-29 — Phase A1.6 (D-005 / D-006 / D-007) [완료]
+- 팀원 출력 추가 진단: process_no 가 JSON 컬럼에 미존재 (마크다운 §1.1) → tier3 sort_order silent 0 위험
+- **D-005** `Equipment.process_step` → `process_no` rename + Pydantic `validation_alias=AliasChoices("process_no","process_step")` JSON 입력 양방향 호환
+- **D-006** `Equipment.process_step` @property (read-only) — rule_engine 무수정 호환 (`rule_10_equipment.py:44` 의 속성 접근 회복). 15건 회귀 → 0
+- **D-007** sort_order derive 전략 교체:
+  - `Equipment.co_locate_group: Optional[str]` 신규 (같은 방 안 병렬 그룹 라벨)
+  - tier3 우선순위 A→D: tier1 > process_no 파싱 > PPO rank 기반 > PPO 밖 보조방 rank 부여
+  - `_full_room_rank()` 공통 헬퍼 (sort_order / co_locate_group 일관)
+- **fixture**: `tests/fixtures/teammate_output_sample.json` (팀원 마크다운 65 장비 재구성)
+- **검증**: sort_order 65/65, co_locate_group 65/65, 13 그룹, 단조 증가, tier1 우선 동작
+- 테스트 9건 신규 (전체 56 passed, 1 skipped)
+
 ### 다음 — Phase B1 진입 대기
 - B1: P-series 수식 (P1·P2·P6·P7)
 - 사용자 검토 → OK 받으면 시작

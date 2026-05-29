@@ -58,14 +58,14 @@ def test_enrich_fills_bbox_m_for_all(baseline_spec):
             assert len(eq.bbox_m) == 2
 
 
-def test_enrich_fills_sort_order_when_process_step_exists(baseline_spec):
-    """sort_order 는 process_step 있는 장비만 채워짐."""
+def test_enrich_fills_sort_order_when_process_no_exists(baseline_spec):
+    """sort_order 는 process_no 있는 장비만 채워짐 (D-005: process_step → process_no)."""
     enrich_spec(baseline_spec)
     for r in baseline_spec.rooms:
         for eq in r.equipment:
-            if eq.process_step:
+            if eq.process_no:
                 assert eq.sort_order is not None and eq.sort_order > 0
-            # process_step 없는 장비(autoclave 등)는 None 유지 — OK
+            # process_no 없는 장비(autoclave 등)는 None 유지 — OK
 
 
 def test_enrich_connects_to_same_room_chain(baseline_spec):
@@ -165,9 +165,17 @@ def test_adapt_equipment_combined_wxdxh():
     assert eq["weight_kg"] == 500 and eq["max_op_weight_kg"] == 600
 
 
-def test_adapt_equipment_process_no_alias():
-    eq = _adapt_equipment({"name": "X", "process_no": "P1-2"})
-    assert eq["process_step"] == "P1-2"
+def test_adapt_equipment_legacy_process_step_via_pydantic_alias(tmp_path):
+    """D-005: tier1 의 process_no→process_step 코드 alias 는 제거됨.
+    구 JSON 의 'process_step' 키는 Pydantic validation_alias 로 process_no
+    에 직접 매핑된다 (schemas.Equipment).
+    """
+    from src.rule_engine.schemas import Equipment
+    eq = Equipment.model_validate({
+        "name": "X", "W_mm": 1, "D_mm": 1, "H_mm": 1,
+        "process_step": "P1-2",   # 구 JSON 키
+    })
+    assert eq.process_no == "P1-2"
 
 
 def test_adapt_equipment_name_strip():
@@ -301,3 +309,120 @@ def test_pressure_cascade_smoothness_returns_none_when_all_dp_zero():
         "rationale": [],
     })
     assert _pressure_cascade_smoothness(spec, layout=None) is None
+
+
+# ══════════════════════════════════════════════════════════════════════
+# D-007: product_process_order 기반 sort_order + co_locate_group derive
+# 팀원 실제 출력 (65 장비) fixture 로 검증
+# ══════════════════════════════════════════════════════════════════════
+@pytest.fixture
+def teammate_spec():
+    from src.drawing_agent.data import load_external_spec
+    path = Path("tests/fixtures/teammate_output_sample.json")
+    if not path.exists():
+        pytest.skip("teammate_output_sample.json missing")
+    return load_external_spec(path.read_text())
+
+
+def test_d007_teammate_fixture_has_65_equipment(teammate_spec):
+    total = sum(len(r.equipment) for r in teammate_spec.rooms)
+    assert total == 65, f"기대 65, 실제 {total}"
+
+
+def test_d007_all_equipment_gets_sort_order(teammate_spec):
+    """D-007: 65 장비 전부 sort_order 채워져야. PPO 안/밖 방 모두 포함."""
+    enrich_spec(teammate_spec)
+    no_so = [
+        f"{r.id}/{eq.name}"
+        for r in teammate_spec.rooms for eq in r.equipment
+        if eq.sort_order is None
+    ]
+    assert not no_so, f"sort_order 미채움 {len(no_so)} 건: {no_so[:5]}"
+
+
+def test_d007_ppo_rooms_get_rank_1_to_7(teammate_spec):
+    """PPO 방의 sort_order 가 rank*100+i 형식 (rank 1~7)."""
+    enrich_spec(teammate_spec)
+    ppo = teammate_spec.flow_paths.product_process_order
+    rooms_by_id = {r.id: r for r in teammate_spec.rooms}
+    for rank, rid in enumerate(ppo, start=1):
+        r = rooms_by_id.get(rid)
+        if not r or not r.equipment:
+            continue
+        for idx, eq in enumerate(r.equipment):
+            assert eq.sort_order == rank * 100 + idx + 1, (
+                f"{r.id} eq[{idx}] sort_order={eq.sort_order}, 기대 {rank*100+idx+1}"
+            )
+
+
+def test_d007_non_ppo_rooms_get_rank_after_ppo(teammate_spec):
+    """PPO 밖 보조방은 rank > 7 받아야."""
+    enrich_spec(teammate_spec)
+    ppo_ids = set(teammate_spec.flow_paths.product_process_order)
+    for r in teammate_spec.rooms:
+        if r.id in ppo_ids or not r.equipment:
+            continue
+        for eq in r.equipment:
+            assert eq.sort_order is not None
+            assert eq.sort_order // 100 >= 8, (
+                f"{r.id} (PPO 밖 보조방) sort_order={eq.sort_order} — rank<8 부적절"
+            )
+
+
+def test_d007_sort_order_within_room_monotonic(teammate_spec):
+    """같은 방 내 sort_order 단조 증가 + 중복 없음."""
+    enrich_spec(teammate_spec)
+    for r in teammate_spec.rooms:
+        sos = [eq.sort_order for eq in r.equipment if eq.sort_order is not None]
+        assert sos == sorted(sos), f"{r.id} sort_order 정렬 깨짐: {sos}"
+        assert len(set(sos)) == len(sos), f"{r.id} sort_order 중복: {sos}"
+
+
+def test_d007_co_locate_group_all_equipment(teammate_spec):
+    """co_locate_group 65/65."""
+    enrich_spec(teammate_spec)
+    no_cg = [
+        f"{r.id}/{eq.name}"
+        for r in teammate_spec.rooms for eq in r.equipment
+        if eq.co_locate_group is None
+    ]
+    assert not no_cg, f"co_locate_group 미채움 {len(no_cg)}건"
+
+
+def test_d007_co_locate_group_same_room_same_label(teammate_spec):
+    """같은 방 안 장비는 모두 같은 group label."""
+    enrich_spec(teammate_spec)
+    for r in teammate_spec.rooms:
+        labels = {eq.co_locate_group for eq in r.equipment}
+        if r.equipment:
+            assert len(labels) == 1, (
+                f"{r.id} co_locate_group 라벨이 같은 방에서 갈림: {labels}"
+            )
+
+
+def test_d007_co_locate_group_format(teammate_spec):
+    """라벨 형식: 'GRP_{rank:02d}_{room_id}'."""
+    enrich_spec(teammate_spec)
+    import re
+    pat = re.compile(r"^GRP_\d{2}_R_")
+    for r in teammate_spec.rooms:
+        for eq in r.equipment:
+            assert pat.match(eq.co_locate_group), eq.co_locate_group
+
+
+def test_d007_tier1_wins_when_process_no_filled():
+    """팀원이 향후 process_no 채워주면 tier3 PPO 대신 process_no 파싱 우선."""
+    from src.drawing_agent.data import load_external_spec
+    import json, copy
+    path = Path("tests/fixtures/teammate_output_sample.json")
+    if not path.exists():
+        pytest.skip("fixture missing")
+    raw = json.loads(path.read_text())
+    # MEDIA_PREPARATION 첫 장비에 process_no 주입
+    raw["rooms"][0]["equipment"][0]["process_no"] = "P9-9"  # PPO 와 충돌하는 값
+    spec = load_external_spec(json.dumps(raw))
+    enrich_spec(spec)
+    # process_no="P9-9" → parse_sort_order → 99
+    assert spec.rooms[0].equipment[0].sort_order == 99, (
+        f"기대 99 (P9-9 파싱), 실제 {spec.rooms[0].equipment[0].sort_order}"
+    )
