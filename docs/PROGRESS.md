@@ -85,5 +85,21 @@ Phase D  평가 + 산출물
 - 테스트 9건 신규 (전체 56 passed, 1 skipped)
 
 ### 다음 — Phase B1 진입 대기
-- B1: P-series 수식 (P1·P2·P6·P7)
-- 사용자 검토 → OK 받으면 시작
+
+**다음 세션 첫 액션 (cold start guide)**:
+1. 사용자에게 "Phase A1.6 보고서를 다시 보여드리고 OK 인지 확인" 부터.
+   (Phase A1.6 마지막 커밋 `8c2f249`. 56 passed, 1 skipped, working tree clean.)
+2. OK 받으면 Phase B1 = **P-series 수식 구현** 진입.
+   - active: P1 flow_monotonicity, P2 adjacency, P6 cleaning_access, P7 compactness
+   - deferred: P3, P5, P8 (CLAUDE.md epistemic honesty 원칙 유지)
+   - 입력 데이터는 이미 Phase A1.6 에서 준비됨:
+     · `eq.sort_order` (PPO 기반, 65/65 채움)
+     · `eq.co_locate_group` (같은 방 그룹, 65/65)
+     · `eq.bbox_m`, `eq.connects_to` (same-room chain)
+   - 시작 지점: `src/reward/scorer.py` 의 `score_spec_p_series()` 골격
+     (Phase A1 에서 만들어둠, 모든 P_* 현재 None 반환)
+3. B1 의 첫 commit 단위: P7 (compactness — bbox_m 만 필요해서 가장 단순) 먼저
+   완성 → 그 다음 P1 (sort_order + layout 좌표 사용) → 그 다음 P2/P6.
+4. B1 끝나면 Phase B2 (strip-band 점수 측정 → output/baselines.json) → B3 (golden fixture).
+
+**대기 중 사용자 결정 없음** — CLAUDE.md 에 active/deferred 정해져 있어 즉시 진행 가능.
