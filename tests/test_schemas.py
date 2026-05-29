@@ -69,18 +69,22 @@ def test_output_roundtrip_json():
     assert back.rationale[0].rule_id == "rule_4_clean_grade"
 
 
-def test_room_strict_extra_forbidden():
-    """Extra fields should be rejected (extra='forbid')."""
-    import pytest
-    from pydantic import ValidationError
+def test_room_extra_field_ignored():
+    """Extra fields should be silently ignored (extra='ignore' per D-003).
 
-    with pytest.raises(ValidationError):
-        Room(
-            id="R_TEST",
-            name_ko="t",
-            name_en="t",
-            category="process",
-            clean_grade="C",
-            area_m2=10,
-            UNKNOWN_FIELD=42,  # type: ignore
-        )
+    이전엔 extra='forbid' 였으나 anti-corruption layer (tier1_ruleengine)
+    채택 후 ignore 로 완화. 팀원 출력 (rule_engine) 이 우리가 모르는 필드
+    (meta, instance_id, severity 등) 를 가져도 깨지지 않도록.
+    """
+    room = Room(
+        id="R_TEST",
+        name_ko="t",
+        name_en="t",
+        category="process",
+        clean_grade="C",
+        area_m2=10,
+        UNKNOWN_FIELD=42,  # type: ignore
+    )
+    # 모르는 필드는 silently drop 되고, 알려진 필드는 정상 보존
+    assert room.id == "R_TEST"
+    assert not hasattr(room, "UNKNOWN_FIELD")

@@ -73,37 +73,29 @@ def score(spec: RuleEngineOutput, layout: Optional[Layout] = None) -> ScoreRepor
     total = 100.0 + breakdown["hard_penalty"] + breakdown["soft_penalty"]
 
     # ── Geometric quality (layout이 있을 때만) ──
+    # 일부 항목은 측정 불가(None)일 수 있음 — silent default 대신 명시적 skip.
     if layout is not None:
-        flow_sep = _flow_separation_quality(spec, layout)
-        pres_smooth = _pressure_cascade_smoothness(spec, layout)
-        corr_eff = _corridor_efficiency(layout)
-        eq_margin = _equipment_margin_quality(layout)
-        area_fit = _area_ratio_fit(spec)
-        aesthetics = _aesthetic_score(layout)
-
-        breakdown["flow_separation"] = W_FLOW_SEPARATION * flow_sep
-        breakdown["pressure_smoothness"] = W_PRESSURE_SMOOTH * pres_smooth
-        breakdown["corridor_efficiency"] = W_CORRIDOR_EFFICIENCY * corr_eff
-        breakdown["equipment_margin"] = W_EQUIPMENT_MARGIN * eq_margin
-        breakdown["area_ratio_fit"] = W_AREA_RATIO_FIT * area_fit
-        breakdown["aesthetics"] = W_AESTHETICS * aesthetics
-
-        total += sum(
-            [
-                breakdown["flow_separation"],
-                breakdown["pressure_smoothness"],
-                breakdown["corridor_efficiency"],
-                breakdown["equipment_margin"],
-                breakdown["area_ratio_fit"],
-                breakdown["aesthetics"],
-            ]
-        )
+        items = [
+            ("flow_separation",     W_FLOW_SEPARATION,      _flow_separation_quality(spec, layout)),
+            ("pressure_smoothness", W_PRESSURE_SMOOTH,      _pressure_cascade_smoothness(spec, layout)),
+            ("corridor_efficiency", W_CORRIDOR_EFFICIENCY,  _corridor_efficiency(layout)),
+            ("equipment_margin",    W_EQUIPMENT_MARGIN,     _equipment_margin_quality(layout)),
+            ("area_ratio_fit",      W_AREA_RATIO_FIT,       _area_ratio_fit(spec, layout)),
+            ("aesthetics",          W_AESTHETICS,           _aesthetic_score(layout)),
+        ]
+        for key, weight, raw in items:
+            if raw is None:
+                breakdown[key] = None  # 측정 불가 — total 에 합산 안 됨
+            else:
+                contrib = weight * raw
+                breakdown[key] = contrib
+                total += contrib
 
     return ScoreReport(
         total=round(total, 2),
         hard_violations=hard,
         soft_violations=soft,
-        breakdown={k: round(v, 2) for k, v in breakdown.items()},
+        breakdown={k: (None if v is None else round(v, 2)) for k, v in breakdown.items()},
     )
 
 
@@ -145,10 +137,20 @@ def _flow_separation_quality(spec: RuleEngineOutput, layout: Layout) -> float:
     return min(score, 1.0)
 
 
-def _pressure_cascade_smoothness(spec: RuleEngineOutput, layout: Layout) -> float:
-    """인접 Room 간 차압 차이의 표준편차 → 작을수록 좋음. 1 - normalized_std."""
-    diffs = []
+def _pressure_cascade_smoothness(
+    spec: RuleEngineOutput, layout: Layout
+) -> Optional[float]:
+    """인접 Room 간 차압 차이의 표준편차 → 작을수록 좋음.
+
+    S4 수정 (silent good-score 차단): 모든 Room.DP=0 (스키마 default 로 들어온
+    채로 변경 없음) 인 경우 "측정 불가"로 None 반환. 이전 동작은 std=0 → 1.0
+    만점이라 망가진 도면도 통과했음.
+    """
     rooms_by_id = {r.id: r for r in spec.rooms}
+    # 측정 가능 조건 1: 어느 한 방이라도 의미있는 DP 가 있어야 함
+    if not any(r.differential_pressure_Pa for r in spec.rooms):
+        return None  # 측정 불가 — 모든 DP=0 (스키마 default 인 채)
+    diffs = []
     for adj in spec.adjacency:
         a = rooms_by_id.get(adj.from_id)
         b = rooms_by_id.get(adj.to_id)
@@ -157,7 +159,7 @@ def _pressure_cascade_smoothness(spec: RuleEngineOutput, layout: Layout) -> floa
         if a.clean_grade != b.clean_grade:
             diffs.append(abs(a.differential_pressure_Pa - b.differential_pressure_Pa))
     if not diffs:
-        return 0.8
+        return None  # 측정 가능한 등급 경계 쌍이 없음
     mean = sum(diffs) / len(diffs)
     var = sum((d - mean) ** 2 for d in diffs) / len(diffs)
     std = var ** 0.5
@@ -196,10 +198,41 @@ def _equipment_margin_quality(layout: Layout) -> float:
     return ok / total if total else 0.7
 
 
-def _area_ratio_fit(spec: RuleEngineOutput) -> float:
-    """주공정 비율이 50% 근처에 있을수록 좋음."""
-    r = spec.constraints.process_zone_area_ratio
-    cur = r.get("current", 0.5)
+def _area_ratio_fit(
+    spec: RuleEngineOutput, layout: Optional[Layout] = None
+) -> Optional[float]:
+    """주공정 비율이 50% 근처에 있을수록 좋음.
+
+    S1 수정 (silent default 차단): 이전엔 `constraints.process_zone_area_ratio
+    .get("current", 0.5)` 라 팀원 출력에 'current' 키 없으면 silent 0.5
+    default → 모든 도면이 동일 점수. 이제 우선순위:
+      1. layout 으로부터 process_zone 면적 비율 실측 계산
+      2. constraints 의 'current' 키 (rule_engine 이 명시적으로 채운 경우)
+      3. 어느 쪽도 없으면 None (측정 불가)
+    """
+    cur: Optional[float] = None
+
+    # 1) layout 실측 (가장 신뢰도 높음)
+    if layout is not None:
+        proc_area = 0.0
+        total_area = 0.0
+        for pr in layout.rooms.values():
+            a = pr.rect.w * pr.rect.h  # mm² 비율이라 단위 무관
+            total_area += a
+            if pr.room.category == "process":
+                proc_area += a
+        if total_area > 0:
+            cur = proc_area / total_area
+
+    # 2) constraints 의 명시적 'current' (rule_engine 이 채운 경우만)
+    if cur is None:
+        r = spec.constraints.process_zone_area_ratio
+        if "current" in r:
+            cur = r["current"]
+
+    if cur is None:
+        return None  # 측정 불가
+
     # 50% 근처에서 최대치, 40% 또는 70%에서 0
     delta = abs(cur - 0.55)
     return max(0.0, 1.0 - delta / 0.15)

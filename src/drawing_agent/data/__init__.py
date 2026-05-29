@@ -19,5 +19,16 @@ from src.drawing_agent.data.adapter import (
     SourceTracker,
     enrich_spec,
 )
+from src.drawing_agent.data.tier1_ruleengine import (
+    adapt_external_dict,
+    load_external_spec,
+    parse_dimensions,
+)
 
-__all__ = ["enrich_spec", "SourceTracker"]
+__all__ = [
+    "enrich_spec",
+    "SourceTracker",
+    "load_external_spec",
+    "adapt_external_dict",
+    "parse_dimensions",
+]

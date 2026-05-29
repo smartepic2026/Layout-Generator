@@ -86,3 +86,93 @@ tier_name` 으로 기록.
 **검증**: tests/test_data_adapter.py 10건 통과. baseline spec (66
 장비) 에서 sort_order 53건 (process_step 있는 장비만), bbox_m 66건,
 same-room connects_to chain 다수 생성 확인.
+
+---
+
+## D-003: Anti-corruption layer (tier1_ruleengine 변환 레이어)
+
+**날짜**: 2026-05-29
+
+**무엇**: 팀원의 외부 JSON 계약(RuleEngineOutput JSON)을 우리 내부 Pydantic
+모델(`schemas.py`)로 변환하는 어댑터 레이어를 `tier1_ruleengine.py` 안에
+도입. schema 자체는 팀원 필드명을 받지 않고, 변환 레이어가 필드명·치수
+형식·이름 trailing space 등을 일괄 정규화한 뒤에 schema 에 전달.
+
+**핵심 변경**:
+1. `schemas.py` `extra="forbid"` → `"ignore"`. 우리가 모르는 필드(`meta`,
+   `instance_id`, `severity`, `note`, `elevator`, `flow` 등)는 silently
+   drop. 이전엔 ValidationError 로 전건 거부.
+2. `tier1_ruleengine.py` 의 `adapt_external_dict()` / `load_external_spec()`:
+   필드명 매핑 + WxDxH 합쳐진 문자열 파싱(콤마 "2,000" 처리) + trailing
+   space strip + process_no→process_step alias + swing(descriptor)→notes
+   보존 + rationale severity+note→decision+reason 합성.
+
+**왜** (CLAUDE.md 4대 원칙 기준):
+1. **성능 / 견고함**: 팀원 출력 한 글자 바뀌면 도면 0건 생성되는 fragile
+   결합 차단. 변환 레이어 한 곳만 고쳐서 흡수.
+2. **실무 수준**: 더러운 실데이터 처리 — 콤마 들어간 치수, trailing
+   space, 외부 계약 변동성을 모두 변환 레이어에서 정상화. 시연용
+   장난감과 분리되는 지점.
+3. **특허**: "외부 출처 정규화 + 출처 메타데이터 추적 + 다중 fallback"
+   결합 자체가 청구항 후보. D-001(4-tier) + D-003(외부 계약 변환) 결합
+   시 청구항 폭 증가.
+4. **논문 재현성**: 외부 계약 변경이 method 섹션에 흘러들지 않게 격리.
+   실험 재현 시 schema 만 봐도 우리 모델 정의가 자명.
+
+**근거**:
+- 진단 (RuleEngine_Output_for_DocAgent.md vs schemas.py): 36건 mismatch
+  + 4건 silent failure. 위험 1 (Pydantic 전건 거부) + 위험 3 (process_step
+  silent skip) 모두 변환 레이어 + extra=ignore 로 흡수.
+- Domain-Driven Design (E. Evans) anti-corruption layer 패턴 — 외부
+  bounded context 의 변동성을 내부 모델로부터 격리.
+
+**한계 / 이월**:
+- Airlock required 필드 (`connects_higher`/`lower`, `area_m2`) 가 팀원
+  출력에 "—" (NULL) 18건. 변환 레이어로 못 메움 → Optional 화는 팀원
+  JSON 실물 확인 후 결정.
+- `process_no` alias 는 깔아뒀지만 팀원의 실제 키 이름은 미확인. 마크다운
+  §1.1 컬럼에 안 보이고 §7 rationale 에서만 언급.
+- AL 이중 표현 (팀원이 PAL_in 등을 rooms[] 와 airlocks[] 양쪽에 둠) 처리
+  미정. zone 카운트 부풀음 가능.
+
+**검증**:
+- E2E probe: 마크다운 §0-7 구조 그대로 가공한 팀원 JSON → load_external_spec
+  통과 → enrich_spec tier3 통과 → scorer S1/S4 silent default 모두 None
+  반환 확인.
+- 테스트 15건 추가, 전체 47 passed (1 skipped).
+
+---
+
+## D-004: Scorer silent failure 차단 (S1, S4)
+
+**날짜**: 2026-05-29
+
+**무엇**: scorer 의 두 함수가 입력 데이터 부재 시 "측정 불가" 대신
+silent default 값을 반환하던 버그를 명시적 None 반환으로 교체.
+
+- **S1 `_area_ratio_fit`**: 이전엔 `process_zone_area_ratio.get("current",
+  0.5)`. 팀원 출력에 `current` 키가 없으면 silent 0.5 → 모든 도면이 동일
+  점수. 변경 후: (a) layout 으로부터 실측 → (b) constraints `current` 키 →
+  (c) None.
+- **S4 `_pressure_cascade_smoothness`**: 이전엔 diffs 가 비면 0.8 반환,
+  모든 DP=0 (스키마 default 인 채) 이어도 std=0 → 1.0 만점. 변경 후:
+  모든 DP=0 또는 등급 경계 쌍 없음 → None.
+
+`score()` 본체는 None 항목을 `breakdown[k]=None` + total 미합산으로
+graceful 처리.
+
+**왜**:
+- **epistemic honesty** (CLAUDE.md): "근거가 명확한 제약만 적용하고
+  불확실한 건 confidence 태깅해 분리" — 측정 불가를 0.5/1.0 으로 위장하지
+  않음. P3·P5·P8 보류 정책과 같은 줄기.
+- **CP-SAT cost function 정직성** (Phase C 대비): 솔버가 silent default
+  로 만점 받는 차원을 "최적화 안 해도 됨"으로 학습하면 안 됨. None
+  이어야 그 차원은 cost 에 안 들어가고, 실제 데이터가 채워지면 활성화.
+
+**근거**:
+- 실험: 모든 DP=0 인 spec → 변경 전 score 1.0, 변경 후 None.
+- 진단 보고 S1/S4 항목 (위험도 2급, silent failure).
+
+**한계**: S5~S8 (조용히 빈 값 먹는 곳) 은 미수정. flow_separation_quality
+가 "R_RETURN_CORRIDOR" 같은 hard-coded id 를 가정하는 등 다른 silent
+경로 존재. Phase B (P-series 수식) 에서 일괄 정리 예정.

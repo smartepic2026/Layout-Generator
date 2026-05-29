@@ -49,7 +49,29 @@ Phase D  평가 + 산출물
 - **결과**: baseline 165 필드 채움 (bbox_m=66, connects_to=46, sort_order=53), 모두 tier3_derive source
 - **한계 / 이월**: cross-room connects_to 는 Phase B 에서 P2 수식 만들 때 검증과 함께
 
+### 2026-05-29 — Phase A1.5 (anti-corruption layer + silent-failure 방어) [완료]
+- 팀원 실제 출력 (RuleEngine_Output_for_DocAgent.md) 크로스체크 → 36건 mismatch + 4건 silent failure 발견
+- D-003 anti-corruption layer 채택 — schema 에 팀원 필드명 박지 않음
+- `schemas.py`: `extra="forbid"` → `"ignore"` (모르는 필드 흡수)
+- `tier1_ruleengine.py` 에 변환 레이어 추가:
+  - 필드명 매핑: room_id→id, cat→category, grade→clean_grade, DP→differential_pressure_Pa, ACPH→air_changes_per_hour, color→background_color, 투명%→transparency_pct, al_id→id, kind→type, doors→door_count, door_size→door_size_mm, target_id→target, gowning→gowning_type
+  - WxDxH 합쳐진 문자열 파싱 (콤마 "2,000" 포함)
+  - process_no → process_step alias
+  - trailing space strip (Room/AL/장비 이름)
+  - swing(descriptor) → notes 로 의미 보존
+  - rationale severity+note → decision+reason 합성
+- scorer 자체 버그:
+  - S1: `_area_ratio_fit` — `current` 키 silent 0.5 default → `(layout, current 키, None)` 우선순위로 변경
+  - S4: `_pressure_cascade_smoothness` — 모든 DP=0 일 때 silent 1.0 만점 → None 반환
+  - `score()` 본체가 None 항목을 breakdown=null + total 미합산으로 graceful 처리
+- 테스트 15건 추가 (47 passed, 1 skipped). 전체 회귀 없음
+- decisions.md: D-003 anti-corruption layer 채택 이유 + 근거 기록
+
+### 보류 (팀원 확인 후 처리)
+- Airlock required 필드 (connects_higher/lower, area_m2) Optional 전환 — JSON 실물에 값 있는지 확인 후
+- process_no 매핑 — alias 만 깔아둠. 팀원 키 확정되면 정리
+- AL 이중표현 (rooms[] + airlocks[]) — 처리방식 결정 후
+
 ### 다음 — Phase B1 진입 대기
 - B1: P-series 수식 (P1·P2·P6·P7)
 - 사용자 검토 → OK 받으면 시작
-- B1 전 사용자 결정 필요: 없음 (CLAUDE.md 에 active/deferred 이미 정해짐)

@@ -22,7 +22,11 @@ Modality = Literal["mAb", "vaccine", "ADC", "cell_therapy"]
 
 
 class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+    # extra="ignore" — 모르는 필드는 무시 (D-003 anti-corruption layer 채택).
+    # rule_engine 팀원 출력에 우리가 모르는 필드(meta, instance_id, severity,
+    # note, elevator 등)가 섞여도 깨지지 않음. 필드명 매핑은 tier1_ruleengine
+    # 의 변환 레이어가 따로 담당.
+    model_config = ConfigDict(extra="ignore", validate_assignment=True)
 
 
 # ============================================================================

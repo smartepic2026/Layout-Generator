@@ -200,4 +200,5 @@ python -m src.cli rl-rollout output/best_policy.zip --n 20
 - **[2026-05-29 / 6dfff6c]** 메타를 방 이름 아래 중앙 정렬 + 장비 박스 안쪽 마진 확대.
 - **[2026-05-29 / 92bf501]** 장비 박스 빨강 단색 + 20% 축소 + 자동축소로 전부 배치 (66/66).
 - **[2026-05-29 / fc216ee]** **Phase A1 완료** — 4-tier 데이터 어댑터 (`src/drawing_agent/data/`) + tier3 derive (sort_order/bbox_m/same-room connects_to). 32 passed, 1 skipped. docs/decisions.md D-001·D-002 기록.
-- **[2026-05-29 / (이 커밋)]** CLAUDE.md 기록 규칙 반영 — `docs/PROGRESS.md` 신설, `prompts.md` 에 사용자 주요 방향 M1~M7 누적.
+- **[2026-05-29 / 309bda8]** CLAUDE.md 기록 규칙 반영 — `docs/PROGRESS.md` 신설, `prompts.md` 에 사용자 주요 방향 M1~M7 누적.
+- **[2026-05-29 / (이 커밋)]** **Phase A1.5 — Anti-corruption layer + silent-failure 차단.** 팀원 출력 진단(36건 mismatch + 4건 silent failure) 대응. schemas.py `extra="forbid"`→`"ignore"`, tier1_ruleengine.py 에 필드명 매핑·WxDxH 파싱·trailing space strip·process_no alias·swing→notes 변환 추가. scorer S1(area_ratio_fit current 키 silent default), S4(모든 DP=0 시 silent 1.0 만점) → None 명시 반환. 테스트 15건 추가 (47 passed). D-003, D-004 결정 로그.
