@@ -36,7 +36,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
-from src.rule_engine.schemas import (
+from src.contract.schemas import (
     Adjacency,
     Airlock,
     Equipment,

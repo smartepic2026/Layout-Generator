@@ -28,8 +28,8 @@ from src.drawing_agent.layout_solver import (
 )
 from src.drawing_agent.renderer import render
 from src.reward.scorer import score_spec_p_series
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 @pytest.fixture(scope="module")

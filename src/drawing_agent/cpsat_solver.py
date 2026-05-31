@@ -37,7 +37,7 @@ from src.drawing_agent.constraint_compiler import (
     compile_room_c3a,
 )
 from src.drawing_agent.layout_solver import Layout, PlacedRoom, Rect
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 
 CP_STATUS_NAMES = {

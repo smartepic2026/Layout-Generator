@@ -21,12 +21,12 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from src.drawing_agent.layout_solver import Layout, Rect
-from src.rule_engine.schemas import RuleEngineOutput
-from src.rule_engine.validators import (
+from src.contract.schemas import RuleEngineOutput
+from src.contract.validators import (
     validate_hard_constraints,
     validate_soft_constraints,
 )
-from src.rule_engine.working_state import WorkingState
+from src.contract.working_state import WorkingState
 
 
 @dataclass
@@ -103,7 +103,7 @@ def score(spec: RuleEngineOutput, layout: Optional[Layout] = None) -> ScoreRepor
 # WorkingState 재구축 — validators는 WorkingState를 입력으로 받음
 # ──────────────────────────────────────────────────────────────────────
 def _rebuild_working_state(spec: RuleEngineOutput) -> WorkingState:
-    from src.rule_engine.schemas import URSInput
+    from src.contract.schemas import URSInput
     ws = WorkingState(urs=URSInput(project_name=spec.project_name))
     for r in spec.rooms:
         ws.rooms[r.id] = r

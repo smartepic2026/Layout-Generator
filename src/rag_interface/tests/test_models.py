@@ -18,7 +18,7 @@ _ROOT = Path(__file__).resolve().parents[2]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from rag_interface.models import Chunk, SearchQuery, SearchResult  # noqa: E402
+from src.rag_interface.models import Chunk, SearchQuery, SearchResult  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,77 @@
+URS 파싱: rooms=48, equipment=65
+==============================================================================
+Rule Engine v0.1 — End-to-end Demo Result
+==============================================================================
+
+[Meta]
+  engine_version    : 0.1.0
+  kb_version        : GMP_Layout_Logic_0510.xlsx
+  input_hash        : cba2bc09d96f
+  generated_at      : 2026-05-26T00:49:37.089078+00:00
+
+[Stats — 7 블록 산출]
+  rooms             :  48
+  airlocks          :  18
+  adjacency_edges   :  23
+  rationale_entries : 399
+  flag_counts       : {'info': 4, 'suspected_violation': 20, 'warning': 4}
+
+[Zones]
+  process_zone   (30): ['R_MEDIA_PREPARATION', 'R_BUFFER_PREPARATION', 'R_INOCULATION', 'R_CAL_IN_INOCULATION', 'R_CAL_OUT_INOCULATION'] …
+  auxiliary_zone (12): ['R_MATERIAL_STORAGE', 'R_EQUIPMENT_STORAGE', 'R_DS_STORAGE', 'R_IPC', 'R_CELL_BANK_STORAGE'] …
+  nc_zone        ( 6): ['R_OFFICE', 'R_TOILET_FEMALE', 'R_TOILET_MALE', 'R_LOBBY', 'R_CORRIDOR_VISITOR'] …
+
+[Rooms — derive 결과 샘플 (상위 6개)]
+  Room                   Grade   area    DP  ACPH color                 
+  Media preparation      C        100    30    30 yellow                
+  Buffer preparation     C        200    30    30 yellow                
+  Inoculation            C         40    30    30 yellow                
+  CAL-in Inoculation     C          -    30    30 yellow                
+  CAL-out Inoculation    C          -    30    30 yellow                
+  Cell Culture           C         96    30    30 yellow                
+
+[Airlocks — 상위 5개]
+  AL ID                        kind       grade flow          DP
+  AL_CAL_IN_INOCULATION        CAL_in     C     cascade       25
+  AL_CAL_OUT_INOCULATION       CAL_out    C     cascade       25
+  AL_PAL_IN_CELL_CULTURE       PAL_in     C     cascade       25
+  AL_MAL_IN_CELL_CULTURE       MAL_in     C     cascade       25
+  AL_PAL_OUT_CELL_CULTURE      PAL_out    C     cascade       25
+
+[Flow paths]
+  personnel_entry (4): R_LOBBY → R_GOWNING → R_SUPPLY_CORRIDOR → R_MEDIA_PREPARATION
+  material_entry  (4): ELEVATOR_MATERIAL_IN → R_MATEIAL_IN → R_SUPPLY_CORRIDOR → R_MEDIA_PREPARATION
+  waste_exit      (4): R_PURIFICATION_2 → R_RETURN_CORRIDOR → R_WASTE_OUT → ELEVATOR_WASTE_OUT
+  product_order   (7): R_MEDIA_PREPARATION → R_BUFFER_PREPARATION → R_INOCULATION → R_CELL_CULTURE → R_HARVEST → R_PURIFICATION_1 → R_PURIFICATION_2
+
+[Rationale — 룰별 적용 횟수]
+  adjacency                      1  ⚠ 1 flag
+  flow_paths                     1
+  rooms_selector                 1
+  rule_01_layout_axis            1
+  rule_02_room_shape            48
+  rule_03_room_size             48  ⚠ 19 flag
+  rule_04_clean_grade           48  ⚠ 2 flag
+  rule_05_zones                  1
+  rule_06_airlocks              18
+  rule_07_al_flow_type          18
+  rule_08_corridors              1
+  rule_09_doors                  1
+  rule_10_equipment             48  ⚠ 2 flag
+  rule_11_wash_prep              1  ⚠ 1 flag
+  rule_12_nc_rooms               1
+  rule_13_pressure              66
+  rule_14_acph                  48
+  rule_15_gowning               48
+
+[Flags — 상위 5개]
+  [info               ] rule_10_equipment: 공정 Room 'Preparation'에 process_no 없는 장비: ['Autoclave', 'Cleanbooth']
+  [info               ] rule_10_equipment: 공정 Room 'Washing'에 process_no 없는 장비: ['COP system']
+  [suspected_violation] rule_03_room_size: 'CAL-in Inoculation' 면적 추정 불가 — KB에도 장비에도 없음
+  [suspected_violation] rule_03_room_size: 'CAL-out Inoculation' 면적 추정 불가 — KB에도 장비에도 없음
+  [info               ] rule_03_room_size: 'Cell Culture '이 KB에 없음 → Algorithm B fallback (96.1 m²)
+
+[Adjacency — 23 edges]
+  door                    22
+  passthrough_only         1
+  (incl. elevator edges    2)

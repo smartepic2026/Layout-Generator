@@ -22,7 +22,7 @@ from typing import Any, Optional
 
 from src.drawing_agent.layout_solver import Layout, PlacedRoom, Rect, solve as base_solve
 from src.reward.scorer import score
-from src.rule_engine.schemas import Room, RuleEngineOutput
+from src.contract.schemas import Room, RuleEngineOutput
 
 log = logging.getLogger(__name__)
 

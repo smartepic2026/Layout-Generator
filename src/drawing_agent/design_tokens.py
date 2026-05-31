@@ -4,7 +4,7 @@
 """
 from __future__ import annotations
 
-from src.rule_engine.kb_loader import grade_colors_kb
+from src.contract.kb_loader import grade_colors_kb
 
 # ──────────────────────────────────────────────────────────────────────
 # Colors (DESIGN.md §2)

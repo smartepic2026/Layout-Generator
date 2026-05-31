@@ -22,7 +22,7 @@ from src.drawing_agent.layout_solver import (
     _place_equipment_grid,
 )
 from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from src.contract.schemas import URSInput
 
 
 def _square_rect_for_area(area_m2: float) -> tuple:

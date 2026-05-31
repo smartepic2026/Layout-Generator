@@ -1,5 +1,5 @@
 """Smoke tests for Pydantic schemas (URSInput + RuleEngineOutput)."""
-from src.rule_engine.schemas import (
+from src.contract.schemas import (
     URSInput,
     RuleEngineOutput,
     Room,

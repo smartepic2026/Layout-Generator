@@ -22,7 +22,7 @@ from src.drawing_agent.layout_solver import (
     Rect,
 )
 from src.reward.scorer import score, score_spec_p_series
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 
 FIXTURE_PATH = Path("tests/fixtures/golden_nne_layout.json")

@@ -16,7 +16,7 @@ from src.drawing_agent.layout_solver import (
     PlacedRoom,
     Rect,
 )
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 
 def render(spec: RuleEngineOutput, layout: Layout) -> str:

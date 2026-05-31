@@ -16,7 +16,7 @@ from typing import Optional
 
 from ortools.sat.python import cp_model
 
-from src.rule_engine.schemas import Room, RuleEngineOutput
+from src.contract.schemas import Room, RuleEngineOutput
 
 
 # 방 크기 결정 정책 — 방 한 변 = √area_m2 × FACTOR (m).

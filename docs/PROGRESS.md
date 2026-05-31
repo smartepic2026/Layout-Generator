@@ -1,5 +1,12 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-01] 소연 룰엔진 모노레포 통합 (옵션 2) — 브랜치 `integrate-soyeon-engine`
+- **레포 이전**: origin = `smartepic2026/Layout-Generator` (공용), 기존 헤민 레포는 `hyemin` 리모트로 보존. teammate = `smartepic2026/rule_engine_validation_agent` (소연 최신 엔진, private, Hyemin 협업자 추가됨). 베이스라인 main 푸시 완료(c19d318).
+- **구조**: ① `src/contract/` 신설 — 우리 pydantic 계약(schemas/validators/working_state/kb_loader/kb) 분리. ② `src/rule_engine/` = 소연 최신 엔진(dataclass models.py)으로 교체. ③ 소연 절대 import 64곳 → `src.` 접두사 정렬. ④ `cli.py rule-engine` = URS xlsx → 소연 엔진 → to_json → tier1 어댑터 → 우리 pydantic spec.
+- **검증 완료**: CLI 3명령(rule-engine/draw/validate) + 드로잉 end-to-end(SVG 90KB) 통과. 테스트 102 passed.
+- **다음 할 일 (follow-up)**: ① 옛 엔진 특정값 단언 테스트 15 fail/6 error 갱신 — 소연 출력 기준(방 ID `R_MEDIA_PREP`→`R_MEDIA_PREPARATION` 등). `test_engine_e2e.py`는 옛 pydantic 엔진 전용이라 대부분 obsolete(재작성 or 삭제 판단). fixture는 `tests/_legacy_spec.py` shim. ② 이 브랜치 PR 리뷰 후 main 병합. ③ 소연도 이제 이 레포에서 작업(옛 레포 아카이브) 합의됨.
+
+
 > CLAUDE.md "작업 기록 규칙" — 매 세션 시작 시 이 파일부터 읽기.
 > Phase/작업 하나 끝낼 때마다 한 줄. 중간에 멈출 때도 "현재 여기까지, 다음은 이것" 남기기.
 

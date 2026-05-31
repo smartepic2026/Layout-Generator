@@ -29,7 +29,7 @@ from src.reward.scorer import (
     score_spec_p_series,
 )
 from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from src.contract.schemas import URSInput
 
 SCHEMA_VERSION = "1.0"
 

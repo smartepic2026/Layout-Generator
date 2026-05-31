@@ -24,7 +24,7 @@ from src.drawing_agent.data import (
 )
 from src.drawing_agent.layout_solver import Layout, solve
 from src.drawing_agent.renderer import render
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 
 def generate_floorplan(

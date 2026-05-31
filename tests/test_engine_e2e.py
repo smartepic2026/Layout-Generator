@@ -3,15 +3,15 @@ from __future__ import annotations
 
 import pytest
 
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
-from src.rule_engine.validators import (
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
+from src.contract.validators import (
     c1_supply_return_no_direct,
     c5_pressure_diff_min,
     validate_hard_constraints,
 )
-from src.rule_engine.working_state import WorkingState
-from src.rule_engine.schemas import Adjacency
+from src.contract.working_state import WorkingState
+from src.contract.schemas import Adjacency
 
 
 def test_default_run_passes_strict():
@@ -76,8 +76,8 @@ def test_validator_catches_supply_return_direct_connection():
 
 def test_validator_catches_low_pressure_diff():
     """C5: 강제로 등급 다른 Room을 같은 DP로 연결 → 위반."""
-    from src.rule_engine.schemas import Room
-    from src.rule_engine.schemas import RangeMM
+    from src.contract.schemas import Room
+    from src.contract.schemas import RangeMM
 
     state = WorkingState(urs=URSInput())
     state.rooms["RA"] = Room(
@@ -112,7 +112,7 @@ def test_overrides_area_works():
 def test_json_roundtrip():
     out = run_rule_engine(URSInput(), strict=True)
     js = out.model_dump_json()
-    from src.rule_engine.schemas import RuleEngineOutput
+    from src.contract.schemas import RuleEngineOutput
     back = RuleEngineOutput.model_validate_json(js)
     assert len(back.rooms) == len(out.rooms)
     assert len(back.airlocks) == len(out.airlocks)
