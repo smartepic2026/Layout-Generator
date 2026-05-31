@@ -33,6 +33,8 @@ def generate_floorplan(
     building_h_mm: Optional[float] = None,
     urs_path: Optional[str] = None,
     return_tracker: bool = False,
+    dynamic_rooms: bool = False,
+    auto_canvas: bool = False,
 ):
     """spec → (svg_text, layout[, tracker]).
 
@@ -53,7 +55,13 @@ def generate_floorplan(
             building_w_mm = w_resolved
         if building_h_mm is None:
             building_h_mm = h_resolved
-    layout = solve(spec, building_w_mm=building_w_mm, building_h_mm=building_h_mm)
+    layout = solve(
+        spec,
+        building_w_mm=building_w_mm,
+        building_h_mm=building_h_mm,
+        dynamic_rooms=dynamic_rooms,
+        auto_canvas=auto_canvas,
+    )
     svg = render(spec, layout)
     if return_tracker:
         return svg, layout, tracker

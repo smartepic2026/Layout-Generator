@@ -1,0 +1,10 @@
+# Biopharm Layout Design System — 런타임 의존성
+# 설치: pip install -r requirements.txt
+# (표준 라이브러리 json/pathlib/dataclasses 등은 별도 설치 불필요)
+
+numpy>=1.24          # RAG 벡터 연산 (RAG_DB_build/vector_store)
+openpyxl>=3.1        # URS xlsx 파싱 (rule_engine/urs_parser)
+PyYAML>=6.0          # 에이전트 프로필 로딩 (rag_interface/search)
+
+# 선택 — 차트 생성 스크립트에만 필요 (핵심 동작에는 불필요)
+# matplotlib>=3.7

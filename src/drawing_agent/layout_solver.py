@@ -106,7 +106,8 @@ class Layout:
     annotations: list[dict] = field(default_factory=list)
 
 
-# Process rows 위/아래 정의 (공정 순서 기반)
+# Process rows 위/아래 정의 (공정 순서 기반) — 우리 default URS 호환용 하드코딩.
+# 팀원 룰엔진 같은 외부 출력은 dynamic_rooms=True 로 호출해 동적 분류 사용.
 TOP_ROW = ["R_MEDIA_PREP", "R_BUFFER_PREP", "R_INOCULATION", "R_CELL_CULTURE", "R_HARVEST"]
 BOTTOM_ROW = ["R_PURIFICATION_1", "R_PURIFICATION_2", "R_PREPARATION", "R_WASHING"]
 
@@ -138,7 +139,140 @@ NC_RIGHT_STACK = [
 ]
 
 
-def solve(spec: RuleEngineOutput, building_w_mm: float = 78500, building_h_mm: float = 42500) -> Layout:
+# ══════════════════════════════════════════════════════════════════════
+# 2026-05-31: 동적 방 분류 (팀원 새 룰엔진 흡수)
+# ══════════════════════════════════════════════════════════════════════
+import re as _re_dyn
+
+# AL 이중 표현 패턴 — 팀원이 rooms[] 안에 별도 fake room 으로 모델링한 AL.
+# (e.g. R_PAL_IN_HARVEST, R_MAL_OUT_PURIFICATION_1, R_CAL_IN_INOCULATION).
+# area_m2=0 + 이 패턴이면 layout 에 그리지 않음 (이미 airlocks[] 에 metadata 있음).
+_AL_FAKE_ROOM_PATTERN = _re_dyn.compile(r"^R_(?:P|M|C)AL_(?:IN|OUT)_")
+
+
+def _is_al_fake_room(room) -> bool:
+    """AL 이중 표현 fake room 인지. D-003 시점 보류했던 이슈 (2026-05-31)."""
+    if _AL_FAKE_ROOM_PATTERN.match(room.id) and room.area_m2 == 0:
+        return True
+    return False
+
+
+def _classify_rooms_dynamic(spec: RuleEngineOutput) -> dict:
+    """spec.rooms 를 process/aux/nc/corridor 로 동적 분류 (하드코딩 리스트 무시).
+
+    PPO (product_process_order) 가 있으면 process 방은 PPO 순서대로 정렬, 나머지
+    process 는 뒤에 붙음. process 가 많으면 top/bottom 2개 row 로 나눔.
+
+    Returns: dict with keys 'top_row', 'bottom_row', 'aux_left', 'nc_right',
+             'corridors', 'skipped' (= AL fake rooms).
+    """
+    by_id = {r.id: r for r in spec.rooms}
+    skipped: list[str] = []
+    process_ids: list[str] = []
+    aux_ids: list[str] = []
+    nc_ids: list[str] = []
+    corridors: list[str] = []
+    # corridor 판별 — is_corridor 필드 + id 패턴 fallback (팀원 spec 호환).
+    # `_CORRIDOR` 가 들어간 id 만 잡음 (R_SUPPLY_CORRIDOR, R_RETURN_CORRIDOR,
+    # R_CORRIDOR, R_CORRIDOR_VISITOR). R_CIP_SUPPLY 등 SUPPLY 단어 다른 의미는 제외.
+    # 단 SUPPLY/RETURN corridor 만 main stripe 로, 나머지 corridor 는 aux/nc 로 흡수.
+    _CORRIDOR_ID_PATTERN = _re_dyn.compile(r"_CORRIDOR(?:_|$)", _re_dyn.IGNORECASE)
+    _MAIN_CORRIDOR_PATTERN = _re_dyn.compile(r"_(?:SUPPLY|RETURN)_CORRIDOR", _re_dyn.IGNORECASE)
+    for r in spec.rooms:
+        if _is_al_fake_room(r):
+            skipped.append(r.id)
+            continue
+        if r.is_corridor or _CORRIDOR_ID_PATTERN.search(r.id):
+            if _MAIN_CORRIDOR_PATTERN.search(r.id):
+                corridors.append(r.id)  # SUPPLY/RETURN — strip-band 중심 stripe
+            elif r.category == "NC" or r.clean_grade == "NC":
+                nc_ids.append(r.id)     # R_CORRIDOR_VISITOR → NC stripe
+            else:
+                aux_ids.append(r.id)    # R_CORRIDOR (auxiliary) → aux stripe
+            continue
+        if r.category == "NC" or r.clean_grade == "NC":
+            nc_ids.append(r.id)
+        elif r.category == "auxiliary":
+            aux_ids.append(r.id)
+        else:  # process (또는 default)
+            process_ids.append(r.id)
+
+    # process 정렬: PPO 순서 우선 + 나머지 area_m2 내림차순
+    ppo = list(getattr(spec.flow_paths, "product_process_order", []) or [])
+    seen = set()
+    sorted_proc: list[str] = []
+    for rid in ppo:
+        if rid in process_ids and rid not in seen:
+            sorted_proc.append(rid)
+            seen.add(rid)
+    extras = [rid for rid in process_ids if rid not in seen]
+    extras.sort(key=lambda rid: -by_id[rid].area_m2)
+    sorted_proc.extend(extras)
+
+    # process 가 많으면 top/bottom 으로 균등 분할. area_m2 합 기준 balance.
+    if len(sorted_proc) <= 6:
+        top_row = sorted_proc
+        bottom_row = []
+    else:
+        half = (len(sorted_proc) + 1) // 2
+        top_row = sorted_proc[:half]
+        bottom_row = sorted_proc[half:]
+
+    return {
+        "top_row": top_row,
+        "bottom_row": bottom_row,
+        "aux_left": aux_ids,
+        "nc_right": nc_ids,
+        "corridors": corridors,
+        "skipped": skipped,
+    }
+
+
+def _auto_canvas_for_rooms(spec: RuleEngineOutput, base_w: float, base_h: float) -> tuple[float, float]:
+    """방 area 합 기준 캔버스 자동 키움. base 면적의 60% 넘으면 비례 확대."""
+    total_area_m2 = sum(
+        r.area_m2 for r in spec.rooms if r.area_m2 > 0 and not _is_al_fake_room(r)
+    )
+    base_area_m2 = base_w * base_h / 1e6
+    target_fill = 0.55  # 캔버스의 55% 가 방 면적 (나머지 통로/여백)
+    if total_area_m2 <= base_area_m2 * target_fill:
+        return base_w, base_h
+    scale = (total_area_m2 / (base_area_m2 * target_fill)) ** 0.5
+    return base_w * scale, base_h * scale
+
+
+def solve(
+    spec: RuleEngineOutput,
+    building_w_mm: float = 78500,
+    building_h_mm: float = 42500,
+    dynamic_rooms: bool = False,
+    auto_canvas: bool = False,
+) -> Layout:
+    """strip-band 결정론적 배치 솔버.
+
+    Args:
+        dynamic_rooms: True 면 하드코딩 TOP_ROW/BOTTOM_ROW/AUX_LEFT/NC_RIGHT 무시,
+                       spec.rooms 의 category/zone/is_corridor 로 동적 분류.
+                       팀원 새 룰엔진 등 외부 spec 흡수용 (2026-05-31).
+        auto_canvas: True 면 spec 의 방 면적 합 기준 캔버스 자동 키움.
+    """
+    if auto_canvas:
+        building_w_mm, building_h_mm = _auto_canvas_for_rooms(
+            spec, building_w_mm, building_h_mm
+        )
+
+    if dynamic_rooms:
+        cls = _classify_rooms_dynamic(spec)
+        top_row_ids = cls["top_row"]
+        bottom_row_ids = cls["bottom_row"]
+        aux_left_ids = cls["aux_left"]
+        nc_right_ids = cls["nc_right"]
+    else:
+        top_row_ids = TOP_ROW
+        bottom_row_ids = BOTTOM_ROW
+        aux_left_ids = AUX_LEFT_STACK
+        nc_right_ids = NC_RIGHT_STACK
+
     layout = Layout(building_w_mm=building_w_mm, building_h_mm=building_h_mm)
     room_by_id = {r.id: r for r in spec.rooms}
 
@@ -179,37 +313,37 @@ def solve(spec: RuleEngineOutput, building_w_mm: float = 78500, building_h_mm: f
 
     # ── Process rows ──
     _place_process_row(
-        layout, room_by_id, TOP_ROW, core_x0, proc_top[0], core_w, proc_top[1] - proc_top[0]
+        layout, room_by_id, top_row_ids, core_x0, proc_top[0], core_w, proc_top[1] - proc_top[0]
     )
     _place_process_row(
-        layout, room_by_id, BOTTOM_ROW, core_x0, proc_bot[0], core_w, proc_bot[1] - proc_bot[0]
+        layout, room_by_id, bottom_row_ids, core_x0, proc_bot[0], core_w, proc_bot[1] - proc_bot[0]
     )
 
     # ── Airlocks (top/bottom of each process row) ──
     _place_al_row(
-        layout, spec, TOP_ROW, suffix="_out",
+        layout, spec, top_row_ids, suffix="_out",
         x0=core_x0, y0=alo_top[0], w=core_w, h=alo_top[1] - alo_top[0],
     )
     _place_al_row(
-        layout, spec, TOP_ROW, suffix="_in",
+        layout, spec, top_row_ids, suffix="_in",
         x0=core_x0, y0=ali_top[0], w=core_w, h=ali_top[1] - ali_top[0],
     )
     _place_al_row(
-        layout, spec, BOTTOM_ROW, suffix="_in",
+        layout, spec, bottom_row_ids, suffix="_in",
         x0=core_x0, y0=ali_bot[0], w=core_w, h=ali_bot[1] - ali_bot[0],
     )
     _place_al_row(
-        layout, spec, BOTTOM_ROW, suffix="_out",
+        layout, spec, bottom_row_ids, suffix="_out",
         x0=core_x0, y0=alo_bot[0], w=core_w, h=alo_bot[1] - alo_bot[0],
     )
     # 양방향(CAL) AL은 supply에 작은 spot 배치
     _place_both_way_als(layout, spec, core_x0, supply[0], core_w, supply[1] - supply[0])
 
     # ── Aux stack (left) ──
-    _place_left_stack(layout, room_by_id, AUX_LEFT_STACK, 0, 0, aux_w, building_h_mm)
+    _place_left_stack(layout, room_by_id, aux_left_ids, 0, 0, aux_w, building_h_mm)
 
     # ── NC stack (right) ──
-    _place_right_stack(layout, room_by_id, NC_RIGHT_STACK, core_x1, 0, nc_w, building_h_mm)
+    _place_right_stack(layout, room_by_id, nc_right_ids, core_x1, 0, nc_w, building_h_mm)
 
     # ── Equipment in each placed process Room ──
     _place_equipment_grid(layout)
@@ -240,8 +374,11 @@ def _place_process_row(layout, room_by_id, row_ids, x0, y0, w, h):
     present = [r for r in row_ids if r in room_by_id]
     if not present:
         return
-    # 면적 비율로 너비 분배
-    areas = [room_by_id[r].area_m2 for r in present]
+    # [2026-05-31] area_m2=0 인 방도 visible 사이즈 보장 (팀원 spec 호환).
+    # area 가 0 또는 너무 작으면 min_area_m2=15 로 fallback — 안 그러면 폭 0 으로
+    # 그려져서 안 보임.
+    MIN_AREA_FALLBACK = 15.0
+    areas = [max(room_by_id[r].area_m2, MIN_AREA_FALLBACK) for r in present]
     total = sum(areas)
     x = x0
     for rid, a in zip(present, areas):
@@ -331,8 +468,9 @@ def _place_left_stack(layout, room_by_id, ids, x, y, w, h):
     present = [r for r in ids if r in room_by_id]
     if not present:
         return
-    # 면적 비율로 세로 분배
-    areas = [room_by_id[r].area_m2 for r in present]
+    # [2026-05-31] area=0 인 방 fallback (팀원 spec 호환)
+    MIN_AREA_FALLBACK = 15.0
+    areas = [max(room_by_id[r].area_m2, MIN_AREA_FALLBACK) for r in present]
     total = sum(areas)
     yy = y
     for rid, a in zip(present, areas):
@@ -347,7 +485,8 @@ def _place_right_stack(layout, room_by_id, ids, x, y, w, h):
     present = [r for r in ids if r in room_by_id]
     if not present:
         return
-    areas = [room_by_id[r].area_m2 for r in present]
+    MIN_AREA_FALLBACK = 15.0
+    areas = [max(room_by_id[r].area_m2, MIN_AREA_FALLBACK) for r in present]
     total = sum(areas)
     yy = y
     for rid, a in zip(present, areas):

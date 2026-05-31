@@ -1,0 +1,5057 @@
+{
+  "collections": {
+    "design_standards": {
+      "metadata": {
+        "description": "ISPE, EPAR, NNE 설계 기준 — Design Agent용"
+      },
+      "ids": [
+        "GMP_Facility_Layout_References_chunk_0",
+        "GMP_Facility_Layout_References_chunk_1",
+        "GMP_Facility_Layout_References_chunk_2",
+        "GMP_Facility_Layout_References_chunk_3",
+        "GMP_Facility_Layout_References_chunk_4",
+        "GMP_Facility_Layout_References_chunk_5",
+        "GMP_Facility_Layout_References_chunk_6",
+        "ISPE_Biopharm_Facility_2005_chunk_0",
+        "ISPE_Biopharm_Facility_2005_chunk_1",
+        "ISPE_Biopharm_Facility_2005_chunk_2",
+        "ISPE_Biopharm_Facility_2005_chunk_3",
+        "ISPE_Biopharm_Facility_2005_chunk_4",
+        "ISPE_Biopharm_Facility_2005_chunk_5",
+        "ISPE_Biopharm_Facility_2005_chunk_6",
+        "ISPE_Biopharm_Facility_2005_chunk_7",
+        "ISPE_Biopharm_Facility_2005_chunk_8",
+        "ISPE_Biopharm_Facility_2005_chunk_9",
+        "ISPE_Biopharm_Facility_2005_chunk_10",
+        "ISPE_Biopharm_Facility_2005_chunk_11",
+        "ISPE_Biopharm_Facility_2005_chunk_12",
+        "ISPE_Biopharm_Facility_2005_chunk_13",
+        "ISPE_Biopharm_Facility_2005_chunk_14",
+        "ISPE_Biopharm_Facility_2005_chunk_15",
+        "ISPE_Biopharm_Facility_2005_chunk_16",
+        "ISPE_Biopharm_Facility_2005_chunk_17",
+        "ISPE_Biopharm_Facility_2005_chunk_18",
+        "ISPE_Biopharm_Facility_2005_chunk_19",
+        "ISPE_Biopharm_Facility_2005_chunk_20",
+        "ISPE_Biopharm_Facility_2005_chunk_21",
+        "ISPE_Biopharm_Facility_2005_chunk_22",
+        "ISPE_Biopharm_Facility_2005_chunk_23",
+        "ISPE_Biopharm_Facility_2005_chunk_24",
+        "ISPE_Biopharm_Facility_2005_chunk_25",
+        "ISPE_Biopharm_Facility_2005_chunk_26",
+        "ISPE_Biopharm_Facility_2005_chunk_27",
+        "ISPE_Biopharm_Facility_2005_chunk_28",
+        "ISPE_Biopharm_Facility_2005_chunk_29",
+        "ISPE_Biopharm_Facility_2005_chunk_30",
+        "ISPE_Biopharm_Facility_2005_chunk_31",
+        "ISPE_Biopharm_Facility_2005_chunk_32",
+        "ISPE_Biopharm_Facility_2005_chunk_33",
+        "ISPE_Biopharm_Facility_2005_chunk_34",
+        "ISPE_Biopharm_Facility_2005_chunk_35",
+        "ISPE_Biopharm_Facility_2005_chunk_36",
+        "ISPE_Biopharm_Facility_2005_chunk_37",
+        "ISPE_Biopharm_Facility_2005_chunk_38",
+        "ISPE_Biopharm_Facility_2005_chunk_39",
+        "ISPE_Biopharm_Facility_2005_chunk_40",
+        "ISPE_Biopharm_Facility_2005_chunk_41",
+        "ISPE_Biopharm_Facility_2005_chunk_42",
+        "ISPE_Biopharm_Facility_2005_chunk_43",
+        "ISPE_Biopharm_Facility_2005_chunk_44",
+        "ISPE_Biopharm_Facility_2005_chunk_45",
+        "ISPE_Biopharm_Facility_2005_chunk_46",
+        "ISPE_Biopharm_Facility_2005_chunk_47",
+        "ISPE_Biopharm_Facility_2005_chunk_48",
+        "ISPE_Biopharm_Facility_2005_chunk_49",
+        "BioPhorum_Improving_Biomfg_chunk_0",
+        "BioPhorum_Improving_Biomfg_chunk_1",
+        "BioPhorum_Improving_Biomfg_chunk_2",
+        "BioPhorum_Improving_Biomfg_chunk_3",
+        "BioPhorum_Improving_Biomfg_chunk_4",
+        "BioPhorum_Improving_Biomfg_chunk_5",
+        "BioPhorum_Improving_Biomfg_chunk_6",
+        "BioPhorum_Improving_Biomfg_chunk_7",
+        "BioPhorum_Improving_Biomfg_chunk_8",
+        "BioPhorum_Improving_Biomfg_chunk_9",
+        "BioPhorum_Improving_Biomfg_chunk_10",
+        "BioPhorum_Improving_Biomfg_chunk_11",
+        "BioPhorum_Improving_Biomfg_chunk_12",
+        "BioPhorum_Improving_Biomfg_chunk_13",
+        "BioPhorum_Improving_Biomfg_chunk_14",
+        "BioPhorum_Improving_Biomfg_chunk_15",
+        "BioPhorum_Improving_Biomfg_chunk_16",
+        "BioPhorum_Improving_Biomfg_chunk_17",
+        "BioPhorum_Improving_Biomfg_chunk_18",
+        "BioPhorum_Improving_Biomfg_chunk_19",
+        "BioPhorum_Improving_Biomfg_chunk_20",
+        "BioPhorum_Improving_Biomfg_chunk_21",
+        "BioPhorum_Improving_Biomfg_chunk_22",
+        "BioPhorum_Improving_Biomfg_chunk_23",
+        "BioPhorum_Improving_Biomfg_chunk_24",
+        "BioPhorum_Improving_Biomfg_chunk_25",
+        "BioPhorum_Improving_Biomfg_chunk_26",
+        "BioPhorum_Improving_Biomfg_chunk_27",
+        "BioPhorum_Improving_Biomfg_chunk_28",
+        "Biotech_Cleanroom_Guide_chunk_0",
+        "Biotech_Cleanroom_Guide_chunk_1",
+        "Biotech_Cleanroom_Guide_chunk_2",
+        "Facility_Layout_GMP_Compliance_chunk_0",
+        "Facility_Layout_GMP_Compliance_chunk_1",
+        "Facility_Layout_GMP_Compliance_chunk_2",
+        "IPS_Biopharm_Layout_chunk_0",
+        "IPS_Biopharm_Layout_chunk_1",
+        "IPS_Biopharm_Layout_chunk_2",
+        "GMP_Gowning_TransitionZones_chunk_0",
+        "GMP_Gowning_TransitionZones_chunk_1",
+        "GMP_Gowning_TransitionZones_chunk_2",
+        "ISPE_Baseline_Vol6_2023_chunk_0",
+        "ISPE_Baseline_Vol6_2023_chunk_1",
+        "ISPE_Baseline_Vol6_2023_chunk_2",
+        "ISPE_Baseline_Vol6_2023_chunk_3",
+        "ISPE_Baseline_Vol6_2023_chunk_4",
+        "ISPE_Baseline_Vol6_2023_chunk_5",
+        "ISPE_Baseline_Vol6_2023_chunk_6",
+        "ISPE_Baseline_Vol6_2023_chunk_7",
+        "ISPE_Baseline_Vol6_2023_chunk_8",
+        "ISPE_Baseline_Vol6_2023_chunk_9",
+        "ISPE_Baseline_Vol6_2023_chunk_10",
+        "ISPE_Baseline_Vol6_2023_chunk_11",
+        "ISPE_Baseline_Vol6_2023_chunk_12",
+        "ISPE_Baseline_Vol6_2023_chunk_13",
+        "ISPE_Baseline_Vol6_2023_chunk_14",
+        "ISPE_Baseline_Vol6_2023_chunk_15",
+        "ISPE_Baseline_Vol6_2023_chunk_16",
+        "ISPE_Baseline_Vol6_2023_chunk_17",
+        "ISPE_Baseline_Vol6_2023_chunk_18",
+        "ISPE_Baseline_Vol6_2023_chunk_19",
+        "ISPE_Baseline_Vol6_2023_chunk_20",
+        "ISPE_Baseline_Vol6_2023_chunk_21",
+        "ISPE_Baseline_Vol6_2023_chunk_22",
+        "ISPE_Baseline_Vol6_2023_chunk_23",
+        "ISPE_Baseline_Vol6_2023_chunk_24",
+        "ISPE_Baseline_Vol6_2023_chunk_25",
+        "ISPE_Baseline_Vol6_2023_chunk_26",
+        "ISPE_Baseline_Vol6_2023_chunk_27",
+        "ISPE_Baseline_Vol6_2023_chunk_28",
+        "ISPE_Baseline_Vol6_2023_chunk_29",
+        "ISPE_Baseline_Vol6_2023_chunk_30",
+        "ISPE_Baseline_Vol6_2023_chunk_31",
+        "ISPE_Baseline_Vol6_2023_chunk_32",
+        "ISPE_Baseline_Vol6_2023_chunk_33",
+        "ISPE_Baseline_Vol6_2023_chunk_34",
+        "ISPE_Baseline_Vol6_2023_chunk_35",
+        "ISPE_Baseline_Vol6_2023_chunk_36",
+        "ISPE_Baseline_Vol6_2023_chunk_37",
+        "ISPE_Baseline_Vol6_2023_chunk_38",
+        "ISPE_Baseline_Vol6_2023_chunk_39",
+        "ISPE_Baseline_Vol6_2023_chunk_40",
+        "ISPE_Baseline_Vol6_2023_chunk_41",
+        "ISPE_Baseline_Vol6_2023_chunk_42",
+        "ISPE_Baseline_Vol6_2023_chunk_43",
+        "ISPE_Baseline_Vol6_2023_chunk_44",
+        "ISPE_Baseline_Vol6_2023_chunk_45",
+        "ISPE_Baseline_Vol6_2023_chunk_46",
+        "ISPE_Baseline_Vol6_2023_chunk_47",
+        "ISPE_Baseline_Vol6_2023_chunk_48",
+        "ISPE_Baseline_Vol6_2023_chunk_49",
+        "ISPE_Baseline_Vol6_2023_chunk_50",
+        "ISPE_Baseline_Vol6_2023_chunk_51",
+        "ISPE_Baseline_Vol6_2023_chunk_52",
+        "ISPE_Baseline_Vol6_2023_chunk_53",
+        "ISPE_Baseline_Vol6_2023_chunk_54",
+        "ISPE_Baseline_Vol6_2023_chunk_55",
+        "ISPE_Baseline_Vol6_2023_chunk_56",
+        "ISPE_Baseline_Vol6_2023_chunk_57",
+        "ISPE_Baseline_Vol6_2023_chunk_58",
+        "ISPE_Baseline_Vol6_2023_chunk_59",
+        "ISPE_Baseline_Vol6_2023_chunk_60",
+        "ISPE_Baseline_Vol6_2023_chunk_61",
+        "ISPE_Baseline_Vol6_2023_chunk_62",
+        "ISPE_Baseline_Vol6_2023_chunk_63",
+        "ISPE_Baseline_Vol6_2023_chunk_64",
+        "ISPE_Baseline_Vol6_2023_chunk_65",
+        "ISPE_Baseline_Vol6_2023_chunk_66",
+        "ISPE_Baseline_Vol6_2023_chunk_67",
+        "ISPE_Baseline_Vol6_2023_chunk_68",
+        "ISPE_Baseline_Vol6_2023_chunk_69",
+        "ISPE_Baseline_Vol6_2023_chunk_70",
+        "ISPE_Baseline_Vol6_2023_chunk_71",
+        "ISPE_Baseline_Vol6_2023_chunk_72",
+        "ISPE_Baseline_Vol6_2023_chunk_73",
+        "ISPE_Baseline_Vol6_2023_chunk_74",
+        "ISPE_Baseline_Vol6_2023_chunk_75",
+        "ISPE_Baseline_Vol6_2023_chunk_76",
+        "ISPE_Baseline_Vol6_2023_chunk_77",
+        "ISPE_Baseline_Vol6_2023_chunk_78",
+        "ISPE_Baseline_Vol6_2023_chunk_79",
+        "ISPE_Baseline_Vol6_2023_chunk_80",
+        "ISPE_Baseline_Vol6_2023_chunk_81",
+        "ISPE_Baseline_Vol6_2023_chunk_82",
+        "ISPE_Baseline_Vol6_2023_chunk_83",
+        "ISPE_Baseline_Vol6_2023_chunk_84",
+        "ISPE_Baseline_Vol6_2023_chunk_85",
+        "ISPE_Baseline_Vol6_2023_chunk_86",
+        "ISPE_Baseline_Vol6_2023_chunk_87",
+        "ISPE_Baseline_Vol6_2023_chunk_88",
+        "ISPE_Baseline_Vol6_2023_chunk_89",
+        "ISPE_Baseline_Vol6_2023_chunk_90",
+        "ISPE_Baseline_Vol6_2023_chunk_91",
+        "ISPE_Baseline_Vol6_2023_chunk_92",
+        "ISPE_Baseline_Vol6_2023_chunk_93",
+        "ISPE_Baseline_Vol6_2023_chunk_94",
+        "ISPE_Baseline_Vol6_2023_chunk_95",
+        "ISPE_Baseline_Vol6_2023_chunk_96",
+        "ISPE_Baseline_Vol6_2023_chunk_97",
+        "ISPE_Baseline_Vol6_2023_chunk_98",
+        "ISPE_Baseline_Vol6_2023_chunk_99",
+        "ISPE_Baseline_Vol6_2023_chunk_100",
+        "ISPE_Baseline_Vol6_2023_chunk_101",
+        "ISPE_Baseline_Vol6_2023_chunk_102",
+        "ISPE_Baseline_Vol6_2023_chunk_103",
+        "ISPE_Baseline_Vol6_2023_chunk_104",
+        "ISPE_Baseline_Vol6_2023_chunk_105",
+        "ISPE_Baseline_Vol6_2023_chunk_106",
+        "ISPE_Baseline_Vol6_2023_chunk_107",
+        "ISPE_Baseline_Vol6_2023_chunk_108",
+        "ISPE_Baseline_Vol6_2023_chunk_109",
+        "ISPE_Baseline_Vol6_2023_chunk_110",
+        "ISPE_Baseline_Vol6_2023_chunk_111",
+        "ISPE_Baseline_Vol6_2023_chunk_112",
+        "ISPE_Baseline_Vol6_2023_chunk_113",
+        "ISPE_Baseline_Vol6_2023_chunk_114",
+        "ISPE_Baseline_Vol6_2023_chunk_115",
+        "ISPE_Baseline_Vol6_2023_chunk_116",
+        "ISPE_Baseline_Vol6_2023_chunk_117",
+        "ISPE_Baseline_Vol6_2023_chunk_118",
+        "ISPE_Baseline_Vol6_2023_chunk_119",
+        "ISPE_Baseline_Vol6_2023_chunk_120",
+        "ISPE_Baseline_Vol6_2023_chunk_121",
+        "ISPE_Baseline_Vol6_2023_chunk_122",
+        "ISPE_Baseline_Vol6_2023_chunk_123",
+        "ISPE_Baseline_Vol6_2023_chunk_124",
+        "ISPE_Baseline_Vol6_2023_chunk_125",
+        "ISPE_Baseline_Vol6_2023_chunk_126",
+        "ISPE_Baseline_Vol6_2023_chunk_127",
+        "ISPE_Baseline_Vol6_2023_chunk_128",
+        "ISPE_Baseline_Vol6_2023_chunk_129",
+        "ISPE_Baseline_Vol6_2023_chunk_130",
+        "ISPE_Baseline_Vol6_2023_chunk_131",
+        "ISPE_Baseline_Vol6_2023_chunk_132",
+        "ISPE_Baseline_Vol6_2023_chunk_133",
+        "ISPE_Baseline_Vol6_2023_chunk_134",
+        "ISPE_Baseline_Vol6_2023_chunk_135",
+        "ISPE_Baseline_Vol6_2023_chunk_136",
+        "ISPE_Baseline_Vol6_2023_chunk_137",
+        "ISPE_Baseline_Vol6_2023_chunk_138",
+        "ISPE_Baseline_Vol6_2023_chunk_139",
+        "ISPE_Baseline_Vol6_2023_chunk_140",
+        "ISPE_Baseline_Vol6_2023_chunk_141",
+        "ISPE_Baseline_Vol6_2023_chunk_142",
+        "ISPE_Baseline_Vol6_2023_chunk_143",
+        "ISPE_Baseline_Vol6_2023_chunk_144",
+        "ISPE_Baseline_Vol6_2023_chunk_145",
+        "ISPE_Baseline_Vol6_2023_chunk_146",
+        "ISPE_Baseline_Vol6_2023_chunk_147",
+        "ISPE_Baseline_Vol6_2023_chunk_148",
+        "ISPE_Baseline_Vol6_2023_chunk_149",
+        "ISPE_Baseline_Vol6_2023_chunk_150",
+        "ISPE_Baseline_Vol6_2023_chunk_151",
+        "ISPE_Baseline_Vol6_2023_chunk_152",
+        "ISPE_Baseline_Vol6_2023_chunk_153",
+        "ISPE_Baseline_Vol6_2023_chunk_154",
+        "ISPE_Baseline_Vol6_2023_chunk_155",
+        "ISPE_Baseline_Vol6_2023_chunk_156",
+        "ISPE_Baseline_Vol6_2023_chunk_157",
+        "ISPE_Baseline_Vol6_2023_chunk_158",
+        "ISPE_Baseline_Vol6_2023_chunk_159",
+        "ISPE_Baseline_Vol6_2023_chunk_160",
+        "ISPE_Baseline_Vol6_2023_chunk_161",
+        "ISPE_Baseline_Vol6_2023_chunk_162",
+        "ISPE_Baseline_Vol6_2023_chunk_163",
+        "ISPE_Baseline_Vol6_2023_chunk_164",
+        "ISPE_Baseline_Vol6_2023_chunk_165",
+        "ISPE_Baseline_Vol6_2023_chunk_166",
+        "ISPE_Baseline_Vol6_2023_chunk_167",
+        "ISPE_Baseline_Vol6_2023_chunk_168",
+        "ISPE_Baseline_Vol6_2023_chunk_169",
+        "ISPE_Baseline_Vol6_2023_chunk_170",
+        "ISPE_Baseline_Vol6_2023_chunk_171",
+        "ISPE_Baseline_Vol6_2023_chunk_172",
+        "Equipment_Layout_Example_chunk_0",
+        "GMP_Layout_Logic_XLSX_chunk_0",
+        "GMP_Layout_Logic_XLSX_chunk_1",
+        "GMP_Layout_Logic_XLSX_chunk_2",
+        "GMP_Layout_Logic_XLSX_chunk_3",
+        "GMP_Layout_Logic_XLSX_chunk_4",
+        "GMP_Layout_Logic_XLSX_chunk_5",
+        "GMP_Layout_Logic_XLSX_chunk_6",
+        "GMP_Layout_Logic_XLSX_chunk_7",
+        "GMP_Layout_Logic_XLSX_chunk_8",
+        "GMP_Layout_DecisionTree_MD_chunk_0",
+        "GMP_Layout_DecisionTree_MD_chunk_1",
+        "GMP_Layout_DecisionTree_MD_chunk_2",
+        "GMP_Layout_DecisionTree_MD_chunk_3",
+        "GMP_Layout_DecisionTree_MD_chunk_4",
+        "GMP_Layout_DecisionTree_JSON_chunk_0",
+        "GMP_Layout_DecisionTree_JSON_chunk_1",
+        "GMP_Layout_DecisionTree_JSON_chunk_2",
+        "GMP_Layout_DecisionTree_JSON_chunk_3",
+        "GMP_Layout_DecisionTree_JSON_chunk_4",
+        "GMP_Layout_DecisionTree_JSON_chunk_5",
+        "GMP_Layout_DecisionTree_JSON_chunk_6",
+        "GMP_Layout_DecisionTree_JSON_chunk_7",
+        "GMP_Layout_DecisionTree_JSON_chunk_8"
+      ],
+      "metadatas": [
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 3
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 4
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 5
+        },
+        {
+          "source": "GMP_Facility_Layout_References",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 6
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 0
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 1
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 2
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 3
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 4
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 5
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 6
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 7
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 8
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 9
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 10
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 11
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 12
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 13
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 14
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 15
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 16
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 17
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 18
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 19
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 20
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 21
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 22
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 23
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 24
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 25
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 26
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 27
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 28
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 29
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 30
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 31
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 32
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 33
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 34
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 35
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 36
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 37
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 38
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 39
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 40
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 41
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 42
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 43
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 44
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 45
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 46
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 47
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 48
+        },
+        {
+          "source": "ISPE_Biopharm_Facility_2005",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2005,
+          "chunk_index": 49
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 0
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 1
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 2
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 3
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 4
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 5
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 6
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 7
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 8
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 9
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 10
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 11
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 12
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 13
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 14
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 15
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 16
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 17
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 18
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 19
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 20
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 21
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 22
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 23
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 24
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 25
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 26
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 27
+        },
+        {
+          "source": "BioPhorum_Improving_Biomfg",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2021,
+          "chunk_index": 28
+        },
+        {
+          "source": "Biotech_Cleanroom_Guide",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "Biotech_Cleanroom_Guide",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "Biotech_Cleanroom_Guide",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "Facility_Layout_GMP_Compliance",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "Facility_Layout_GMP_Compliance",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "Facility_Layout_GMP_Compliance",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "IPS_Biopharm_Layout",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "IPS_Biopharm_Layout",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "IPS_Biopharm_Layout",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "GMP_Gowning_TransitionZones",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Gowning_TransitionZones",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "GMP_Gowning_TransitionZones",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 0
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 1
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 2
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 3
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 4
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 5
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 6
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 7
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 8
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 9
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 10
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 11
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 12
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 13
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 14
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 15
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 16
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 17
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 18
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 19
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 20
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 21
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 22
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 23
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 24
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 25
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 26
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 27
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 28
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 29
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 30
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 31
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 32
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 33
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 34
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 35
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 36
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 37
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 38
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 39
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 40
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 41
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 42
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 43
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 44
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 45
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 46
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 47
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 48
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 49
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 50
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 51
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 52
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 53
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 54
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 55
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 56
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 57
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 58
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 59
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 60
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 61
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 62
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 63
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 64
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 65
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 66
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 67
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 68
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 69
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 70
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 71
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 72
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 73
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 74
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 75
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 76
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 77
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 78
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 79
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 80
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 81
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 82
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 83
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 84
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 85
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 86
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 87
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 88
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 89
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 90
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 91
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 92
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 93
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 94
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 95
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 96
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 97
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 98
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 99
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 100
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 101
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 102
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 103
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 104
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 105
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 106
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 107
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 108
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 109
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 110
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 111
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 112
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 113
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 114
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 115
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 116
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 117
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 118
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 119
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 120
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 121
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 122
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 123
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 124
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 125
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 126
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 127
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 128
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 129
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 130
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 131
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 132
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 133
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 134
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 135
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 136
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 137
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 138
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 139
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 140
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 141
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 142
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 143
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 144
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 145
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 146
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 147
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 148
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 149
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 150
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 151
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 152
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 153
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 154
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 155
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 156
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 157
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 158
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 159
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 160
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 161
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 162
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 163
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 164
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 165
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 166
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 167
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 168
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 169
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 170
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 171
+        },
+        {
+          "source": "ISPE_Baseline_Vol6_2023",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2023,
+          "chunk_index": 172
+        },
+        {
+          "source": "Equipment_Layout_Example",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 3
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 4
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 5
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 6
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 7
+        },
+        {
+          "source": "GMP_Layout_Logic_XLSX",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 8
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_MD",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_MD",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_MD",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_MD",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 3
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_MD",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 4
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 0
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 1
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 2
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 3
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 4
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 5
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 6
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 7
+        },
+        {
+          "source": "GMP_Layout_DecisionTree_JSON",
+          "doc_type": "design_standard",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 2024,
+          "chunk_index": 8
+        }
+      ]
+    },
+    "regulatory_docs": {
+      "metadata": {
+        "description": "FDA, EMA, ICH 규정 — Validation Agent용"
+      },
+      "ids": [
+        "FDA_Sterile_Drug_Products_2004_chunk_0",
+        "FDA_Sterile_Drug_Products_2004_chunk_1",
+        "FDA_Sterile_Drug_Products_2004_chunk_2",
+        "FDA_Sterile_Drug_Products_2004_chunk_3",
+        "FDA_Sterile_Drug_Products_2004_chunk_4",
+        "FDA_Sterile_Drug_Products_2004_chunk_5",
+        "FDA_Sterile_Drug_Products_2004_chunk_6",
+        "FDA_Sterile_Drug_Products_2004_chunk_7",
+        "FDA_Sterile_Drug_Products_2004_chunk_8",
+        "FDA_Sterile_Drug_Products_2004_chunk_9",
+        "FDA_Sterile_Drug_Products_2004_chunk_10",
+        "FDA_Sterile_Drug_Products_2004_chunk_11",
+        "FDA_Sterile_Drug_Products_2004_chunk_12",
+        "FDA_Sterile_Drug_Products_2004_chunk_13",
+        "FDA_Sterile_Drug_Products_2004_chunk_14",
+        "FDA_Sterile_Drug_Products_2004_chunk_15",
+        "FDA_Sterile_Drug_Products_2004_chunk_16",
+        "FDA_Sterile_Drug_Products_2004_chunk_17",
+        "FDA_Sterile_Drug_Products_2004_chunk_18",
+        "FDA_Sterile_Drug_Products_2004_chunk_19",
+        "FDA_Sterile_Drug_Products_2004_chunk_20",
+        "FDA_Sterile_Drug_Products_2004_chunk_21",
+        "FDA_Sterile_Drug_Products_2004_chunk_22",
+        "FDA_Sterile_Drug_Products_2004_chunk_23",
+        "FDA_Sterile_Drug_Products_2004_chunk_24",
+        "FDA_Sterile_Drug_Products_2004_chunk_25",
+        "FDA_Sterile_Drug_Products_2004_chunk_26",
+        "FDA_Sterile_Drug_Products_2004_chunk_27",
+        "FDA_Sterile_Drug_Products_2004_chunk_28",
+        "FDA_Sterile_Drug_Products_2004_chunk_29",
+        "FDA_Sterile_Drug_Products_2004_chunk_30",
+        "FDA_Sterile_Drug_Products_2004_chunk_31",
+        "FDA_Sterile_Drug_Products_2004_chunk_32",
+        "FDA_Sterile_Drug_Products_2004_chunk_33",
+        "FDA_Sterile_Drug_Products_2004_chunk_34",
+        "FDA_Sterile_Drug_Products_2004_chunk_35",
+        "FDA_Sterile_Drug_Products_2004_chunk_36",
+        "FDA_Sterile_Drug_Products_2004_chunk_37",
+        "FDA_Sterile_Drug_Products_2004_chunk_38",
+        "FDA_Sterile_Drug_Products_2004_chunk_39",
+        "FDA_Sterile_Drug_Products_2004_chunk_40",
+        "FDA_Sterile_Drug_Products_2004_chunk_41",
+        "FDA_Sterile_Drug_Products_2004_chunk_42",
+        "FDA_Sterile_Drug_Products_2004_chunk_43",
+        "FDA_Sterile_Drug_Products_2004_chunk_44",
+        "FDA_Sterile_Drug_Products_2004_chunk_45",
+        "FDA_Sterile_Drug_Products_2004_chunk_46",
+        "FDA_Sterile_Drug_Products_2004_chunk_47",
+        "FDA_Sterile_Drug_Products_2004_chunk_48",
+        "FDA_Sterile_Drug_Products_2004_chunk_49",
+        "FDA_Sterile_Drug_Products_2004_chunk_50",
+        "FDA_Sterile_Drug_Products_2004_chunk_51",
+        "FDA_Sterile_Drug_Products_2004_chunk_52",
+        "FDA_Sterile_Drug_Products_2004_chunk_53",
+        "FDA_Sterile_Drug_Products_2004_chunk_54",
+        "FDA_Sterile_Drug_Products_2004_chunk_55",
+        "FDA_Sterile_Drug_Products_2004_chunk_56",
+        "FDA_Sterile_Drug_Products_2004_chunk_57",
+        "FDA_Sterile_Drug_Products_2004_chunk_58",
+        "FDA_Sterile_Drug_Products_2004_chunk_59",
+        "FDA_Sterile_Drug_Products_2004_chunk_60",
+        "FDA_Sterile_Drug_Products_2004_chunk_61",
+        "FDA_Sterile_Drug_Products_2004_chunk_62",
+        "FDA_Sterile_Drug_Products_2004_chunk_63",
+        "FDA_Sterile_Drug_Products_2004_chunk_64",
+        "EU_GMP_Annex1_2022_chunk_0",
+        "EU_GMP_Annex1_2022_chunk_1",
+        "EU_GMP_Annex1_2022_chunk_2",
+        "EU_GMP_Annex1_2022_chunk_3",
+        "EU_GMP_Annex1_2022_chunk_4",
+        "EU_GMP_Annex1_2022_chunk_5",
+        "EU_GMP_Annex1_2022_chunk_6",
+        "EU_GMP_Annex1_2022_chunk_7",
+        "EU_GMP_Annex1_2022_chunk_8",
+        "EU_GMP_Annex1_2022_chunk_9",
+        "EU_GMP_Annex1_2022_chunk_10",
+        "EU_GMP_Annex1_2022_chunk_11",
+        "EU_GMP_Annex1_2022_chunk_12",
+        "EU_GMP_Annex1_2022_chunk_13",
+        "EU_GMP_Annex1_2022_chunk_14",
+        "EU_GMP_Annex1_2022_chunk_15",
+        "EU_GMP_Annex1_2022_chunk_16",
+        "EU_GMP_Annex1_2022_chunk_17",
+        "EU_GMP_Annex1_2022_chunk_18",
+        "EU_GMP_Annex1_2022_chunk_19",
+        "EU_GMP_Annex1_2022_chunk_20",
+        "EU_GMP_Annex1_2022_chunk_21",
+        "EU_GMP_Annex1_2022_chunk_22",
+        "EU_GMP_Annex1_2022_chunk_23",
+        "EU_GMP_Annex1_2022_chunk_24",
+        "EU_GMP_Annex1_2022_chunk_25",
+        "EU_GMP_Annex1_2022_chunk_26",
+        "EU_GMP_Annex1_2022_chunk_27",
+        "EU_GMP_Annex1_2022_chunk_28",
+        "EU_GMP_Annex1_2022_chunk_29",
+        "EU_GMP_Annex1_2022_chunk_30",
+        "EU_GMP_Annex1_2022_chunk_31",
+        "EU_GMP_Annex1_2022_chunk_32",
+        "EU_GMP_Annex1_2022_chunk_33",
+        "EU_GMP_Annex1_2022_chunk_34",
+        "EU_GMP_Annex1_2022_chunk_35",
+        "EU_GMP_Annex1_2022_chunk_36",
+        "EU_GMP_Annex1_2022_chunk_37",
+        "EU_GMP_Annex1_2022_chunk_38",
+        "EU_GMP_Annex1_2022_chunk_39",
+        "EU_GMP_Annex1_2022_chunk_40",
+        "EU_GMP_Annex1_2022_chunk_41",
+        "EU_GMP_Annex1_2022_chunk_42",
+        "EU_GMP_Annex1_2022_chunk_43",
+        "EU_GMP_Annex1_2022_chunk_44",
+        "EU_GMP_Annex1_2022_chunk_45",
+        "EU_GMP_Annex1_2022_chunk_46",
+        "EU_GMP_Annex1_2022_chunk_47",
+        "EU_GMP_Annex1_2022_chunk_48",
+        "EU_GMP_Annex1_2022_chunk_49",
+        "EU_GMP_Annex1_2022_chunk_50",
+        "EU_GMP_Annex1_2022_chunk_51",
+        "EU_GMP_Annex1_2022_chunk_52",
+        "EU_GMP_Annex1_2022_chunk_53",
+        "EU_GMP_Annex1_2022_chunk_54",
+        "EU_GMP_Annex1_2022_chunk_55",
+        "EU_GMP_Annex1_2022_chunk_56",
+        "EU_GMP_Annex1_2022_chunk_57",
+        "EU_GMP_Annex1_2022_chunk_58",
+        "EU_GMP_Annex1_2022_chunk_59",
+        "EU_GMP_Annex1_2022_chunk_60",
+        "EU_GMP_Annex1_2022_chunk_61",
+        "EU_GMP_Annex1_2022_chunk_62",
+        "EU_GMP_Annex1_2022_chunk_63",
+        "EU_GMP_Annex1_2022_chunk_64",
+        "WHO_TRS_Annex2_2022_chunk_0",
+        "WHO_TRS_Annex2_2022_chunk_1",
+        "WHO_TRS_Annex2_2022_chunk_2",
+        "WHO_TRS_Annex2_2022_chunk_3",
+        "WHO_TRS_Annex2_2022_chunk_4",
+        "WHO_TRS_Annex2_2022_chunk_5",
+        "WHO_TRS_Annex2_2022_chunk_6",
+        "WHO_TRS_Annex2_2022_chunk_7",
+        "WHO_TRS_Annex2_2022_chunk_8",
+        "WHO_TRS_Annex2_2022_chunk_9",
+        "WHO_TRS_Annex2_2022_chunk_10",
+        "WHO_TRS_Annex2_2022_chunk_11",
+        "WHO_TRS_Annex2_2022_chunk_12",
+        "WHO_TRS_Annex2_2022_chunk_13",
+        "WHO_TRS_Annex2_2022_chunk_14",
+        "WHO_TRS_Annex2_2022_chunk_15",
+        "WHO_TRS_Annex2_2022_chunk_16",
+        "WHO_TRS_Annex2_2022_chunk_17",
+        "WHO_TRS_Annex2_2022_chunk_18",
+        "WHO_TRS_Annex2_2022_chunk_19",
+        "WHO_TRS_Annex2_2022_chunk_20",
+        "WHO_TRS_Annex2_2022_chunk_21",
+        "WHO_TRS_Annex2_2022_chunk_22",
+        "WHO_TRS_Annex2_2022_chunk_23",
+        "WHO_TRS_Annex2_2022_chunk_24",
+        "WHO_TRS_Annex2_2022_chunk_25",
+        "WHO_TRS_Annex2_2022_chunk_26",
+        "WHO_TRS_Annex2_2022_chunk_27",
+        "WHO_TRS_Annex2_2022_chunk_28",
+        "WHO_TRS_Annex2_2022_chunk_29",
+        "WHO_TRS_Annex2_2022_chunk_30",
+        "WHO_TRS_Annex2_2022_chunk_31",
+        "WHO_TRS_Annex2_2022_chunk_32",
+        "WHO_TRS_Annex2_2022_chunk_33",
+        "WHO_TRS_Annex2_2022_chunk_34",
+        "WHO_TRS_Annex2_2022_chunk_35",
+        "WHO_TRS_Annex2_2022_chunk_36",
+        "WHO_TRS_Annex2_2022_chunk_37",
+        "WHO_TRS_Annex2_2022_chunk_38",
+        "WHO_TRS_Annex2_2022_chunk_39",
+        "WHO_TRS_Annex2_2022_chunk_40",
+        "WHO_TRS_Annex2_2022_chunk_41",
+        "WHO_TRS_Annex2_2022_chunk_42",
+        "WHO_TRS_Annex2_2022_chunk_43",
+        "WHO_TRS_Annex2_2022_chunk_44",
+        "WHO_TRS_Annex2_2022_chunk_45",
+        "WHO_TRS_Annex2_2022_chunk_46",
+        "WHO_TRS_Annex2_2022_chunk_47",
+        "WHO_TRS_Annex2_2022_chunk_48",
+        "WHO_TRS_Annex2_2022_chunk_49",
+        "WHO_TRS_Annex2_2022_chunk_50",
+        "WHO_TRS_Annex2_2022_chunk_51",
+        "WHO_TRS_Annex2_2022_chunk_52",
+        "WHO_TRS_Annex2_2022_chunk_53",
+        "WHO_TRS_Annex2_2022_chunk_54",
+        "WHO_TRS_Annex2_2022_chunk_55",
+        "WHO_TRS_Annex2_2022_chunk_56",
+        "WHO_TRS_Annex2_2022_chunk_57",
+        "WHO_TRS_Annex2_2022_chunk_58",
+        "WHO_TRS_Annex2_2022_chunk_59",
+        "WHO_TRS_Annex2_2022_chunk_60",
+        "WHO_TRS_Annex2_2022_chunk_61",
+        "WHO_TRS_Annex2_2022_chunk_62",
+        "WHO_TRS_Annex2_2022_chunk_63",
+        "ISO_14644_1_chunk_0",
+        "ISO_14644_1_chunk_1",
+        "ISO_14644_1_chunk_2",
+        "ISO_14644_1_chunk_3",
+        "ISO_14644_1_chunk_4",
+        "ISO_14644_1_chunk_5",
+        "ISO_14644_1_chunk_6",
+        "ISO_14644_1_chunk_7",
+        "ISO_14644_1_chunk_8",
+        "ISO_14644_1_chunk_9",
+        "ISO_14644_1_chunk_10",
+        "ISO_14644_1_chunk_11",
+        "ISO_14644_1_chunk_12",
+        "ISO_14644_1_chunk_13",
+        "ISO_14644_1_chunk_14",
+        "ISO_14644_1_chunk_15",
+        "ISO_14644_1_chunk_16",
+        "ISO_14644_1_chunk_17",
+        "ISO_14644_1_chunk_18",
+        "ISO_14644_4_chunk_0",
+        "ISO_14644_4_chunk_1",
+        "ISO_14644_4_chunk_2",
+        "ISO_14644_4_chunk_3",
+        "ISO_14644_4_chunk_4",
+        "ISO_14644_4_chunk_5",
+        "ISO_14644_4_chunk_6",
+        "ISO_14644_4_chunk_7",
+        "ISO_14644_4_chunk_8",
+        "FDA_mAb_Guidance_1996_chunk_0",
+        "FDA_mAb_Guidance_1996_chunk_1",
+        "FDA_mAb_Guidance_1996_chunk_2",
+        "FDA_mAb_Guidance_1996_chunk_3",
+        "FDA_mAb_Guidance_1996_chunk_4",
+        "FDA_mAb_Guidance_1996_chunk_5",
+        "FDA_mAb_Guidance_1996_chunk_6",
+        "FDA_mAb_Guidance_1996_chunk_7",
+        "FDA_mAb_Guidance_1996_chunk_8",
+        "FDA_mAb_Guidance_1996_chunk_9",
+        "FDA_mAb_Guidance_1996_chunk_10",
+        "FDA_mAb_Guidance_1996_chunk_11",
+        "FDA_mAb_Guidance_1996_chunk_12",
+        "FDA_mAb_Guidance_1996_chunk_13",
+        "FDA_mAb_Guidance_1996_chunk_14",
+        "FDA_mAb_Guidance_1996_chunk_15"
+      ],
+      "metadatas": [
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 0
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 1
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 2
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 3
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 4
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 5
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 6
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 7
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 8
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 9
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 10
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 11
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 12
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 13
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 14
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 15
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 16
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 17
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 18
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 19
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 20
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 21
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 22
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 23
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 24
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 25
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 26
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 27
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 28
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 29
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 30
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 31
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 32
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 33
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 34
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 35
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 36
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 37
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 38
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 39
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 40
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 41
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 42
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 43
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 44
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 45
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 46
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 47
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 48
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 49
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 50
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 51
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 52
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 53
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 54
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 55
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 56
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 57
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 58
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 59
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 60
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 61
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 62
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 63
+        },
+        {
+          "source": "FDA_Sterile_Drug_Products_2004",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2004,
+          "jurisdiction": "FDA",
+          "chunk_index": 64
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 0
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 1
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 2
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 3
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 4
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 5
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 6
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 7
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 8
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 9
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 10
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 11
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 12
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 13
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 14
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 15
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 16
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 17
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 18
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 19
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 20
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 21
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 22
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 23
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 24
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 25
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 26
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 27
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 28
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 29
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 30
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 31
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 32
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 33
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 34
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 35
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 36
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 37
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 38
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 39
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 40
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 41
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 42
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 43
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 44
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 45
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 46
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 47
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 48
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 49
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 50
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 51
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 52
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 53
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 54
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 55
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 56
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 57
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 58
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 59
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 60
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 61
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 62
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 63
+        },
+        {
+          "source": "EU_GMP_Annex1_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "EMA",
+          "chunk_index": 64
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 0
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 1
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 2
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 3
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 4
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 5
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 6
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 7
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 8
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 9
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 10
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 11
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 12
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 13
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 14
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 15
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 16
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 17
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 18
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 19
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 20
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 21
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 22
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 23
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 24
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 25
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 26
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 27
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 28
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 29
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 30
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 31
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 32
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 33
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 34
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 35
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 36
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 37
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 38
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 39
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 40
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 41
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 42
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 43
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 44
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 45
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 46
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 47
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 48
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 49
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 50
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 51
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 52
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 53
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 54
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 55
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 56
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 57
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 58
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 59
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 60
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 61
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 62
+        },
+        {
+          "source": "WHO_TRS_Annex2_2022",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2022,
+          "jurisdiction": "WHO",
+          "chunk_index": 63
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 0
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 1
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 2
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 3
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 4
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 5
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 6
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 7
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 8
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 9
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 10
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 11
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 12
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 13
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 14
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 15
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 16
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 17
+        },
+        {
+          "source": "ISO_14644_1",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2015,
+          "jurisdiction": "ISO",
+          "chunk_index": 18
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 0
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 1
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 2
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 3
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 4
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 5
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 6
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 7
+        },
+        {
+          "source": "ISO_14644_4",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "high",
+          "year": 2001,
+          "jurisdiction": "ISO",
+          "chunk_index": 8
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 0
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 1
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 2
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 3
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 4
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 5
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 6
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 7
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 8
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 9
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 10
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 11
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 12
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 13
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 14
+        },
+        {
+          "source": "FDA_mAb_Guidance_1996",
+          "doc_type": "regulatory",
+          "scale": "commercial",
+          "reliability": "medium",
+          "year": 1996,
+          "jurisdiction": "FDA",
+          "chunk_index": 15
+        }
+      ]
+    }
+  }
+}

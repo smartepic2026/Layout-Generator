@@ -1,0 +1,16 @@
+# LayoutAgent 검색 프로필
+agent: LayoutAgent
+backend: tfidf
+collections:
+  - name: design_standards
+    weight: 1.0
+  - name: regulatory_docs
+    weight: 0.5
+confidence:
+  min_threshold: 0.10
+top_k_default: 5
+fallback:
+  on_low_confidence: broaden_filter
+  on_empty: warn
+citation:
+  style: inline_with_chunk_id

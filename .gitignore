@@ -3,6 +3,13 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+.venv_py39_backup/
+
+# RAG 임베딩 산출물 — 재생성 가능한 바이너리 (코드만 커밋)
+*.pkl
+*.emb.npy
+*.faiss
+*.bin
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/

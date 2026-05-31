@@ -1,10 +1,13 @@
 pydantic>=2.6
 shapely>=2.0
 svgwrite>=1.4
-numpy>=1.26
+numpy>=2.0          # Python 3.13 호환 (1.26.x 는 3.13 미지원)
 matplotlib>=3.8
 gymnasium>=0.29
 stable-baselines3>=2.3
 pytest>=8.0
-# [D-015] Phase C0 — CP-SAT 솔버. 재현성 확보를 위해 고정.
-ortools==9.10.4067
+# [D-015 / 2026-05-31 갱신] CP-SAT 솔버. 3.13 호환 위해 9.14 로 핀 (Python 3.10+ 작업과 통합).
+ortools==9.14.6206
+# 팀원 룰엔진 + RAG validation 통합 (2026-05-31)
+openpyxl>=3.1       # 팀원 urs_parser xlsx 파싱
+PyYAML>=6.0         # 팀원 rag_interface profile 로딩

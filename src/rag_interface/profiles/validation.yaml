@@ -1,0 +1,16 @@
+# ValidationAgent 검색 프로필 (ARCHITECTURE.md §6)
+agent: ValidationAgent
+backend: tfidf
+# D2: ValidationAgent 는 cross-collection 금지 → regulatory_docs 단일.
+collections:
+  - name: regulatory_docs
+    weight: 1.0
+confidence:
+  # D1: TF-IDF 분포 기준 보수값. cosine.
+  min_threshold: 0.10
+top_k_default: 5
+fallback:
+  on_low_confidence: broaden_filter   # source 필터 해제 후 재질의
+  on_empty: warn                      # raise 대신 insufficient_evidence 반환 (validator robust)
+citation:
+  style: inline_with_chunk_id

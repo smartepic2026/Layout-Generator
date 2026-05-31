@@ -43,6 +43,10 @@ ROOM_KEY_MAP = {
     "투명%": "transparency_pct",
     "투명도": "transparency_pct",
     "transparency": "transparency_pct",
+    # 2026-05-31: 새 팀원 룰엔진 (dataclass 기반) 신규 매핑
+    "room_flow": "one_way_flow",          # 팀원 "One-way"/"Both-way" string
+    "well_type_ceiling": "has_well_ceiling",
+    "process_no": "process_step_ids",     # Room.process_no (list[str]) → process_step_ids
 }
 
 # Airlock 필드명 매핑 (§2)
@@ -51,6 +55,9 @@ AL_KEY_MAP = {
     "kind": "type",
     "grade": "clean_grade",
     "DP": "differential_pressure_Pa",
+    # 2026-05-31: 새 팀원 룰엔진 매핑
+    "connects_higher_room": "connects_higher",
+    "connects_lower_room": "connects_lower",
     # higher_room / lower_room / area_m2 는 required 인데 팀원 출력에
     # "—" (null) 인 상태. 이번 fix 에선 매핑만, Optional 화는 팀원 확인 후.
 }
@@ -61,6 +68,8 @@ ADJ_KEY_MAP = {
     "door_size": "door_size_mm",
     # `swing` 은 의미가 다름 (Room id vs 방향 descriptor) — 그대로 받으면
     # 의미 오염. 팀원 확인 전엔 swing → notes 로 보존.
+    # 2026-05-31: 새 팀원 룰엔진 매핑
+    "door_swing_target": "door_swing_to",
 }
 
 # Rationale 필드명 매핑 (§7)
@@ -120,7 +129,19 @@ def _adapt_equipment(eq: dict) -> dict:
     """Equipment dict 정규화: 합쳐진 W×D×H 문자열 파싱 + 이름 strip + 키 매핑."""
     eq = dict(eq)  # shallow copy
 
-    # 1) 합쳐진 dimension 문자열 → W_mm/D_mm/H_mm. 가능한 키 모두 시도.
+    # 1a) [2026-05-31] 새 팀원 룰엔진 (dataclass) — 치수 필드명 변경
+    #     width_mm/depth_mm/height_mm → 우리 W_mm/D_mm/H_mm
+    if "width_mm" in eq and "W_mm" not in eq:
+        eq["W_mm"] = eq["width_mm"]
+    if "depth_mm" in eq and "D_mm" not in eq:
+        eq["D_mm"] = eq["depth_mm"]
+    if "height_mm" in eq and "H_mm" not in eq:
+        eq["H_mm"] = eq["height_mm"]
+    # max_operating_weight_kg → max_op_weight_kg
+    if "max_operating_weight_kg" in eq and "max_op_weight_kg" not in eq:
+        eq["max_op_weight_kg"] = eq["max_operating_weight_kg"]
+
+    # 1b) 구 팀원 출력 호환 — 합쳐진 dimension 문자열 → W_mm/D_mm/H_mm
     for combined_key in ("W×D×H(mm)", "WxDxH(mm)", "WxDxH_mm", "dimensions",
                          "dim", "size", "WDH"):
         if combined_key in eq and not all(k in eq for k in ("W_mm", "D_mm", "H_mm")):
@@ -133,15 +154,24 @@ def _adapt_equipment(eq: dict) -> dict:
                 eq.setdefault("H_mm", h)
             break
 
-    # 2) weight / max_op 키 매핑 (마크다운 §1.1)
+    # 2) weight / max_op 키 매핑 (구 팀원 출력)
     if "weight" in eq and "weight_kg" not in eq:
         eq["weight_kg"] = eq["weight"]
     if "max_op" in eq and "max_op_weight_kg" not in eq:
         eq["max_op_weight_kg"] = eq["max_op"]
 
-    # D-005: process_no 가 정식 필드명 (팀원 정식 계약). 별도 alias 변환 불필요.
-    #   - schemas.Equipment.process_no 가 validation_alias 로 "process_step" 도 받음 → 구 JSON 호환은 schema 가 처리.
-    #   - A1.5 에서 깔았던 process_no → process_step alias 는 D-005 에서 제거됨.
+    # 3) [2026-05-31] process_no 타입 변환 — 새 팀원: list[str] → 우리: Optional[str]
+    #    팀원: ["P1-2. 배지 제조"] → 우리: "P1-2" (첫 element 의 P{n}-{m} prefix 만 추출)
+    if "process_no" in eq and isinstance(eq["process_no"], list):
+        if eq["process_no"]:
+            first = eq["process_no"][0]
+            # "P1-2. 배지 제조" → "P1-2" 추출 (regex)
+            m = re.match(r"^(P\d+[-_.]\d+)", str(first))
+            eq["process_no"] = m.group(1) if m else str(first)
+        else:
+            eq["process_no"] = None
+
+    # D-005/006: process_no 가 정식 필드명, process_step 은 @property (back-compat).
 
     # name trailing space strip
     if "name" in eq:
@@ -163,6 +193,26 @@ def _adapt_room(room: dict) -> dict:
     if "gowning" in room and "gowning_type" not in room:
         room["gowning_type"] = _strip_name(room["gowning"])
 
+    # [2026-05-31] 새 팀원 룰엔진 — room_flow 문자열 → one_way_flow bool
+    #   "One-way" → True, "Both-way" / 기타 → False
+    if "one_way_flow" in room and isinstance(room["one_way_flow"], str):
+        room["one_way_flow"] = (room["one_way_flow"].strip().lower() == "one-way")
+
+    # [2026-05-31] None 값 보정 — area_m2 / volume_m3 / ceiling_height_mm 같은
+    # required 숫자 필드. 팀원 출력에 None 일 수 있음 (보조방 등).
+    for f in ("area_m2", "volume_m3"):
+        if f in room and room[f] is None:
+            room[f] = 0.0
+    if room.get("ceiling_height_mm") is None:
+        room["ceiling_height_mm"] = 3000
+
+    # [2026-05-31] Room.process_no (list[str]) → process_step_ids (list[str])
+    # 위 ROOM_KEY_MAP 에서 키만 매핑됨. 값은 그대로 list 유지.
+    # (만약 list 가 아니면 list 로 wrap)
+    if "process_step_ids" in room and not isinstance(room["process_step_ids"], list):
+        v = room["process_step_ids"]
+        room["process_step_ids"] = [v] if v else []
+
     # equipment 도 재귀 정규화
     if "equipment" in room and isinstance(room["equipment"], list):
         room["equipment"] = [_adapt_equipment(eq) for eq in room["equipment"]]
@@ -176,6 +226,28 @@ def _adapt_airlock(al: dict) -> dict:
     for k in NAME_FIELDS_TO_STRIP:
         if k in al:
             al[k] = _strip_name(al[k])
+
+    # [2026-05-31] 새 팀원 룰엔진 — None 보정 (required 필드)
+    if al.get("area_m2") is None:
+        al["area_m2"] = 0.0
+    if al.get("connects_higher") is None:
+        al["connects_higher"] = ""
+    if al.get("connects_lower") is None:
+        al["connects_lower"] = ""
+
+    # [2026-05-31] purpose 간소화 형태 → 우리 Literal 확장형 매핑
+    # 팀원: personnel / material / common — entry/exit 구분 없음.
+    # 우리: personnel_entry/exit, material_entry/exit, common/common_in/common_out.
+    # type (kind) 의 _in/_out 보고 결정. 안 보이면 _entry 로 통일.
+    if "purpose" in al:
+        p = al["purpose"]
+        t = str(al.get("type") or "")
+        if p == "personnel":
+            al["purpose"] = "personnel_exit" if "_out" in t else "personnel_entry"
+        elif p == "material":
+            al["purpose"] = "material_exit" if "_out" in t else "material_entry"
+        elif p == "common":
+            al["purpose"] = "common_out" if "_out" in t else ("common_in" if "_in" in t else "common")
     return al
 
 
@@ -193,6 +265,12 @@ def _adapt_adjacency(adj: dict) -> dict:
     for k in NAME_FIELDS_TO_STRIP:
         if k in adj:
             adj[k] = _strip_name(adj[k])
+
+    # [2026-05-31] None 보정 (required 필드 default)
+    if adj.get("door_size_mm") is None:
+        adj["door_size_mm"] = 1000
+    if adj.get("door_count") is None:
+        adj["door_count"] = 1
     return adj
 
 
@@ -220,6 +298,13 @@ def adapt_external_dict(data: dict) -> dict:
     meta / 그 외 모르는 최상위 키는 extra='ignore' 가 알아서 흡수.
     """
     data = dict(data)
+    # [2026-05-31] 새 팀원 룰엔진 (dataclass) 은 project_name / modality 를
+    # 최상위에 안 박음. meta 에서 추출 또는 default.
+    meta = data.get("meta") or {}
+    if "project_name" not in data:
+        data["project_name"] = meta.get("project_name") or "Teammate RuleEngine Output"
+    if "modality" not in data:
+        data["modality"] = meta.get("modality") or "mAb"
     if "rooms" in data and isinstance(data["rooms"], list):
         data["rooms"] = [_adapt_room(r) for r in data["rooms"]]
     if "airlocks" in data and isinstance(data["airlocks"], list):
