@@ -1,0 +1,594 @@
+{
+  "metadata": {
+    "name": "GMP Layout Design Decision Tree",
+    "target": "mAb 8,000L culture Line",
+    "total_area_m2_default": 3300,
+    "source": "GMP_Layout_Logic_0510.xlsx",
+    "regulatory_basis": ["EU GMP Annex 1"],
+    "version": "0.1",
+    "design_level": "conceptual"
+  },
+
+  "clean_grades": {
+    "order": ["A", "B", "C", "D", "CNC", "NC"],
+    "color_map": {
+      "A":   { "fill": "Green-diagonal Black", "transparency": 0.5 },
+      "B":   { "fill": "Green",                "transparency": 0.5 },
+      "C":   { "fill": "Yellow",               "transparency": 0.5 },
+      "D":   { "fill": "Blue",                 "transparency": 0.5 },
+      "CNC": { "fill": "Gray-dotted Black",    "transparency": 0.5 },
+      "NC":  { "fill": "Gray",                 "transparency": 0.5 }
+    },
+    "pressure_rank": {
+      "B": 4, "C": 3, "D": 2, "CNC": 1, "NC": 0
+    },
+    "acph": {
+      "A": "0.36~0.54 m/s (unidirectional)",
+      "B": "40~60 ACPH",
+      "C": "20~40 ACPH",
+      "D": "6~20 ACPH"
+    },
+    "gowning": {
+      "B": "sterile gown (over gowning)",
+      "C": "dust-free gown (over gowning)",
+      "D": "scrub (degowning and gowning)",
+      "CNC": "scrub (degowning and gowning)"
+    }
+  },
+
+  "phases": [
+    {
+      "id": "P1",
+      "name": "사전조건 분석 (Pre-condition Analysis)",
+      "nodes": [
+        {
+          "id": "D-1.1",
+          "type": "decision",
+          "description": "건축물 인터페이스 확인",
+          "inputs": [
+            { "key": "RAW_IN",    "desc": "원자재 반입구 좌표", "required": true },
+            { "key": "WASTE_OUT", "desc": "폐기물 반출구 좌표", "required": true },
+            { "key": "ELEV",      "desc": "엘리베이터 좌표",   "required_if": "floor >= 2" }
+          ]
+        },
+        {
+          "id": "D-1.2",
+          "type": "decision",
+          "description": "전체 면적/규모 확인",
+          "inputs": [
+            { "key": "TOTAL_AREA",          "desc": "전체 layout 면적(m²)", "default": 3300 },
+            { "key": "PROCESS_SCALE",       "desc": "공정 규모",           "default": "mAb 8,000L culture" },
+            { "key": "OVERLAP_PRODUCTION",  "desc": "다품목/공정 overlap 여부", "type": "boolean" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "P2",
+      "name": "Zoning (구역 분할)",
+      "nodes": [
+        {
+          "id": "D-2.1",
+          "type": "decision",
+          "description": "3대 구역 분할",
+          "branches": [
+            {
+              "name": "process_area",
+              "rooms_include": ["배지 조제실", "버퍼 조제실", "Seed 접종실", "배양실1", "배양실2",
+                                 "회수실", "정제실1", "정제실2", "공정 준비실", "세척실",
+                                 "공급복도", "리턴복도"],
+              "area_ratio_rule": {
+                "if_overlap_production_true":  [0.60, 0.70],
+                "if_overlap_production_false": [0.40, 0.50]
+              }
+            },
+            {
+              "name": "support_area",
+              "rooms_include": ["자재 보관실", "장비 보관실", "DS 보관실", "IPC 실",
+                                 "세포주 보관실", "CIP 공급실", "갱의실 (여)", "갱의실 (남)"],
+              "clean_grade": ["D", "CNC"],
+              "position_hint": "near RAW_IN"
+            },
+            {
+              "name": "nc_area",
+              "rooms_include": ["화장실 (여)", "화장실 (남)", "사무실", "모니터링실", "로비"],
+              "clean_grade": ["NC"],
+              "optional_if_separate_floor_or_building": true
+            }
+          ]
+        },
+        {
+          "id": "A-2.2",
+          "type": "action",
+          "description": "전체 동선 컨셉 설정",
+          "action": "set_flow_direction",
+          "params": { "start_near": "RAW_IN", "end_near": "WASTE_OUT" }
+        },
+        {
+          "id": "A-2.3",
+          "type": "action",
+          "description": "복도 골격 배치",
+          "action": "place_corridors",
+          "params": {
+            "supply_corridor_position": "center",
+            "return_corridor_position": "perimeter"
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "P3",
+      "name": "Room 청정등급 부여 (Clean Grade Classification)",
+      "nodes": [
+        {
+          "id": "D-3.1",
+          "type": "decision",
+          "description": "무균공정 여부",
+          "rule": {
+            "if": "room.has_laminar_flow_barrier (Isolator/RABS/Cleanbench/BSC)",
+            "then": [
+              { "target": "barrier_inside",  "grade": "A" },
+              { "target": "surrounding_room", "grade": "B" }
+            ],
+            "else": "goto D-3.2"
+          }
+        },
+        {
+          "id": "D-3.2",
+          "type": "decision",
+          "description": "주요 제조공정 Room 여부",
+          "rule": {
+            "if": "room.is_main_process (배지/버퍼/배양/정제)",
+            "branches": [
+              { "if_sub": "all_equipment_is_closed_system",  "then_grade": "D" },
+              { "else_sub": true,                            "then_grade": "C" }
+            ],
+            "else": "goto D-3.3"
+          }
+        },
+        {
+          "id": "D-3.3",
+          "type": "decision",
+          "description": "보조 기능 Room 분류",
+          "rules": [
+            { "if": "room.purpose ∈ {storage, washing, gowning, IPC, transit}",
+              "then_grade": ["D", "CNC"] },
+            { "if": "room.purpose ∈ {toilet, office, monitoring, lobby}",
+              "then_grade": "NC" },
+            { "else": true, "then_grade": "D", "rationale": "conservative default" }
+          ]
+        },
+        {
+          "id": "A-3.4",
+          "type": "action",
+          "description": "Layout 색상 부여",
+          "action": "apply_color_map",
+          "params_ref": "clean_grades.color_map"
+        }
+      ],
+      "recommended_grade_by_room": [
+        { "room": "배지 조제실",     "grade_options": ["C", "D"], "area_m2": 100 },
+        { "room": "버퍼 조제실",     "grade_options": ["C", "D"], "area_m2": 200 },
+        { "room": "Seed 접종실",     "grade_options": ["B", "C"], "area_m2": 40  },
+        { "room": "배양실1",         "grade_options": ["C", "D"], "area_m2": 150 },
+        { "room": "배양실2",         "grade_options": ["C", "D"], "area_m2": 150 },
+        { "room": "회수실",          "grade_options": ["C", "D"], "area_m2": 60  },
+        { "room": "정제실1",         "grade_options": ["C", "D"], "area_m2": 300 },
+        { "room": "정제실2",         "grade_options": ["C", "D"], "area_m2": 100 },
+        { "room": "공정 준비실",     "grade_options": ["C", "D"], "area_m2": 80  },
+        { "room": "세척실",          "grade_options": ["C", "D"], "area_m2": 60  },
+        { "room": "공급복도",        "grade_options": ["C", "D"], "area_m2": 150 },
+        { "room": "리턴복도",        "grade_options": ["D", "CNC"], "area_m2": 250 },
+        { "room": "착의실",          "grade_options": ["B", "C"], "area_m2": 30  },
+        { "room": "자재 보관실",     "grade_options": ["D", "CNC"], "area_m2": 100 },
+        { "room": "장비 보관실",     "grade_options": ["D", "CNC"], "area_m2": 100 },
+        { "room": "DS 보관실",       "grade_options": ["D", "CNC"], "area_m2": 50  },
+        { "room": "IPC 실",          "grade_options": ["D", "CNC"], "area_m2": 30  },
+        { "room": "세포주 보관실",   "grade_options": ["D", "CNC"], "area_m2": 20  },
+        { "room": "CIP 공급실",      "grade_options": ["CNC", "NC"], "area_m2": 60 },
+        { "room": "갱의실 (여)",     "grade_options": ["D", "CNC"], "area_m2": 50  },
+        { "room": "갱의실 (남)",     "grade_options": ["D", "CNC"], "area_m2": 80  }
+      ]
+    },
+
+    {
+      "id": "P4",
+      "name": "Room 크기 결정 (Room Sizing)",
+      "nodes": [
+        {
+          "id": "D-4.1",
+          "type": "decision",
+          "description": "Room 형상",
+          "rule": "default = rectangle; allow union-of-rectangles if site requires"
+        },
+        {
+          "id": "D-4.2",
+          "type": "decision",
+          "description": "Room 내부 면적 산정",
+          "formula": "Area_min = sum(equip_footprint) + equip_spacing(>=1000mm) + wall_clearance(600~1200mm)",
+          "result": "room.area = max(Area_min, recommended_area)"
+        },
+        {
+          "id": "D-4.3",
+          "type": "decision",
+          "description": "복도 폭",
+          "rule": {
+            "default_range_mm": [2000, 3000],
+            "if_area_constrained_mm": [1500, 2000],
+            "hard_min_mm": 1500
+          }
+        },
+        {
+          "id": "D-4.4",
+          "type": "decision",
+          "description": "전실(Air Lock) 크기",
+          "rule": {
+            "if_area_abundant_mm": [3000, 3000],
+            "else_min": "사람·물품 통과 가능한 최소 (PAL≈12m², MAL≈16m²)"
+          }
+        },
+        {
+          "id": "D-4.5",
+          "type": "decision",
+          "description": "천정 높이",
+          "rule": {
+            "default_range_mm": [2700, 3000],
+            "if_equipment_taller_than_default": "apply well-type ceiling (local elevation)",
+            "if_bioreactor_10000L_or_larger": "lower body in service area, head exposed to room"
+          }
+        },
+        {
+          "id": "A-4.6",
+          "type": "action",
+          "description": "체적 산정 → 환기횟수 결정",
+          "formula": "Volume = Area × Ceiling_height",
+          "drives": "ACPH per clean grade (see clean_grades.acph)"
+        },
+        {
+          "id": "D-4.7",
+          "type": "decision",
+          "description": "주요 공정 Room 합 면적 검증",
+          "rule": {
+            "constraint": "0.40 <= sum(main_process_room_area)/TOTAL_AREA <= 0.70",
+            "if_violated": "loop back to D-4.2"
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "P5",
+      "name": "Room 배열 (Room Arrangement)",
+      "nodes": [
+        {
+          "id": "A-5.1",
+          "type": "action",
+          "description": "공정 순서대로 1차 정렬",
+          "process_sequence": [
+            "Cell bank storage",
+            "Media preparation",
+            "Buffer preparation",
+            "Inoculation (Seed)",
+            "Cell Culture (배양1)",
+            "Cell Culture (배양2)",
+            "Harvest (회수)",
+            "Purification 1",
+            "Virus Filtration (boundary)",
+            "Purification 2",
+            "DS storage"
+          ]
+        },
+        {
+          "id": "D-5.2",
+          "type": "decision",
+          "description": "One-way Flow 적용 구간 판정",
+          "rule": {
+            "one_way_rooms_before_virus_filtration": [
+              "Seed 접종실", "배양실1", "배양실2", "회수실", "정제실1"
+            ],
+            "one_way_constraints": {
+              "entry_via": "Supply Corridor",
+              "exit_via":  "Return Corridor",
+              "entry_door": "≠ exit_door"
+            },
+            "bidirectional_rooms_after_virus_filtration": ["정제실2", "DS 보관실"]
+          }
+        },
+        {
+          "id": "A-5.3",
+          "type": "action",
+          "description": "Room 도어 위치 1차 결정 (동선 최단)"
+        },
+        {
+          "id": "D-5.4",
+          "type": "decision",
+          "description": "부속 Room 필요 여부",
+          "rule": "if needed, connect via single door, allow free traffic"
+        }
+      ]
+    },
+
+    {
+      "id": "P6",
+      "name": "전실(Air Lock) 배치",
+      "nodes": [
+        {
+          "id": "D-6.1",
+          "type": "decision",
+          "description": "AL 필요 여부",
+          "rules": [
+            { "if": "Grade(r1) != Grade(r2)",                     "then": "AL required" },
+            { "if": "process_importance(r1) != process_importance(r2)", "then": "AL required" },
+            { "else": true,                                       "then": "AL omitted" }
+          ]
+        },
+        {
+          "id": "D-6.2",
+          "type": "decision",
+          "description": "AL 개수 결정",
+          "rules": [
+            {
+              "if": "room.grade == 'B' AND room.flow == 'one_way'",
+              "then": { "count": 4, "types": ["PAL-in", "MAL-in", "PAL-out", "MAL-out"] }
+            },
+            {
+              "if": "room.grade == 'C' AND room.flow == 'one_way' AND space.abundant",
+              "then": { "count": 4, "types": ["PAL-in", "MAL-in", "PAL-out", "MAL-out"] }
+            },
+            {
+              "if": "room.grade == 'C' AND room.flow == 'one_way' AND NOT space.abundant",
+              "then": { "count": 2, "types": ["AL-in", "AL-out"], "note": "PAL+MAL combined" }
+            },
+            {
+              "if": "room.flow == 'bidirectional'",
+              "then": { "count": 1, "types": ["AL"] }
+            }
+          ]
+        },
+        {
+          "id": "D-6.3",
+          "type": "decision",
+          "description": "AL 타입(압력 패턴)",
+          "options": [
+            { "type": "Cascade", "pattern": "High_DP_room → AL → Low_DP_room", "default": true },
+            { "type": "Sink",    "pattern": "AL < both rooms (lower pressure)", "use_when": "biological safety isolation" },
+            { "type": "Bubble",  "pattern": "AL > both rooms (higher pressure)", "use_when": "external intrusion prevention" }
+          ]
+        },
+        {
+          "id": "A-6.4",
+          "type": "action",
+          "description": "AL과 복도 연결",
+          "rule": {
+            "one_way_room.entry_AL": "connect to Supply Corridor",
+            "one_way_room.exit_AL":  "connect to Return Corridor"
+          }
+        },
+        {
+          "id": "D-6.5",
+          "type": "decision",
+          "description": "AL Grade 부여",
+          "options": [
+            { "al": "MAL-in/out, PAL-in/out (adjacent to Grade B)", "grade": ["B", "C", "D"] },
+            { "al": "CAL (Common Air Lock)",                       "grade": ["C", "D"] },
+            { "al": "support area entry AL",                       "grade": ["CNC", "NC"] }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "P7",
+      "name": "복도(Corridor) 설계",
+      "nodes": [
+        {
+          "id": "D-7.1",
+          "type": "decision",
+          "description": "복도 유형",
+          "types": {
+            "supply_corridor": { "purpose": ["personnel_in", "material_in"],  "grade": ["C", "D"] },
+            "return_corridor": { "purpose": ["personnel_out", "waste_out"], "grade": ["D", "CNC"] }
+          }
+        },
+        {
+          "id": "C-7.2",
+          "type": "hard_constraint",
+          "description": "Supply ↔ Return 직접 연결 금지 (cross-contamination prevention)"
+        },
+        {
+          "id": "A-7.3",
+          "type": "action",
+          "description": "Return Corridor 끝 → 보조구역(D/CNC) 출구"
+        }
+      ]
+    },
+
+    {
+      "id": "P8",
+      "name": "도어(Door) 설계",
+      "nodes": [
+        {
+          "id": "D-8.1",
+          "type": "decision",
+          "description": "도어 폭",
+          "rules": [
+            { "if": "door.type == 'standard'", "width_mm": 1000 },
+            { "if": "door.type == 'MAL'",      "width_mm_range": [1500, 2000] }
+          ]
+        },
+        {
+          "id": "A-8.2",
+          "type": "action",
+          "description": "도어 열림 방향 = 차압 흐름 방향 (passive close)"
+        },
+        {
+          "id": "A-8.3",
+          "type": "action",
+          "description": "도어 위치 = 내·외 동선 최단 위치"
+        },
+        {
+          "id": "D-8.4",
+          "type": "decision",
+          "description": "Room별 도어 개수",
+          "rule": "1 ~ 4 (or more) per room"
+        }
+      ]
+    },
+
+    {
+      "id": "P9",
+      "name": "제조 장비 배치 (Equipment Placement)",
+      "nodes": [
+        {
+          "id": "A-9.1",
+          "type": "action",
+          "description": "공정 순서대로 장비 배치 (제조장비 범례의 '단위 공정' 순)"
+        },
+        {
+          "id": "D-9.2",
+          "type": "decision",
+          "description": "장비 간 간격",
+          "rule": ">= 1000 mm"
+        },
+        {
+          "id": "D-9.3",
+          "type": "decision",
+          "description": "장비-벽 간격",
+          "rule_mm_range": [600, 1200]
+        },
+        {
+          "id": "D-9.4",
+          "type": "decision",
+          "description": "벽면 부착 여부",
+          "rules": [
+            { "if": "utility_source == 'wall'",    "then": "place equipment adjacent to wall" },
+            { "if": "utility_source == 'ceiling'", "then": "allow center placement" }
+          ]
+        },
+        {
+          "id": "D-9.5",
+          "type": "decision",
+          "description": "대형 장비 특수 처리",
+          "rule": {
+            "if": "equipment == 'BioReactor 10,000L' OR height > room.ceiling_height",
+            "then_options": [
+              "lower body in service area, head exposed",
+              "apply well-type ceiling"
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "P10",
+      "name": "세척실 / 준비실 (Washing / Preparation)",
+      "nodes": [
+        {
+          "id": "A-10.1",
+          "type": "action",
+          "description": "연결 경로",
+          "params": {
+            "washing_connects_to":     "Return Corridor (via exit AL)",
+            "preparation_connects_to": "Supply Corridor"
+          }
+        },
+        {
+          "id": "A-10.2",
+          "type": "action",
+          "description": "Pass-through COP 공유 (인접 배치)"
+        },
+        {
+          "id": "C-10.3",
+          "type": "hard_constraint",
+          "description": "세척실 ↔ 준비실 사람 직접 왕래 물리적 차단"
+        }
+      ]
+    },
+
+    {
+      "id": "P11",
+      "name": "NC 구역 배치",
+      "nodes": [
+        {
+          "id": "D-11.1",
+          "type": "decision",
+          "description": "NC Room 포함 여부",
+          "rule": {
+            "if": "separate_floor_or_building_planned == true",
+            "then": "skip NC area in this layout",
+            "else": "include NC area"
+          }
+        },
+        {
+          "id": "A-11.2",
+          "type": "action",
+          "description": "NC Room 배치 (별도 영역)",
+          "rooms": ["화장실 (여)", "화장실 (남)", "사무실", "모니터링실", "로비"]
+        }
+      ]
+    },
+
+    {
+      "id": "P12",
+      "name": "차압(Differential Pressure) 부여",
+      "nodes": [
+        {
+          "id": "A-12.1",
+          "type": "action",
+          "description": "단위 표기",
+          "params": { "unit": "Pa", "reference_pressure_Pa": 0 }
+        },
+        {
+          "id": "D-12.2",
+          "type": "decision",
+          "description": "청정등급 간 차압",
+          "rule": {
+            "min_delta_Pa": 10,
+            "max_delta_Pa": 15,
+            "rank_order": ["B", "C", "D", "CNC", "NC"],
+            "higher_grade_higher_pressure": true
+          }
+        },
+        {
+          "id": "D-12.3",
+          "type": "decision",
+          "description": "동일 등급 Room 간 차압",
+          "rule": {
+            "default_delta_Pa": 0,
+            "exception": {
+              "case": "Virus Removal 전후 정제실",
+              "rule": "DP(정제실2) >= DP(정제실1) + 0.5 Pa"
+            }
+          }
+        },
+        {
+          "id": "A-12.4",
+          "type": "action",
+          "description": "Room별 급기/배기 균형 설계"
+        }
+      ]
+    }
+  ],
+
+  "hard_constraints": [
+    { "id": "C1",  "phase": "P7",  "rule": "Supply Corridor ↔ Return Corridor 직접 연결 금지" },
+    { "id": "C2",  "phase": "P10", "rule": "세척실 ↔ 준비실 사람 왕래 물리적 차단" },
+    { "id": "C3",  "phase": "P5",  "rule": "One-way Room 입구 AL ≠ 출구 AL" },
+    { "id": "C4",  "phase": "P6",  "rule": "Grade B one-way Room → AL 4개 필수" },
+    { "id": "C5",  "phase": "P12", "rule": "인접 등급 간 차압 ≥ 10~15 Pa" },
+    { "id": "C6",  "phase": "P12", "rule": "등급 서열 B > C > D > CNC > NC" },
+    { "id": "C7",  "phase": "P4",  "rule": "복도 폭 ≥ 1500 mm" },
+    { "id": "C8",  "phase": "P9",  "rule": "장비 간격 ≥ 1000 mm, 장비-벽 ≥ 600 mm" },
+    { "id": "C9",  "phase": "P4",  "rule": "주요 공정 Room 합 ∈ [40%, 70%] × TOTAL_AREA" },
+    { "id": "C10", "phase": "P8",  "rule": "도어 열림 방향 = 차압 흐름 방향" }
+  ],
+
+  "design_loop_recommendations": [
+    "After P4 → re-validate P2 area_ratio constraint",
+    "After P6 → re-validate P7 supply/return separation",
+    "After P12 → re-validate adjacent-grade DP consistency"
+  ]
+}
