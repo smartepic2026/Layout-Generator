@@ -1,0 +1,252 @@
+<svg viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Rule Engine v0.1 - End-to-end Demo Visualization</title>
+  <desc>실제 URS (48 Rooms, 65 Equipment) 입력으로 run_rule_engine을 실행한 결과. 상단은 룰별 적용 횟수와 flag 분포 막대 차트, 하단은 process flow + 엘리베이터 anchor + 핵심 AL 다이어그램.</desc>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a1a1a"/>
+    </marker>
+    <marker id="arrm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#888"/>
+    </marker>
+  </defs>
+
+  <style>
+    .panel-title { font: 700 14px system-ui, sans-serif; fill: #1a1a1a; }
+    .sub { font: 400 10px system-ui, sans-serif; fill: #666; }
+    .bar-bg { fill: #f0f0f0; }
+    .bar-fg { fill: #1a1a1a; }
+    .bar-flag { fill: #d97757; }
+    .bar-label { font: 400 10px system-ui, sans-serif; fill: #1a1a1a; }
+    .bar-count { font: 600 10px system-ui, sans-serif; fill: #1a1a1a; }
+    .stat-num { font: 700 28px system-ui, sans-serif; fill: #1a1a1a; }
+    .stat-label { font: 400 10px system-ui, sans-serif; fill: #666; text-anchor: middle; }
+    .room { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1.2; }
+    .elev { fill: #e8efe7; stroke: #1a1a1a; stroke-width: 1.2; }
+    .lbl { font: 600 11px system-ui, sans-serif; fill: #1a1a1a; text-anchor: middle; }
+    .lbl-sub { font: 400 9px system-ui, sans-serif; fill: #666; text-anchor: middle; }
+    .edge { stroke: #1a1a1a; stroke-width: 1.4; fill: none; }
+    .edge-elev { stroke: #888; stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+  </style>
+
+  <text class="panel-title" x="20" y="22">Demo run - input URS</text>
+  <text class="sub" x="20" y="36">URS_ConceptualDesign for layout_0516.xlsx - input_hash=cba2bc09d96f</text>
+
+  <g transform="translate(20, 50)">
+    <rect class="room" x="0" y="0" width="110" height="56" rx="6"/>
+    <text class="stat-num" x="55" y="32" text-anchor="middle">48</text>
+    <text class="stat-label" x="55" y="48">rooms</text>
+
+    <rect class="room" x="120" y="0" width="110" height="56" rx="6"/>
+    <text class="stat-num" x="175" y="32" text-anchor="middle">18</text>
+    <text class="stat-label" x="175" y="48">airlocks</text>
+
+    <rect class="room" x="240" y="0" width="110" height="56" rx="6"/>
+    <text class="stat-num" x="295" y="32" text-anchor="middle">23</text>
+    <text class="stat-label" x="295" y="48">adjacency edges</text>
+
+    <rect class="room" x="360" y="0" width="110" height="56" rx="6"/>
+    <text class="stat-num" x="415" y="32" text-anchor="middle">399</text>
+    <text class="stat-label" x="415" y="48">rationale entries</text>
+
+    <rect class="room" x="480" y="0" width="110" height="56" rx="6"/>
+    <text class="stat-num" x="535" y="32" text-anchor="middle" fill="#d97757">28</text>
+    <text class="stat-label" x="535" y="48">flags (20/4/4)</text>
+
+    <rect class="room" x="600" y="0" width="120" height="56" rx="6"/>
+    <text class="stat-num" x="660" y="32" text-anchor="middle">122/122</text>
+    <text class="stat-label" x="660" y="48">unit tests PASS</text>
+  </g>
+
+  <text class="panel-title" x="20" y="138">Rationale entries per rule (orange = entries with flag)</text>
+
+  <g transform="translate(20, 150)">
+    <g transform="translate(0, 0)">
+      <text class="bar-label" x="0" y="11">rule_13_pressure</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="528" height="12"/>
+      <text class="bar-count" x="670" y="11">66</text>
+    </g>
+    <g transform="translate(0, 18)">
+      <text class="bar-label" x="0" y="11">rule_02_room_shape</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <text class="bar-count" x="670" y="11">48</text>
+    </g>
+    <g transform="translate(0, 36)">
+      <text class="bar-label" x="0" y="11">rule_03_room_size</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <rect class="bar-flag" x="135" y="2" width="152" height="12"/>
+      <text class="bar-count" x="670" y="11">48 / 19!</text>
+    </g>
+    <g transform="translate(0, 54)">
+      <text class="bar-label" x="0" y="11">rule_04_clean_grade</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <rect class="bar-flag" x="135" y="2" width="16" height="12"/>
+      <text class="bar-count" x="670" y="11">48 / 2!</text>
+    </g>
+    <g transform="translate(0, 72)">
+      <text class="bar-label" x="0" y="11">rule_10_equipment</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <rect class="bar-flag" x="135" y="2" width="16" height="12"/>
+      <text class="bar-count" x="670" y="11">48 / 2!</text>
+    </g>
+    <g transform="translate(0, 90)">
+      <text class="bar-label" x="0" y="11">rule_14_acph</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <text class="bar-count" x="670" y="11">48</text>
+    </g>
+    <g transform="translate(0, 108)">
+      <text class="bar-label" x="0" y="11">rule_15_gowning</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="384" height="12"/>
+      <text class="bar-count" x="670" y="11">48</text>
+    </g>
+    <g transform="translate(0, 126)">
+      <text class="bar-label" x="0" y="11">rule_06_airlocks</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="144" height="12"/>
+      <text class="bar-count" x="670" y="11">18</text>
+    </g>
+    <g transform="translate(0, 144)">
+      <text class="bar-label" x="0" y="11">rule_07_al_flow_type</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="144" height="12"/>
+      <text class="bar-count" x="670" y="11">18</text>
+    </g>
+    <g transform="translate(0, 162)">
+      <text class="bar-label" x="0" y="11">rule_01_layout_axis</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 180)">
+      <text class="bar-label" x="0" y="11">rule_05_zones</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 198)">
+      <text class="bar-label" x="0" y="11">rule_08_corridors</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 216)">
+      <text class="bar-label" x="0" y="11">rule_09_doors</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 234)">
+      <text class="bar-label" x="0" y="11">rule_11_wash_prep</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <rect class="bar-flag" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1 / 1!</text>
+    </g>
+    <g transform="translate(0, 252)">
+      <text class="bar-label" x="0" y="11">rule_12_nc_rooms</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 270)">
+      <text class="bar-label" x="0" y="11">rooms_selector</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+    <g transform="translate(0, 288)">
+      <text class="bar-label" x="0" y="11">adjacency</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <rect class="bar-flag" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1 / 1!</text>
+    </g>
+    <g transform="translate(0, 306)">
+      <text class="bar-label" x="0" y="11">flow_paths</text>
+      <rect class="bar-bg" x="135" y="2" width="528" height="12"/>
+      <rect class="bar-fg" x="135" y="2" width="8" height="12"/>
+      <text class="bar-count" x="670" y="11">1</text>
+    </g>
+  </g>
+
+  <text class="panel-title" x="20" y="500">Product process flow (URS P1-&gt;P7) + elevator anchors</text>
+
+  <g transform="translate(20, 510)">
+    <rect class="elev" x="0" y="60" width="70" height="40" rx="6"/>
+    <text class="lbl" x="35" y="78">ELEVATOR</text>
+    <text class="lbl-sub" x="35" y="91">material in (12)</text>
+
+    <line class="edge-elev" x1="70" y1="80" x2="105" y2="80" marker-end="url(#arrm)"/>
+
+    <rect class="room" x="105" y="60" width="75" height="40" rx="6"/>
+    <text class="lbl" x="142" y="78">Mateial-in</text>
+    <text class="lbl-sub" x="142" y="91">auxiliary</text>
+
+    <line class="edge" x1="180" y1="80" x2="210" y2="80" marker-end="url(#arr)"/>
+
+    <rect class="room" x="210" y="60" width="78" height="40" rx="6"/>
+    <text class="lbl" x="249" y="76">Media prep</text>
+    <text class="lbl-sub" x="249" y="89">P1 / Grade C / 100m2</text>
+
+    <line class="edge" x1="288" y1="80" x2="316" y2="80" marker-end="url(#arr)"/>
+
+    <rect class="room" x="316" y="60" width="78" height="40" rx="6"/>
+    <text class="lbl" x="355" y="76">Buffer prep</text>
+    <text class="lbl-sub" x="355" y="89">P2 / Grade C / 200m2</text>
+
+    <line class="edge" x1="394" y1="80" x2="422" y2="80" marker-end="url(#arr)"/>
+
+    <rect class="room" x="422" y="60" width="78" height="40" rx="6"/>
+    <text class="lbl" x="461" y="76">Inoculation</text>
+    <text class="lbl-sub" x="461" y="89">P3 / Grade C / 40m2</text>
+
+    <line class="edge" x1="500" y1="80" x2="528" y2="80" marker-end="url(#arr)"/>
+
+    <rect class="room" x="528" y="60" width="78" height="40" rx="6"/>
+    <text class="lbl" x="567" y="76">Cell Culture</text>
+    <text class="lbl-sub" x="567" y="89">P4 / Grade C / 96m2</text>
+
+    <line class="edge" x1="606" y1="80" x2="634" y2="80" marker-end="url(#arr)"/>
+
+    <rect class="room" x="634" y="60" width="78" height="40" rx="6"/>
+    <text class="lbl" x="673" y="76">Harvest</text>
+    <text class="lbl-sub" x="673" y="89">P5 / Grade C / 60m2</text>
+
+    <line class="edge" x1="673" y1="100" x2="673" y2="155" marker-end="url(#arr)"/>
+
+    <rect class="room" x="634" y="155" width="78" height="40" rx="6"/>
+    <text class="lbl" x="673" y="171">Purification 1</text>
+    <text class="lbl-sub" x="673" y="184">P6 / Grade C / 300m2</text>
+
+    <line class="edge" x1="634" y1="175" x2="606" y2="175" marker-end="url(#arr)"/>
+
+    <rect class="room" x="528" y="155" width="78" height="40" rx="6"/>
+    <text class="lbl" x="567" y="171">Purification 2</text>
+    <text class="lbl-sub" x="567" y="184">P7 / Grade C / 100m2</text>
+
+    <line class="edge" x1="528" y1="175" x2="500" y2="175" marker-end="url(#arr)"/>
+
+    <rect class="room" x="422" y="155" width="78" height="40" rx="6"/>
+    <text class="lbl" x="461" y="171">Return corridor</text>
+    <text class="lbl-sub" x="461" y="184">Grade D / 250m2</text>
+
+    <line class="edge" x1="422" y1="175" x2="394" y2="175" marker-end="url(#arr)"/>
+
+    <rect class="room" x="316" y="155" width="78" height="40" rx="6"/>
+    <text class="lbl" x="355" y="171">Waste-out</text>
+    <text class="lbl-sub" x="355" y="184">auxiliary / CNC</text>
+
+    <line class="edge-elev" x1="316" y1="175" x2="285" y2="175" marker-end="url(#arrm)"/>
+
+    <rect class="elev" x="215" y="155" width="70" height="40" rx="6"/>
+    <text class="lbl" x="250" y="173">ELEVATOR</text>
+    <text class="lbl-sub" x="250" y="186">waste out (9)</text>
+  </g>
+</svg>

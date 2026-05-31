@@ -21,7 +21,7 @@ import json
 import re
 from typing import Any, Optional
 
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 TIER_NAME = "tier1_ruleengine"
 

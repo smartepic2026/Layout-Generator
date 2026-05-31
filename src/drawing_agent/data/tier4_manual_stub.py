@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 TIER_NAME = "tier4_manual_stub"
 KB_DIR = Path("src/drawing_agent/kb")

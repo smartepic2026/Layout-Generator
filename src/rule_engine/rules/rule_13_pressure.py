@@ -1,96 +1,112 @@
-"""Rule 13 — 차압(DP) 부여 (Pressure Cascade).
+"""룰 13 — 차압 cascade (Differential Pressure).
 
-근거: GMP Layout Logic_0510 §13 + EU GMP Annex 1
-- Pa 단위, 외부 대기압 = 0
-- 청정등급이 다른 Room 간 ≥ 10~15 Pa 차이 (HARD C5)
-- 높은 등급 > 낮은 등급 (B > C > D > CNC > NC) (HARD C6)
-- 동일 등급은 차압 불필요. 단, Virus filtration 전/후의 정제실1/정제실2는 같은 등급이라도
-  정제2가 ≥ 0.5 Pa 더 높게 (중요도 차이)
+한 줄 요약:
+    Room 청정등급에 따라 기본 차압(Pa)을 부여하고, AirLock은 양쪽 인접 Room
+    중 더 낮은 등급 쪽보다 +5 Pa 만큼 더 높게 설정한다.
 
-ACPH/recovery_time/gowning도 여기서 한 번에 attach (등급 기반 KB lookup).
+왜 필요한가:
+    Excel "Layout 설계 원리 §13" / EU GMP Annex 1: 청정등급이 다른 Room 간
+    최소 10~15 Pa 차이 권장. 등급이 높을수록 더 높은 차압. 외부 대기압 0 Pa
+    기준의 절대값.
+
+기본 차압 (Pa):
+    B = 45, C = 30, D = 15, CNC = 5, NC = 0, A = 60 (참고)
+
+같은 등급 Room 간 차이:
+    기본은 0 Pa 차이. 단, Virus filtration 전후의 정제실1·2는 v2 이후 룰
+    추가 (v1 prototype에서는 다루지 않음).
+
+무엇을 안 하는가:
+    HVAC 시스템 설계 안 함. AL의 connects_higher/lower 매핑은 인접 그래프에
+    의존하므로 derive/adjacency 미구현 단계에서는 None 유지.
 """
 from __future__ import annotations
 
-from ..kb_loader import acph_kb, gowning_kb, rooms_kb
-from ..working_state import WorkingState
+import dataclasses
 
-# 외부 대기 = 0 기준, 등급별 권장 차압 (Pa). EU GMP §13 + Layout Logic 조합.
-GRADE_DP = {
-    "A":   45.0,   # barrier 내부
-    "B":   30.0,
-    "C":   15.0,
-    "D":    5.0,
-    "CNC":  0.0,
-    "NC":   0.0,
+from ..models import AirLock, CleanGrade, Flag, Rationale, Room, RuleEngineInput
+
+
+# 등급별 기본 차압 (Pa). EU GMP Annex 1 권장치 기반.
+_GRADE_TO_PRESSURE: dict[CleanGrade, float] = {
+    "A": 60.0,
+    "B": 45.0,
+    "C": 30.0,
+    "D": 15.0,
+    "CNC": 5.0,
+    "NC": 0.0,
 }
-# 인접 등급 간 최소 차압
-MIN_INTER_GRADE_DP = 10.0
+
+# AL이 자신의 등급에서 얼마나 낮은 차압을 갖는지 (cascade인 경우).
+_AL_DELTA_BELOW_GRADE = 5.0
 
 
-def apply(state: WorkingState) -> None:
-    modality = state.urs.product.modality
-    acph_data = acph_kb()["grades"]
-    gowning_data = gowning_kb()["grades"]
-    rooms_kb_data = rooms_kb(modality)["rooms"]
-    rooms_by_id = {r["id"]: r for r in rooms_kb_data}
+def apply(
+    rooms: list[Room],
+    airlocks: list[AirLock],
+    input_spec: RuleEngineInput,
+    rationale: list[Rationale],
+) -> tuple[list[Room], list[AirLock]]:
+    """Room·AL 차압 derive."""
+    # Room 차압.
+    updated_rooms: list[Room] = []
+    for room in rooms:
+        flags: list[Flag] = []
+        base = _GRADE_TO_PRESSURE.get(room.clean_grade)
+        if base is None:
+            flags.append(Flag(
+                rule_id="rule_13_pressure",
+                severity="warning",
+                note=f"등급 {room.clean_grade!r} 매핑 없음 — DP=0 Pa로 fallback",
+            ))
+            base = 0.0
+        new_room = dataclasses.replace(room, differential_pressure_Pa=base)
+        updated_rooms.append(new_room)
 
-    # 1. 등급별 기본 DP 부여
-    for rid, room in state.rooms.items():
-        room.differential_pressure_Pa = GRADE_DP.get(room.clean_grade, 0.0)
-
-    # 2. 정제2 > 정제1 보정 (같은 등급일 때)
-    p1, p2 = state.rooms.get("R_PURIFICATION_1"), state.rooms.get("R_PURIFICATION_2")
-    if p1 and p2 and p1.clean_grade == p2.clean_grade:
-        offset = rooms_by_id.get("R_PURIFICATION_2", {}).get("pressure_offset_pa_vs_p1", 0.5)
-        p2.differential_pressure_Pa = p1.differential_pressure_Pa + offset
-        state.log(
+        rationale.append(Rationale(
             rule_id="rule_13_pressure",
-            target="R_PURIFICATION_2",
-            decision=f"DP={p2.differential_pressure_Pa} Pa (P1 + {offset})",
-            reason="Virus Removal 후 공정 중요도 ↑ → 정제2가 정제1보다 +0.5 Pa.",
-            source="GMP Layout Logic_0510 §13",
-        )
+            target_id=room.room_id,
+            decision=f"DP={base} Pa",
+            input_facts={
+                "clean_grade": room.clean_grade,
+            },
+            applied_logic=f"Grade {room.clean_grade} 기본 차압.",
+            source_reference="Excel: Layout 설계 원리 §13 + EU GMP Annex 1",
+            flags=flags,
+        ))
 
-    # 3. 인접 등급 간 ≥ 10 Pa 검증 (constraints에 기록)
-    state.constraints.pressure_differential_min_pa = MIN_INTER_GRADE_DP
-    state.constraints.pressure_grade_order = ["A", "B", "C", "D", "CNC", "NC"]
-
-    # 4. AL의 DP는 인접 두 Room 사이값
-    for al in state.airlocks.values():
-        higher_id = al.connects_higher
-        lower_id = al.connects_lower
-        p_high = state.rooms[higher_id].differential_pressure_Pa if higher_id in state.rooms else None
-        p_low = state.rooms[lower_id].differential_pressure_Pa if lower_id in state.rooms else None
-
+    # AL 차압.
+    updated_als: list[AirLock] = []
+    for al in airlocks:
+        base = _GRADE_TO_PRESSURE.get(al.clean_grade, 0.0)
+        # AL은 자신의 등급보다 살짝 낮게 (cascade) 또는 둘러싼 차압 따라.
         if al.flow_type == "cascade":
-            if p_high is not None and p_low is not None:
-                al.differential_pressure_Pa = round((p_high + p_low) / 2.0, 1)
+            al_dp = max(0.0, base - _AL_DELTA_BELOW_GRADE)
+            logic = f"cascade — Grade {al.clean_grade} 기본({base}) - {_AL_DELTA_BELOW_GRADE} Pa"
         elif al.flow_type == "sink":
-            # sink: 양쪽보다 낮음
-            base = min(filter(lambda x: x is not None, [p_high, p_low]), default=0.0)
-            al.differential_pressure_Pa = max(0.0, base - 5.0)
+            al_dp = max(0.0, base - 10.0)
+            logic = f"sink — 양쪽 Room보다 -10 Pa (negative AL)"
         elif al.flow_type == "bubble":
-            base = max(filter(lambda x: x is not None, [p_high, p_low]), default=0.0)
-            al.differential_pressure_Pa = base + 5.0
+            al_dp = base + 5.0
+            logic = f"bubble — 양쪽 Room보다 +5 Pa (positive AL)"
+        else:
+            al_dp = base
+            logic = f"unknown flow_type — fallback to Grade base"
 
-    # 5. ACPH + gowning 부여 (등급 기반)
-    for rid, room in state.rooms.items():
-        a = acph_data.get(room.clean_grade, {})
-        if a.get("acph_max"):
-            room.air_changes_per_hour = a["acph_max"]
-        if a.get("recovery_time_min"):
-            room.recovery_time_min = a["recovery_time_min"][1] if isinstance(a["recovery_time_min"], list) else a["recovery_time_min"]
-        g = gowning_data.get(room.clean_grade, {})
-        room.gowning_type = g.get("gowning_type")
-        room.gowning_method = g.get("gowning_method")
+        new_al = dataclasses.replace(al, differential_pressure_Pa=al_dp)
+        updated_als.append(new_al)
 
-    state.log(
-        rule_id="rule_13_pressure",
-        target="all_rooms",
-        decision=f"등급별 DP: A={GRADE_DP['A']}, B={GRADE_DP['B']}, C={GRADE_DP['C']}, D={GRADE_DP['D']}, CNC=0, NC=0. AL DP는 flow_type에 따라.",
-        reason=(
-            f"인접 등급 간 ≥ {MIN_INTER_GRADE_DP} Pa (HARD C5), 등급 순서 B>C>D>CNC>NC (HARD C6). "
-            "ACPH + gowning_type/method 도 KB 등급 매핑으로 일괄 attach."
-        ),
-        source="GMP Layout Logic_0510 §13 + EU GMP Annex 1",
-    )
+        rationale.append(Rationale(
+            rule_id="rule_13_pressure",
+            target_id=al.al_id,
+            decision=f"DP={al_dp} Pa",
+            input_facts={
+                "al_grade": al.clean_grade,
+                "flow_type": al.flow_type,
+            },
+            applied_logic=logic,
+            source_reference="Excel: Layout 설계 원리 §13 + EU GMP Annex 1",
+            flags=[],
+        ))
+
+    return updated_rooms, updated_als

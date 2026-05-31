@@ -4,8 +4,8 @@ from __future__ import annotations
 import re
 
 from src.drawing_agent.floorplan import generate_floorplan
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 def test_floorplan_generation_smoke():

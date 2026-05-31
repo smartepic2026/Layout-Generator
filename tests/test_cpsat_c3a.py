@@ -25,8 +25,8 @@ from src.drawing_agent.layout_solver import (
     _place_equipment_grid,
     solve,
 )
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 SQUARE_100M2 = (0, 0, 10000, 10000)

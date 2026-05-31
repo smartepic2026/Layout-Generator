@@ -19,8 +19,8 @@ from src.drawing_agent.cpsat_solver import solve_minimal
 from src.drawing_agent.data import enrich_spec, resolve_building_dims
 from src.drawing_agent.layout_solver import Layout, PlacedRoom, Rect
 from src.drawing_agent.renderer import render
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 THREE_ROOMS = ["R_MEDIA_PREP", "R_BUFFER_PREP", "R_INOCULATION"]

@@ -1,86 +1,104 @@
-"""Rule 4 — 청정등급 부여 (Clean Grade Assignment).
+"""룰 4 — 청정등급 (passthrough + color derive + flag checker).
 
-근거: GMP Layout Logic_0510 §4 + EU GMP Annex 1
-- A: 무균공정 barrier (Isolator/RABS/Cleanbench/BSC)
-- B: A barrier를 둘러싼 Room
-- C: 주공정 Room (default)
-- D: 주공정 Room이 closed system이거나 보조 구역
-- CNC: 자재 보관/세척/갱의/IPC/이동 통로 등
-- NC: 동선/제조환경에 영향 없는 구역
+한 줄 요약:
+    URS의 사용자 명시 청정등급을 통과시키고, background_color와 transparency를
+    derive한다. 룰 위반 의심은 Flag로 마킹만 한다.
 
-이 룰은 KB의 grade_options와 default_grade에서 선택하되:
-- URS overrides.grade_overrides가 있으면 강제
-- aseptic_filling_onsite=True 면 Inoculation을 Grade B로 격상
-- closed_system_main_process=True 면 default가 D로 떨어진 경우 유지
+왜 필요한가:
+    보고서 v0.2 §4.1의 URS 우선 정책. Excel "Layout 설계 원리 §5"의 색상
+    매핑을 그대로 따른다. 50% 투명을 적용해 장비가 잘 보이도록 한다.
 
-색상/투명도/패턴은 grade_colors KB에서 채움.
+무엇을 안 하는가:
+    URS 값을 수정하지 않는다.
 """
 from __future__ import annotations
 
-from ..kb_loader import grade_colors_kb, rooms_kb
-from ..working_state import WorkingState
+import dataclasses
+
+from ..models import CleanGrade, Flag, Rationale, Room, RuleEngineInput
 
 
-def apply(state: WorkingState) -> None:
-    modality = state.urs.product.modality
-    rooms_data = rooms_kb(modality)["rooms"]
-    colors = grade_colors_kb()["grades"]
-    rooms_by_id = {r["id"]: r for r in rooms_data}
+_GRADE_TO_COLOR: dict[CleanGrade, str] = {
+    "A": "Green-diagonal-black",
+    "B": "Green",
+    "C": "yellow",
+    "D": "Blue",
+    "CNC": "Gray-dotted-black",
+    "NC": "Gray",
+}
 
-    overrides = state.urs.overrides.grade_overrides
-    aseptic = state.urs.product.aseptic_filling_onsite
-    closed = state.urs.product.closed_system_main_process
+_TRANSPARENCY_PCT = 50
 
-    for rid, room in state.rooms.items():
-        kb_room = rooms_by_id.get(rid)
-        if not kb_room:
-            continue
 
-        chosen, reason = _decide_grade(rid, kb_room, overrides, aseptic, closed)
-        room.clean_grade = chosen  # type: ignore[assignment]
+def apply(
+    rooms: list[Room],
+    input_spec: RuleEngineInput,
+    rationale: list[Rationale],
+) -> list[Room]:
+    """color/transparency derive + flag check.
 
-        meta = colors[chosen]
-        room.background_color = meta["fill"]
-        room.color_pattern = meta["pattern"]
-        room.transparency_pct = meta["transparency_pct"]
+    Args:
+        rooms: Room 리스트.
+        input_spec: closed_system_main_process 참조용.
+        rationale: 룰 적용 추적용 리스트.
 
-        state.log(
-            rule_id="rule_4_clean_grade",
-            target=rid,
-            decision=f"Grade {chosen} (color={meta['description']})",
-            reason=reason,
-            source="GMP Layout Logic_0510 §4 + EU GMP Annex 1",
+    Returns:
+        background_color / transparency_pct 가 채워진 Room 리스트.
+    """
+    closed_system = input_spec.product.closed_system_main_process
+    updated: list[Room] = []
+
+    for room in rooms:
+        color = _GRADE_TO_COLOR.get(room.clean_grade)
+        flags: list[Flag] = []
+
+        # 의심 위반 1: 주공정 Room이 Grade D인데 closed system이 아님.
+        if (
+            room.category == "process"
+            and room.clean_grade == "D"
+            and not closed_system
+        ):
+            flags.append(Flag(
+                rule_id="rule_04_clean_grade",
+                severity="suspected_violation",
+                note=(
+                    "주공정 Room이 Grade D인데 closed_system_main_process=False. "
+                    "Excel §5에 따르면 폐쇄형 장비 미사용 시 Grade C 이상 권고."
+                ),
+            ))
+
+        # 의심 위반 2: 매핑 테이블에 없는 등급.
+        if color is None:
+            flags.append(Flag(
+                rule_id="rule_04_clean_grade",
+                severity="warning",
+                note=f"색상 매핑 없음 — clean_grade={room.clean_grade!r}",
+            ))
+            transparency = None
+        else:
+            transparency = _TRANSPARENCY_PCT
+
+        new_room = dataclasses.replace(
+            room,
+            background_color=color,
+            transparency_pct=transparency,
         )
+        updated.append(new_room)
 
-    # 색상 범례를 constraints에 노출 (Drawing Agent가 범례 박스 그릴 때)
-    state.constraints.color_legend = {
-        g: f"fill={m['fill']} border={m['border']} ({m['description']}, opacity={m['transparency_pct']}%)"
-        for g, m in colors.items()
-    }
-
-
-def _decide_grade(
-    rid: str,
-    kb_room: dict,
-    overrides: dict,
-    aseptic: bool,
-    closed: bool,
-) -> tuple[str, str]:
-    if rid in overrides:
-        return overrides[rid], f"URS overrides.grade_overrides[{rid}]={overrides[rid]} (사용자 강제)"
-
-    options = kb_room.get("grade_options", [])
-    default = kb_room.get("default_grade")
-
-    # Aseptic filling on-site → Inoculation 격상
-    if aseptic and rid == "R_INOCULATION" and "B" in options:
-        return "B", "aseptic_filling_onsite=True → 접종실 Grade B (층류장치 둘러싼 Room)"
-
-    # closed system → 주공정도 D 허용
-    if closed and "D" in options and default == "C":
-        return "D", "closed_system_main_process=True → 주공정 Grade D 허용 (밀폐형 장비)"
-
-    if default:
-        return default, f"KB default_grade for {rid}={default}"
-
-    return options[0], f"KB grade_options[0]={options[0]} (default 미지정)"
+        rationale.append(Rationale(
+            rule_id="rule_04_clean_grade",
+            target_id=room.room_id,
+            decision=f"grade={room.clean_grade}, color={color}",
+            input_facts={
+                "urs_clean_grade": room.clean_grade,
+                "category": room.category,
+                "closed_system_main_process": closed_system,
+            },
+            applied_logic=(
+                f"URS Grade {room.clean_grade} 통과 + 색상 {color!r} + "
+                f"50% 투명"
+            ),
+            source_reference="Excel: Layout 설계 원리 §5 (청정등급·색상)",
+            flags=flags,
+        ))
+    return updated

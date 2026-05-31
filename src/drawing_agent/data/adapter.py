@@ -25,7 +25,7 @@ from src.drawing_agent.data import (
     tier3_derive,
     tier4_manual_stub,
 )
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 # A1/A1.5/D-007 channel 화 필드. 순서 중요 — sort_order 가 connects_to 보다 먼저.
 A1_FIELDS = ("sort_order", "bbox_m", "connects_to", "co_locate_group")

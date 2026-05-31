@@ -19,7 +19,7 @@ from src.drawing_agent.data import (
     resolve_building_dims,
 )
 from src.drawing_agent.data.tier3_derive import derive_bbox_m, parse_sort_order
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 
 # ── tier3 단위 함수 ──
@@ -175,7 +175,7 @@ def test_adapt_equipment_legacy_process_step_via_pydantic_alias(tmp_path):
     구 JSON 의 'process_step' 키는 Pydantic validation_alias 로 process_no
     에 직접 매핑된다 (schemas.Equipment).
     """
-    from src.rule_engine.schemas import Equipment
+    from src.contract.schemas import Equipment
     eq = Equipment.model_validate({
         "name": "X", "W_mm": 1, "D_mm": 1, "H_mm": 1,
         "process_step": "P1-2",   # 구 JSON 키
@@ -280,7 +280,7 @@ def test_load_external_spec_extra_meta_ignored():
 def test_area_ratio_fit_returns_none_when_no_data():
     """S1: layout 없고 'current' 키도 없으면 None (이전엔 silent 0.5 default)."""
     from src.reward.scorer import _area_ratio_fit
-    from src.rule_engine.schemas import RuleEngineOutput
+    from src.contract.schemas import RuleEngineOutput
     spec = RuleEngineOutput.model_validate({
         "project_name": "t", "modality": "mAb",
         "rooms": [], "airlocks": [], "adjacency": [],
@@ -298,7 +298,7 @@ def test_area_ratio_fit_returns_none_when_no_data():
 def test_pressure_cascade_smoothness_returns_none_when_all_dp_zero():
     """S4: 모든 Room.DP=0 이면 None (이전엔 silent 1.0 만점)."""
     from src.reward.scorer import _pressure_cascade_smoothness
-    from src.rule_engine.schemas import RuleEngineOutput
+    from src.contract.schemas import RuleEngineOutput
     spec = RuleEngineOutput.model_validate({
         "project_name": "t", "modality": "mAb",
         "rooms": [
@@ -437,7 +437,7 @@ def test_d007_tier1_wins_when_process_no_filled():
 # D-010: building dim resolver (4-tier — URS → 룰엔진 → manual default)
 # ══════════════════════════════════════════════════════════════════════
 def _minimal_spec() -> RuleEngineOutput:
-    from src.rule_engine.schemas import (
+    from src.contract.schemas import (
         Constraints, FlowPaths, RangeMM, RuleEngineOutput, Zones,
     )
     return RuleEngineOutput(
@@ -493,8 +493,8 @@ def test_resolve_building_dims_bad_urs_falls_back():
 def test_generate_floorplan_uses_urs_building_dim():
     """generate_floorplan(urs_path=...) 가 URS 캔버스로 layout 생성."""
     from src.drawing_agent.floorplan import generate_floorplan
-    from src.rule_engine.engine import run_rule_engine
-    from src.rule_engine.schemas import URSInput
+    from tests._legacy_spec import run_rule_engine
+    from src.contract.schemas import URSInput
     import json
     urs = URSInput(**json.loads(Path("examples/urs_A_small_aseptic.json").read_text()))
     spec = run_rule_engine(urs, strict=False)
@@ -506,8 +506,8 @@ def test_generate_floorplan_uses_urs_building_dim():
 def test_generate_floorplan_explicit_dim_wins_over_urs():
     """명시 building_w_mm 인자가 URS 보다 우선."""
     from src.drawing_agent.floorplan import generate_floorplan
-    from src.rule_engine.engine import run_rule_engine
-    from src.rule_engine.schemas import URSInput
+    from tests._legacy_spec import run_rule_engine
+    from src.contract.schemas import URSInput
     import json
     urs = URSInput(**json.loads(Path("examples/urs_A_small_aseptic.json").read_text()))
     spec = run_rule_engine(urs, strict=False)

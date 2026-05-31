@@ -9,8 +9,8 @@ from src.drawing_agent.data import enrich_spec
 from src.drawing_agent.data.tier1_ruleengine import load_external_spec
 from src.drawing_agent.floorplan import generate_floorplan
 from src.reward.scorer import P_DEFERRED, P_WEIGHTS, ScoreReport, score, score_spec_p_series
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 def test_baseline_passes_hard():
@@ -53,7 +53,7 @@ def test_hard_violation_drops_score():
     spec = run_rule_engine(URSInput(), strict=True)
     baseline = score(spec).total
     # 강제 위반 주입
-    from src.rule_engine.schemas import Adjacency
+    from src.contract.schemas import Adjacency
     spec.adjacency.append(
         Adjacency(
             from_id="R_SUPPLY_CORRIDOR",
@@ -167,7 +167,7 @@ def test_p1_axis_projection_respects_sort_order(engine_spec_with_layout):
 def test_p7_high_density_room_scores_high():
     """장비 끼리 빈틈 없이 packed + 방의 절반 차지 → P7 score 높음."""
     from src.drawing_agent.layout_solver import Layout, PlacedEquipment, PlacedRoom, Rect
-    from src.rule_engine.schemas import (
+    from src.contract.schemas import (
         Constraints, Equipment, FlowPaths, RangeMM, Room, RuleEngineOutput, Zones,
     )
     eq1 = Equipment(name="X1", W_mm=5000, D_mm=5000, H_mm=3000, bbox_m=[5.0, 5.0])
@@ -197,7 +197,7 @@ def test_p7_high_density_room_scores_high():
 def test_p7_scattered_equipment_scores_low():
     """장비 둘이 방 양 끝에 떨어져 있으면 outer_fill 크지만 inner 작음 → 점수 낮음."""
     from src.drawing_agent.layout_solver import Layout, PlacedEquipment, PlacedRoom, Rect
-    from src.rule_engine.schemas import (
+    from src.contract.schemas import (
         Constraints, Equipment, FlowPaths, RangeMM, Room, RuleEngineOutput, Zones,
     )
     eq1 = Equipment(name="X1", W_mm=1000, D_mm=1000, H_mm=3000, bbox_m=[1.0, 1.0])
@@ -226,7 +226,7 @@ def test_p7_scattered_equipment_scores_low():
 def test_p2_distant_group_members_score_lower():
     """같은 co_locate_group 멤버가 멀리 떨어져 있으면 P2 group_term 낮음."""
     from src.drawing_agent.layout_solver import Layout, PlacedEquipment, PlacedRoom, Rect
-    from src.rule_engine.schemas import (
+    from src.contract.schemas import (
         Constraints, Equipment, FlowPaths, RangeMM, Room, RuleEngineOutput, Zones,
     )
     eq1 = Equipment(name="X1", W_mm=1000, D_mm=1000, H_mm=3000,

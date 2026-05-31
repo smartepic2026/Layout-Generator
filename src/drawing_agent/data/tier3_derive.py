@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 from typing import Optional
 
-from src.rule_engine.schemas import RuleEngineOutput
+from src.contract.schemas import RuleEngineOutput
 
 TIER_NAME = "tier3_derive"
 

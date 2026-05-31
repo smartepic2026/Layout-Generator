@@ -21,7 +21,7 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from src.rule_engine.schemas import RuleEngineOutput, URSInput
+from src.contract.schemas import RuleEngineOutput, URSInput
 
 
 DEFAULT_BUILDING_W_MM: float = 78500.0

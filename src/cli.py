@@ -1,9 +1,14 @@
 """CLI entrypoint.
 
 사용:
-  python -m src.cli rule-engine examples/urs_mab_8000L.json output/spec.json
-  python -m src.cli rule-engine examples/urs_mab_8000L.json output/spec.json --no-strict
+  python -m src.cli rule-engine examples/teammate_urs_0516.xlsx output/spec.json
+  python -m src.cli draw output/spec.json output/floorplan.svg
   python -m src.cli validate output/spec.json
+
+[2026-06-01 통합] rule-engine 은 이제 소연 엔진(src/rule_engine, dataclass)을
+URS xlsx 로 돌린 뒤, tier1 어댑터로 우리 내부 계약(src/contract/schemas.py,
+pydantic)으로 변환해 spec.json 을 쓴다. draw/validate 는 그 pydantic spec 을
+그대로 읽으므로 변경 없음 (anti-corruption layer, CLAUDE.md D-003).
 """
 from __future__ import annotations
 
@@ -12,20 +17,25 @@ import json
 import sys
 from pathlib import Path
 
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import RuleEngineOutput, URSInput
+from src.contract.schemas import RuleEngineOutput
 
 
 def cmd_rule_engine(args: argparse.Namespace) -> int:
+    """URS xlsx → 소연 엔진 → (to_json) → tier1 어댑터 → 우리 pydantic spec.json."""
+    from src.rule_engine import run_rule_engine
+    from src.rule_engine.urs_parser import load_urs_as_input
+    from src.drawing_agent.data.tier1_ruleengine import adapt_external_dict
+
     urs_path = Path(args.urs)
     out_path = Path(args.output)
 
-    urs = URSInput.model_validate_json(urs_path.read_text())
-    try:
-        out = run_rule_engine(urs, strict=args.strict)
-    except ValueError as e:
-        print(f"[FAIL] Hard constraint violations:\n{e}", file=sys.stderr)
-        return 1
+    # 1) URS xlsx → 소연 RuleEngineInput → 소연 엔진 실행 (her dataclass output)
+    inp = load_urs_as_input(path=urs_path)
+    her_out = run_rule_engine(inp)
+
+    # 2) 소연 출력(dataclass→JSON) → anti-corruption 어댑터 → 우리 pydantic 계약
+    her_dict = json.loads(her_out.to_json())
+    out = RuleEngineOutput.model_validate(adapt_external_dict(her_dict))
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(out.model_dump_json(indent=2))
@@ -73,16 +83,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="layout-generator")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_rule = sub.add_parser("rule-engine", help="URS → 7-block spec.json")
-    p_rule.add_argument("urs", help="URS input JSON path")
+    p_rule = sub.add_parser("rule-engine", help="URS xlsx → 7-block spec.json (소연 엔진)")
+    p_rule.add_argument("urs", help="URS input xlsx path (e.g. examples/teammate_urs_0516.xlsx)")
     p_rule.add_argument("output", help="output spec.json path")
-    p_rule.add_argument(
-        "--no-strict",
-        dest="strict",
-        action="store_false",
-        help="hard constraint 위반 시 raise하지 않고 rationale만 기록",
-    )
-    p_rule.set_defaults(strict=True, func=cmd_rule_engine)
+    p_rule.set_defaults(func=cmd_rule_engine)
 
     p_val = sub.add_parser("validate", help="spec.json 재로드 & 요약")
     p_val.add_argument("spec", help="output spec.json")

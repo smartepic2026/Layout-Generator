@@ -22,7 +22,7 @@ from src.drawing_agent.layout_solver import (
 )
 from src.reward.scorer import score_spec_p_series
 from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from src.contract.schemas import URSInput
 
 
 # C3 시간 배분 정책 (n_eq 별) — D-020 통합 후 시간 절감 (사용자 요청)

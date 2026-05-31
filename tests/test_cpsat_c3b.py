@@ -14,8 +14,8 @@ ortools = pytest.importorskip("ortools")
 
 from scripts.c3b_room_map import _square_rect_for_area, measure_room_modes
 from src.drawing_agent.data import enrich_spec
-from src.rule_engine.engine import run_rule_engine
-from src.rule_engine.schemas import URSInput
+from tests._legacy_spec import run_rule_engine
+from src.contract.schemas import URSInput
 
 
 @pytest.fixture(scope="module")

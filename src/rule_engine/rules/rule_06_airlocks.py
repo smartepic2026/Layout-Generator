@@ -1,135 +1,111 @@
-"""Rule 6 — 전실(Air Lock) 배열.
+"""룰 6 — 전실 배열 (URS Room → AirLock 객체 변환).
 
-근거: GMP Layout Logic_0510 §6 (전실의 배열)
-- AL은 청정등급이 바뀌거나 공정 중요도 구분이 필요한 두 Room 사이에 위치
-- One-way Room: 입구/출구 별도 → 입구 AL + 출구 AL 각각 배치
-- AL 종류: PAL (Personnel), MAL (Material), CAL (Common, PAL+MAL 통합)
-- Grade B + one-way → 4개 (PAL-in, MAL-in, PAL-out, MAL-out)
-- Grade C + one-way → 공간 넉넉하면 4개, 부족하면 2개 (AL-in + AL-out)
-- 양방향 Room → 1개 (AL)
-- 양 Room 등급 같고 중요도 구분 불필요 → AL 생략
+한 줄 요약:
+    URS Room 시트의 AL 명을 AirLock 객체로 변환한다. AirLock의 kind는
+    "PAL|MAL|CAL" 표기 + in/out 표기를 정규식으로 추출해 결정한다.
 
-산출: state.airlocks[al_id] = Airlock(...)
-이 단계에서 in/out, type만 정함. cascade/sink/bubble은 룰 7에서.
+왜 필요한가:
+    Excel "Layout 설계 원리 §7". 청정등급이 바뀌거나 공정 중요도 구분이 필요한
+    두 Room 사이에 전실이 들어간다. URS의 AL Room이 그 자체로 청정도·gowning을
+    명시하므로 룰 6은 단순 변환자다.
+
+kind 추론 (정규식):
+    "PAL-in Cell Culture" → PAL_in (대상: Cell Culture)
+    "MAL-out Harvest"     → MAL_out (대상: Harvest)
+    "CAL Inoculation"     → CAL
+
+무엇을 안 하는가:
+    flow_type 결정은 룰 7. 차압 계산은 룰 13. 인접 Room 매칭은 derive/adjacency.
 """
 from __future__ import annotations
 
-from ..kb_loader import flow_policy_kb, rooms_kb
-from ..schemas import Airlock
-from ..working_state import WorkingState
+import re
 
-# 면적 (룰 5.4 기준)
-PAL_AREA = 12.0
-MAL_AREA = 16.0
-CAL_AREA = 16.0
+from ..models import AirLock, ALKind, Flag, Rationale, Room, RuleEngineInput
 
 
-def apply(state: WorkingState) -> None:
-    modality = state.urs.product.modality
-    rooms_kb_data = rooms_kb(modality)["rooms"]
-    rooms_by_id = {r["id"]: r for r in rooms_kb_data}
-    fp = flow_policy_kb(modality)
+# AL 토큰을 찾는 정규식: PAL/MAL/CAL + optional in/out.
+# 단어 경계로 'Inoculation' 같은 단어 안의 'in' 매치 방지.
+_AL_PATTERN = re.compile(
+    r"\b(PAL|MAL|CAL)\b[-_ ]?(in|out)?\b",
+    re.IGNORECASE,
+)
 
-    # 공간 여유 판단: 주공정 비율로 추정
-    # current 비율 > 0.55 면 공간 여유 부족 → C grade는 CAL 2개로 간소화
-    ratio_now = state.constraints.process_zone_area_ratio.get("current", 0.5)
-    space_tight = ratio_now > 0.55
 
-    supply = "R_SUPPLY_CORRIDOR" if state.has_room("R_SUPPLY_CORRIDOR") else None
-    ret = "R_RETURN_CORRIDOR" if state.has_room("R_RETURN_CORRIDOR") else None
+def _detect_kind(name_en: str) -> tuple[ALKind | None, str]:
+    """영문명에서 AL kind와 대상 Room 명 추출."""
+    m = _AL_PATTERN.search(name_en)
+    if not m:
+        return None, name_en.strip()
 
-    al_counter = 0
+    al_type = m.group(1).upper()
+    direction = m.group(2)
+    if direction:
+        kind: ALKind = f"{al_type}_{direction.lower()}"  # type: ignore[assignment]
+    else:
+        kind = al_type  # type: ignore[assignment]
 
-    def new_id() -> str:
-        nonlocal al_counter
-        al_counter += 1
-        return f"AL_{al_counter:03d}"
+    # 대상 Room 추출 (AL 토큰과 괄호 제거).
+    cleaned = _AL_PATTERN.sub("", name_en)
+    cleaned = re.sub(r"[\(\)]", "", cleaned).strip()
+    return kind, cleaned
 
-    for rid, room in state.rooms.items():
-        kb_room = rooms_by_id.get(rid)
-        if not kb_room or not kb_room.get("needs_airlock"):
+
+def _is_airlock(room: Room) -> bool:
+    """Room이 AL인지 판정."""
+    return _AL_PATTERN.search(room.name_en) is not None
+
+
+def apply(
+    rooms: list[Room],
+    input_spec: RuleEngineInput,
+    rationale: list[Rationale],
+) -> list[AirLock]:
+    """URS AL Room → AirLock 객체 리스트."""
+    airlocks: list[AirLock] = []
+
+    for room in rooms:
+        if not _is_airlock(room):
             continue
+        flags: list[Flag] = []
+        kind, target = _detect_kind(room.name_en)
+        if kind is None:
+            flags.append(Flag(
+                rule_id="rule_06_airlocks",
+                severity="warning",
+                note=f"AL kind 추론 실패: {room.name_en!r} — CAL fallback",
+            ))
+            kind = "CAL"
 
-        in_one_way = kb_room.get("in_one_way_chain", False)
-        grade = room.clean_grade
+        if "PAL" in kind:
+            purpose = "personnel"
+        elif "MAL" in kind:
+            purpose = "material"
+        else:
+            purpose = "common"
 
-        # ---- Grade B + one_way → 4개 풀세트 ----
-        if grade == "B" and in_one_way:
-            _add(state, new_id(), "PAL_in",  room, supply, ret, "personnel_entry",  PAL_AREA, grade)
-            _add(state, new_id(), "MAL_in",  room, supply, ret, "material_entry",   MAL_AREA, grade)
-            _add(state, new_id(), "PAL_out", room, supply, ret, "personnel_exit",   PAL_AREA, grade)
-            _add(state, new_id(), "MAL_out", room, supply, ret, "material_exit",    MAL_AREA, grade)
-            room.one_way_flow = True
-            state.log(
-                rule_id="rule_6_airlocks",
-                target=rid,
-                decision="AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
-                reason="Grade B + one-way → 풀세트 강제 (EU GMP Annex 1)",
-            )
-            continue
+        airlocks.append(AirLock(
+            al_id=room.room_id.replace("R_", "AL_"),
+            kind=kind,
+            clean_grade=room.clean_grade,
+            area_m2=room.area_m2,
+            flow_type="cascade",  # 룰 7에서 재결정
+            connects_higher_room=None,
+            connects_lower_room=None,
+            purpose=purpose,
+            differential_pressure_Pa=None,
+        ))
 
-        # ---- Grade C + one_way ----
-        if grade == "C" and in_one_way:
-            if space_tight:
-                # 공간 부족 → CAL_in + CAL_out
-                _add(state, new_id(), "CAL_in",  room, supply, ret, "common_in",  CAL_AREA, grade)
-                _add(state, new_id(), "CAL_out", room, supply, ret, "common_out", CAL_AREA, grade)
-                room.one_way_flow = True
-                state.log(
-                    rule_id="rule_6_airlocks",
-                    target=rid,
-                    decision="AL 2개 (CAL_in/CAL_out, PAL+MAL 통합)",
-                    reason=f"Grade C + one-way + 공간 부족 (process ratio={ratio_now:.0%}) → CAL 통합형",
-                )
-            else:
-                # 공간 여유 → 4개
-                _add(state, new_id(), "PAL_in",  room, supply, ret, "personnel_entry",  PAL_AREA, grade)
-                _add(state, new_id(), "MAL_in",  room, supply, ret, "material_entry",   MAL_AREA, grade)
-                _add(state, new_id(), "PAL_out", room, supply, ret, "personnel_exit",   PAL_AREA, grade)
-                _add(state, new_id(), "MAL_out", room, supply, ret, "material_exit",    MAL_AREA, grade)
-                room.one_way_flow = True
-                state.log(
-                    rule_id="rule_6_airlocks",
-                    target=rid,
-                    decision="AL 4개 (PAL_in/MAL_in/PAL_out/MAL_out)",
-                    reason=f"Grade C + one-way + 공간 여유 (process ratio={ratio_now:.0%}) → 풀세트",
-                )
-            continue
-
-        # ---- 양방향 / 그 외 ----
-        if grade in ("C", "D") and kb_room.get("flow") == "both_way":
-            # AL 1개로 충분
-            _add(state, new_id(), "CAL", room, supply, supply, "common", CAL_AREA, grade)
-            state.log(
-                rule_id="rule_6_airlocks",
-                target=rid,
-                decision="AL 1개 (CAL)",
-                reason=f"Grade {grade} + both-way → 단일 AL",
-            )
-
-
-def _add(
-    state: WorkingState,
-    al_id: str,
-    al_type: str,
-    room,
-    higher_room_id: str | None,
-    lower_room_id: str | None,
-    purpose: str,
-    area: float,
-    inherited_grade: str,
-) -> None:
-    """AL grade는 인접 Room 둘 중 더 낮은 등급. 여기선 일단 room.grade로 두고 룰 7에서 정밀화."""
-    # in 쪽은 supply corridor(high), out 쪽은 return corridor(low)와 연결
-    al = Airlock(
-        id=al_id,
-        type=al_type,  # type: ignore[arg-type]
-        clean_grade=inherited_grade,  # type: ignore[arg-type]
-        area_m2=area,
-        flow_type="cascade",  # 룰 7에서 정정
-        connects_higher=room.id,
-        connects_lower=(higher_room_id if "in" in al_type else (lower_room_id or higher_room_id or "")),
-        purpose=purpose,  # type: ignore[arg-type]
-        differential_pressure_Pa=0,
-    )
-    state.add_airlock(al)
+        rationale.append(Rationale(
+            rule_id="rule_06_airlocks",
+            target_id=room.room_id,
+            decision=f"kind={kind}, purpose={purpose}, target={target!r}",
+            input_facts={
+                "al_room_name_en": room.name_en,
+                "al_room_grade": room.clean_grade,
+            },
+            applied_logic="PAL|MAL|CAL + in/out 정규식 매칭으로 kind 추론.",
+            source_reference="Excel: Layout 설계 원리 §7 (전실 배열)",
+            flags=flags,
+        ))
+    return airlocks
