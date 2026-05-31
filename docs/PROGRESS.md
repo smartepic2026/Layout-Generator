@@ -84,22 +84,370 @@ Phase D  평가 + 산출물
 - **검증**: sort_order 65/65, co_locate_group 65/65, 13 그룹, 단조 증가, tier1 우선 동작
 - 테스트 9건 신규 (전체 56 passed, 1 skipped)
 
-### 다음 — Phase B1 진입 대기
+### 2026-05-29 — Phase B1 (D-008 1차 시도, spec-only) [SUPERSEDED by D-009]
+
+D-008 으로 P1·P2·P7 을 spec-only 로 구현했으나 사용자 진단에서 silent 만점
+버그 발견 — layout 인자를 받지만 본체 미사용. tier3 데이터 일관성을 "측정"
+했을 뿐 배치 품질 측정 아니었음. 결과: 모든 fixture 가 P1=1.0/P2=1.0.
+
+### 2026-05-29 — Phase B1 (D-009 좌표 기반 재구현) [완료]
+
+- **원칙 명시 (D-009)**: 점수 = 배치 품질 (좌표 기반). 데이터 일관성 ≠ 점수.
+  layout=None 시 P1/P2/P7 모두 명시적 None (= 측정 불가).
+- **P1 flow_monotonicity** (W=10) — 흐름축 unit vector u = (마지막 PPO 방 중심)
+  − (첫 PPO 방 중심). 각 장비 좌표 투영 proj. (i,j) 쌍 중 sort_order 다른
+  것에 대해 forward / (forward+reverse). 같은 sort_order = D-003 병렬 = 분모
+  제외. 근거: ISPE Vol.6 §7.9 (one-way flow).
+- **P2 adjacency** (W=6) — (a) co_locate_group 멤버 좌표 평균 거리 d_g →
+  `s_g = max(0, 1 − d_g / 20m)`, 그룹 평균. (b) connects_to link 좌표 거리
+  d_link → `s_link = max(0, 1 − d_link / 20m)`, link 평균. raw = 두 항 평균.
+  근거: ISPE §7.5 (process flow grouping).
+- **P6 cleaning_access** (W=4) — `clearance_m` + layout 둘 다 있어야 함.
+  본 수식 미구현 (return None 유지). 근거: ISO 14644-4 §6.
+- **P7 compactness** (W=3) — 좌표 기반 packing density. inner = sum(eq.rect)
+  / 장비 외접 bbox, outer = `max(0, 1 − |env/room − 0.5| / 0.4)`. process 방
+  평균. 근거: ISPE Vol.6 §1.
+- **정규화 분모 동적**: `_measured_denominator` = 측정된 active 가중치 합.
+  None 항 (P6) 분모 제외. 비교용 `_active_denominator`(상수 23) 도 노출.
+- **strip-band baseline (4 시나리오, layout 부여)**:
+
+  | Scenario | Rooms | Eq | P1 | P2 | P6 | P7 | normalized |
+  |---|---:|---:|---:|---:|---:|---:|---:|
+  | mab_8000L | 28 | 66 | 0.6396 | 0.9046 | None | 0.2483 | 0.6615 |
+  | A_small_aseptic | 28 | 66 | 0.6396 | 0.9046 | None | 0.2483 | 0.6615 |
+  | B_large_multiproduct | 29 | 66 | 0.6396 | 0.9046 | None | 0.2483 | 0.6615 |
+  | C_closed_system | 25 | 66 | 0.6707 | 0.9046 | None | 0.2483 | 0.6779 |
+
+  전 시나리오 layout=None → P1/P2/P7 모두 None (silent 만점 차단 확인).
+
+- **관찰**:
+  - strip-band 가 P1 만점 아님 (≈0.64) — 격자 배치 → 흐름축 ~35% 역행. 정상.
+  - strip-band 가 P7 매우 낮음 (≈0.25) — CP-SAT 가 가장 크게 개선할 차원.
+  - **4 시나리오 P2/P7 동일값** — 룰엔진이 URS 변동을 잘 반영 안 함. 별도
+    이슈 (룰엔진 영역 수정 금지, Phase B2 에서 사용자 보고 후 결정).
+- 테스트 추가 + 좌표 기반으로 재작성 (67 passed, 1 skipped). 회귀 0건.
+- decisions.md D-009 작성 + D-008 SUPERSEDED 표기.
+
+### 2026-05-30 — Phase B1.5 (D-010 책임 분리 — 캔버스 = 우리) [완료]
+
+- **진단 (B1 직후)**: 4 시나리오 strip-band 점수 동일 → 원인 (b) rule_engine
+  이 URS 의 culture_scale_L / n_product_types / building dim 을 spec 에 흘리지
+  않음. 부속발견: 우리 솔버도 building dim 무시 (default 78500×42500).
+- **책임 분리 (D-010)**: 장비 사양 = rule_engine (도메인), 건물 캔버스 =
+  drawing_agent (배치). 옵션 2 (drawing_agent 가 장비 sizing override) 거부 —
+  검증 안 된 추론 데이터 = epistemic honesty 위배 + 논문 방어 약화.
+- **구현**: `src/drawing_agent/data/building.py` 신규 — `resolve_building_dims`
+  4-tier (tier1 룰엔진 / tier2 URS / tier3 의도 미구현 / tier4 default).
+  `generate_floorplan(spec, urs_path=...)` 가 자동으로 URS dim 적용.
+- **strip-band 점수 (D-010 적용 후)**:
+
+  | Scenario | URS dim | P1 | P2 | P7 | norm |
+  |---|---|---:|---:|---:|---:|
+  | A_small_aseptic | 60000×30000 | 0.6309 | 0.9136 | **0.3051** | 0.6687 |
+  | mab_8000L | 78500×42500 | 0.6396 | 0.9046 | 0.2483 | 0.6615 |
+  | C_closed_sys | 60000×40000 | **0.6974** | 0.9136 | 0.2595 | **0.6965** |
+  | B_large_multi | 100000×52000 | 0.6260 | 0.8898 | 0.2574 | 0.6511 |
+
+  - 4 시나리오 모두 distinct (norm 0.6511 ~ 0.6965).
+  - 작은 캔버스 (A_small) → P7 ↑ (자동 compact). 큰 캔버스 (B_large) → P2 ↓
+    (장비 흩어짐). 논문 valid 신호 "같은 공정, 다른 건물 → 다른 배치".
+- 테스트 6건 신규 (73 passed, 1 skipped). 회귀 0건.
+- decisions.md D-010 작성.
+
+**남은 한계 (사용자 별도 진행)**:
+- 변동 폭 좁음 (P7 0.25~0.31) — 룰엔진 변별 부재. 옵션 1 (팀원 협의로
+  scale/multi-product 반영) 은 사용자가 별도 진행.
+- 옵션 3 (examples overrides 강화) 도 보류 — D-010 만으로 시나리오 분리는
+  충족, 강화는 옵션 1 결과 본 후.
+
+### 2026-05-30 — Phase B2 (D-013 before-baseline 저장) [완료]
+
+- **scripts/baselines.py 신규** — 4 시나리오 strip-band P-series + 기존 6종
+  geometric quality + hard/soft 를 결정론적으로 측정 → `output/baselines.json`.
+  `--check` 옵션: 두 번 측정해 동일성 검증 (timestamp 제외 byte-identical).
+- **output/baselines.json (354 줄)** — 시나리오별 메타 (urs_path, building_dim
+  + source, rooms/eq count, PPO len) + P-series 전체 (raw/weight/contrib/status)
+  + geometric_quality (total + breakdown + hard/soft count) + 한계 5건 +
+  expected_variation_note.
+- **메타에 박은 한계 5건** (논문 추적성):
+  1. rule_engine 장비 변별 부재 (URS 3.6 연결 대기 — 팀원 별도 작업).
+  2. CP-SAT 미도입 (Phase C 예정).
+  3. P3·P5·P8 보류 (검수자 부재, epistemic honesty).
+  4. P6 미구현 (clearance_m 부재 + 수식 후속).
+  5. 정규화 분모 동적 (P6 빠진 19, 상수 23 도 노출).
+- **요약 표 (생성 직후)**:
+
+  | Scenario | URS dim | P1 | P2 | P6 | P7 | norm | geo total | hard | soft |
+  |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+  | A_small_aseptic | 60000×30000 | 0.6309 | 0.9136 | None | 0.3051 | 0.6687 | 121.50 | 0 | 1 |
+  | mab_8000L | 78500×42500 | 0.6396 | 0.9046 | None | 0.2483 | 0.6615 | 121.68 | 0 | 1 |
+  | C_closed_sys | 60000×40000 | 0.6974 | 0.9136 | None | 0.2595 | 0.6965 | 127.06 | 0 | 0 |
+  | B_large_multi | 100000×52000 | 0.6260 | 0.8898 | None | 0.2574 | 0.6511 | 121.67 | 0 | 1 |
+
+  결정론 `--check` 통과. hard violation 4건 전부 0 — 룰엔진 출력은 모든
+  시나리오에서 hard 제약 만족 (정상).
+- decisions.md D-013 작성.
+
+**핵심 명시 (논문 서사의 출발점)**:
+변동 폭 좁음 (norm 0.65~0.70, ~7%p) 은 버그 아니라 예상된 중간 상태.
+두 요인 (장비 변별 + CP-SAT) 해소 시 변동 폭이 커지는 것이 "before → after"
+정량 신호. 현 baselines.json 은 두 요인 *없을 때* 의 진짜 floor.
+
+### 2026-05-30 — Phase B3 (D-014 NNE 모범 배치 골든) [완료]
+
+- **목적**: P-series 수식이 "좋은 배치를 높게 평가" 하는지 검증. 안 그러면
+  CP-SAT 가 임의 낮은 점수로 수렴할 위험 → 진단·보정 필요.
+- **방법 B (구조 검증)**: 정밀 좌표 X, 그리드 근사 + 같은 방 안 row-major
+  auto-pack. 좌표 정확성 아닌 구조 (PPO 순서, 인접, 응집) 만 보장.
+- **파일**:
+  - `docs/reference/nne_equipment_layout.md` (사용자 작성, NNE 도면 추출).
+  - `tests/fixtures/golden_nne_layout.json` (16 rooms / 70 eq / 62000×42000 mm).
+  - `scripts/golden_nne.py` (`python -m scripts.golden_nne`).
+  - `tests/test_golden_nne.py` (7 회귀 — NNE 우위 보장).
+- **검증 결과 — NNE vs strip-band**:
+
+  | Layout | P1 | P2 | P6 | P7 | norm |
+  |---|---:|---:|---:|---:|---:|
+  | **NNE_golden** | **0.6986** | 0.9079 | None | **0.4366** | **0.7233** |
+  | strip-band avg (4 시나리오) | 0.6484 | 0.9054 | None | 0.2676 | 0.6694 |
+  | **Δ** | **+0.050** | +0.003 | — | **+0.169** | **+0.054** |
+
+  - **P1 (+0.05)**: NNE 직선 흐름축 vs strip-band zigzag — 의도대로.
+  - **P2 (≈0)**: 둘 다 같은 방 응집 만점에 가까움 → D_REF=20m 가 너무 관대,
+    후속 보정 여지.
+  - **P7 (+0.17)**: NNE 의 방 면적 ↔ 장비 면적 균형이 strip-band 보다 명확
+    우위 (outer_fill 가 sweet 0.5 근처).
+- **결과**: **P-series 가 전문가 배치를 strip-band 보다 +5.4%p 높게 평가**.
+  점수 수식 타당성 확인. CP-SAT 가기 전 안전판 확보.
+- **별도 주의**: NNE spec 의 hard_violations = 16건 (airlock 부재 등 우리
+  fixture 단순화 영향, NNE 실제 도면 위반 아님). geo_total = -694. P-series
+  비교가 본 검증 목적이라 별도 차원으로 두고 진행. 후속 옵션.
+- 테스트 7건 신규 (80 passed, 1 skipped). 회귀 0건.
+- decisions.md D-014 작성.
+
+### 2026-05-30 — Phase C0 (D-015 CP-SAT 골격 검증) [완료]
+
+- **진단 보고 (이전 턴, 사용자 요청)**: 현재 strip-band 4 한계 (점수 분리,
+  하드코딩 결정 변수, 도메인 제약 미표현, infeasibility 무시) 정리. 결론
+  채택: **층1 (방 배치) 부터 CP-SAT, 층2 (장비) 는 strip-band `_place_equipment_grid`
+  당분간 재사용** (P2 group_term 포화로 leverage 작음).
+- **C0 = 최소 골격 검증 only**. 점수 연동·전체 방·adjacency/zone·장비 좌표
+  모두 C1 이후.
+- **구현**:
+  - `requirements.txt` — `ortools==9.10.4067` 핀.
+  - `src/drawing_agent/constraint_compiler.py` 신규 — `compile_minimal()`.
+    변수: 방 (x_var, y_var) 격자 셀 + IntervalVar. 제약: 캔버스 도메인 +
+    AddNoOverlap2D. 목적: 좌상단 모으기 (임시).
+  - `src/drawing_agent/cpsat_solver.py` 신규 — `solve_minimal()` →
+    (Layout, SolveReport). `num_search_workers=1` 결정론.
+  - 기존 `layout_solver.solve()` (strip-band) **수정 0줄**, fallback 보존.
+- **검증 (mab_8000L, 3 rooms: MEDIA/BUFFER/INOC)**:
+
+  | 항목 | 값 |
+  |---|---|
+  | status | OPTIMAL (code 4), objective 46.0 |
+  | CP-SAT 풀이 시간 | **20.12 ms** (방 3개) |
+  | 안 겹침 / 캔버스 안 | PASS / PASS |
+  | Layout 자료구조 재사용 | `Layout`/`PlacedRoom`/`Rect` 타입 그대로 |
+  | renderer.render() 재사용 | 수정 0줄, SVG 23,819 bytes |
+  | 결정론 | 두 번 풀이 좌표 동일 |
+  | SVG 산출물 | `output/floorplan_c0_cpsat_3room.svg` |
+
+- 테스트 8건 신규 (`tests/test_cpsat_c0.py`). 88 passed, 1 skipped.
+  회귀 0건 (strip-band, P-series, NNE golden 전부 그대로).
+- decisions.md D-015 작성.
+
+### 2026-05-30 — Phase C1a (D-016 전체 방 + hard 제약) [완료]
+
+- **C1a 목적**: 28 방 전부 hard 제약 안에서 feasible + 풀이 시간 감당.
+  점수 목적함수는 C1b.
+- **Hard 제약 4개**: H1 캔버스 안, H2 안 겹침 (AddNoOverlap2D), H3 zone 영역
+  분리 (aux 좌/proc 중간/nc 우), H4 adjacency 인접 (좌상단 맨해튼 ≤ 25m).
+- **첫 시도 INFEASIBLE → 진단 + 격리**:
+  - 단계 완화 (zones/adj on-off) 로 **zone 만 켜도 INFEASIBLE** 확인.
+  - 근본 원인: `ROOM_AREA_TO_SIDE_FACTOR=1.4` 로 방 면적이 1.96× 부풀음 →
+    aux stripe (15.5m × 42.5m) 안에 12방 못 들어감.
+  - **factor 1.4 → 1.0 정직화** (방 한 변 = √area, aspect [0.7, 1.4] 로 자연
+    변동). 즉시 zones+adj hard 모두 FEASIBLE 500ms.
+- **결정론 강화**: random_seed=0 + num_search_workers=1 만으로는 wall-clock
+  time_limit 도달 시 머신 부하에 따라 좌표 다름 (테스트 실패). 해결:
+  `max_deterministic_time = time_limit × 4.0` 추가 (ortools 권장 패턴).
+- **검증 (mab_8000L 28방, zones+adj hard, 5s)**:
+  - status FEASIBLE, **첫 feasible 500ms**, 5s 종료 시 obj=1650
+  - 28방 모두 좌표, 안 겹침 0, 캔버스 밖 0, adjacency 6 pair 모두 25m 안
+  - renderer 재사용 0 줄 → SVG 68KB (`output/floorplan_c1a_28room.svg`)
+  - 결정론 통과 (두 번 풀이 좌표 동일)
+- 테스트 10건 신규 (`tests/test_cpsat_c1a.py`). **98 passed**, 1 skipped, 0 fail.
+- decisions.md D-016 작성.
+
+### 2026-05-30 — Phase C1b (D-017 P-series surrogate + 첫 before→after) [완료]
+
+- **목적함수 surrogate**: P1 (PPO 인접 쌍 흐름축 단조 페널티) + P2 (adjacency
+  hard 변수 거리 합 minimize) + tie-breaker (좌상단). `compile_c1a` 의
+  objective 를 분리 가능하게 `add_compactness_objective: bool=True` 플래그 추가.
+- **4 시나리오 측정 (P1-only weight: p1=500, p2=0, tie=0, 10s)**:
+
+  | Scenario | strip-band | CP-SAT C1b | Δ |
+  |---|---:|---:|---:|
+  | A_small_aseptic | 0.6687 | **0.7122** | **+0.0435** |
+  | mab_8000L | 0.6615 | 0.6527 | −0.0088 |
+  | C_closed_sys | 0.6965 | 0.6405 | −0.0560 |
+  | B_large_multi | 0.6511 | **0.6658** | **+0.0147** |
+  | **avg** | **0.6694** | **0.6678** | **−0.0017** |
+  | NNE_golden (ref) | — | 0.7233 | — |
+
+  - 모두 OPTIMAL 도달 (700ms ~ 2.6s, 10s timeout 안에)
+  - 2/4 향상 (A, B), 2/4 저조 (mab, C). 평균 거의 동등.
+- **디폴트 (P1=100, P2=60, tie=1) 는 더 저조 (−0.033 평균)**: P2 surrogate 가
+  P1 과 충돌 + tie-breaker 가 PPO 단조 방해 → timeout 도달. **P1-only 권장**.
+- **핵심 진단** (논문 자료):
+  1. **factor 정책 차이**: CP-SAT (방 한 변 √area × aspect [0.7,1.4]) vs
+     strip-band (area_m2 stripe 비례). 방 사이즈 비교 시 주의.
+  2. **adjacency 35건 (room↔airlock) 모델 밖**: 전실 미편입 → P2 link 거리에
+     PAL/MAL 통과 무시. **C2 에서 결정**.
+  3. **P1 surrogate ≠ 실제 P1 점수**: surrogate=방 단위, 실제=장비 흐름축
+     투영. 같은 방 안 row-major pack 으로 sort_order row 간 역행 → 진짜 P1
+     향상은 **C3 (장비 CP-SAT)** 가 가야 가능.
+  4. **NNE 까지 격차 (Δ +0.054)**: P7 (방-장비 면적 균형) 가 핵심. NNE 의
+     0.44 도달은 B-001 (시각 축소 분리) + C3 가 필요.
+- 테스트 8건 신규 (`tests/test_cpsat_c1b.py`). 회귀 0 (98 → **106 passed**).
+- SVG: `output/floorplan_c1b_mab_8000L.svg`.
+- decisions.md D-017 작성.
+
+### 2026-05-30 — Phase C3a (D-018 장비 CP-SAT 착수 + B-001 시각 축소 분리) [완료]
+
+- **D-015 부분 재검토**: C1b 실측에서 진짜 P1·P7 leverage 가 *장비* 단위
+  임을 확인 → 층2 CP-SAT 필수. D-015 결정의 P2 포화 근거는 유효, 다만 P1·P7
+  과소평가가 문제.
+- **C3a 구현** (방 1개 + 장비 N개 CP-SAT):
+  - `compile_room_c3a(room, room_rect_mm, ...)` — 장비 (x_var, y_var) 격자.
+    hard: 방 안 + 안 겹침 (AddNoOverlap2D + gap padding). 목적: P1 surrogate
+    (sort_order 인접 쌍 가로 단조) + P7 surrogate (장비 외접 bbox perimeter
+    `(x_max-x_min)+(y_max-y_min)` 최소화).
+  - `solve_room_c3a(...) → (list[PlacedEquipment], SolveReport)`. INFEASIBLE
+    이면 빈 list.
+- **B-001 부분 처리**: `_place_equipment_grid(use_actual_mm: bool=False)`
+  플래그 추가. default 변경 X (baselines/B3 안 흔듦), True 면 실제 W_mm 사용.
+- **검증 — R_MEDIA_PREP 5장비 (10×10m=100m² 방)**:
+
+  | Mode | inner | outer_fill | **P7_room** | P1_local |
+  |---|---:|---:|---:|---:|
+  | A row-major 시각축소 (0.8x) | 0.206 | 0.118 | **0.126** | 1.000 (왜곡) |
+  | B row-major 실제 W_mm | 0.570 | 0.684 | **0.556** | 0.500 |
+  | **C CP-SAT 실제** | **0.765** | **0.510** | **0.870** | **0.750** |
+
+  - CP-SAT vs row-major 실제: **P7 +0.314, P1 +0.250**.
+  - CP-SAT outer_fill = 0.510 — sweet 0.50 거의 정확. ✓
+  - **풀이 시간**: 226ms (OPTIMAL, 5장비).
+  - strip-band rect (54m²) 에선 INFEASIBLE — **C3 사용 시 방 rect 가 spec
+    area 근처여야 함** (C1 의 CP-SAT 방 rect 와 결합 필요).
+- 테스트 8건 신규 (`tests/test_cpsat_c3a.py`). **114 passed**, 1 skipped, 0 fail.
+- decisions.md D-018 작성.
+
+### 2026-05-30 — Phase C3b (D-019 모든 방 sweep + 정제실1 진단) [완료]
+
+- **scripts/c3b_room_map.py 신규** — mab_8000L 의 *장비 있는 모든 방* (13방)
+  에 C3a 적용 + row-major(실제 W_mm) 대비 측정. 방 rect = spec area_m2 정사각.
+  결과 `output/c3b_room_map.json` 저장.
+- **결과 — 13/13 모두 feasible (INFEASIBLE 0건)**:
+
+  | Room | n | density | RM P7 | CP P7 | ΔP7 | CP status | ms |
+  |---|---:|---:|---:|---:|---:|---|---:|
+  | R_CIP_SUPPLY ~ R_DS_STORAGE | 1~4 | <0.20 | … | … | ≈0 | OPT | <50 |
+  | R_INOCULATION | 4 | 0.279 | 0.511 | 0.757 | **+0.245** | OPT | 26 |
+  | R_HARVEST | 4 | 0.340 | 0.829 | 0.801 | −0.028 | OPT | 12 |
+  | R_BUFFER_PREP | 5 | 0.219 | 0.633 | 0.615 | −0.018 | FEA | 5003 |
+  | R_MEDIA_PREP | 5 | 0.390 | 0.556 | **0.870** | **+0.314** | OPT | 223 |
+  | R_CELL_CULTURE | 6 | 0.122 | 0.429 | 0.438 | +0.009 | FEA | 5003 |
+  | R_PURIFICATION_2 | 6 | 0.270 | 0.500 | **0.722** | **+0.222** | OPT | 4421 |
+  | **R_PURIFICATION_1** | **23** | **0.390** | **0.259** | **0.777** | **+0.518** | **FEA** | **5003** |
+
+  - **평균 P7: RM 0.505 → CP 0.605 (+10%p)**, P1 평균: RM 0.696 → CP 0.911 (+21.5%p).
+  - density 큰 방에서 CP-SAT 효과 큼. 정제실1 (+0.52) 이 최대.
+- **R_PURIFICATION_1 강조 (사용자 1순위 위험)**:
+  - FEASIBLE 5s timeout, **P7 +0.518 (가장 큰 향상)**, P1 거의 동일.
+  - **fallback 전략 불필요** — 정제실1 도 풀린다.
+- 테스트 4건 신규. **118 passed**, 1 skipped, 0 fail.
+- decisions.md D-019 작성.
+
+### 2026-05-30 — Phase C1+C3 통합 (D-020 첫 진짜 before→after) [완료]
+
+- **scripts/c1c3_pipeline.py 신규** — C1b(방) → C3a(장비) → P-series 측정.
+- **3단계 진단·해결**:
+  1. default aspect [0.7,1.4] → INFEASIBLE 23/52 (44%). C1b 가 방을 작게 풀음.
+  2. aspect 좁힘 [0.9,1.1] → mab +0.06 그러나 A_small INFEASIBLE.
+  3. **동적 aspect** (canvas vs spec area 비교, threshold=1.0) → 채택.
+- **solve_c1b 에 aspect_min/max 인자 추가**. C3 시간 배분 단축 (≤4=1s,
+  5-10=3s, 11+=8s). 95s → 66s.
+- **최종 결과**:
+
+  | Scenario | strip-band | CP-SAT C1+C3 | Δ | time | fallback |
+  |---|---:|---:|---:|---:|---:|
+  | A_small | 0.6687 | 0.6740 | +0.0053 | 4.0s | 6/13 |
+  | **mab_8000L** | 0.6615 | **0.7230** | **+0.0615** | 20.3s | 1/13 |
+  | **C_closed** | 0.6965 | **0.7050** | **+0.0085** | 25.1s | 1/13 |
+  | B_large | 0.6511 | 0.6534 | +0.0023 | 16.7s | 0/13 |
+  | **avg** | **0.6694** | **0.6888** | **+0.0194** | **66.1s** | 8/52 |
+  | NNE | — | 0.7233 | — | — | — |
+
+  - **mab_8000L = NNE 거의 도달** (0.7230 vs 0.7233).
+  - **mab P7: 0.2483 → 0.6756 (+0.43!!)** — C3 효과의 핵심.
+  - **R_PURIFICATION_1 FEASIBLE 8s, fallback 안 함**. 사용자 1순위 위험 통과.
+- 테스트 4건 신규. **122 passed**, 1 skipped, 0 fail.
+- decisions.md D-020 작성.
+
+**한계 명시**:
+- A_small / B_large 작은 향상 — URS 의 캔버스/area 부정합. URS 3.6 (별도 트랙) 후.
+- P2 감소 (~−0.09) — C3 가 P7 우선해서 group 응집 약화. C2 (전실) 또는
+  P2 surrogate C3 박기 후.
+
+### 다음 — Phase C2 / B-001 default 변경 / URS 3.6 결합 대기
 
 **다음 세션 첫 액션 (cold start guide)**:
-1. 사용자에게 "Phase A1.6 보고서를 다시 보여드리고 OK 인지 확인" 부터.
-   (Phase A1.6 마지막 커밋 `8c2f249`. 56 passed, 1 skipped, working tree clean.)
-2. OK 받으면 Phase B1 = **P-series 수식 구현** 진입.
-   - active: P1 flow_monotonicity, P2 adjacency, P6 cleaning_access, P7 compactness
-   - deferred: P3, P5, P8 (CLAUDE.md epistemic honesty 원칙 유지)
-   - 입력 데이터는 이미 Phase A1.6 에서 준비됨:
-     · `eq.sort_order` (PPO 기반, 65/65 채움)
-     · `eq.co_locate_group` (같은 방 그룹, 65/65)
-     · `eq.bbox_m`, `eq.connects_to` (same-room chain)
-   - 시작 지점: `src/reward/scorer.py` 의 `score_spec_p_series()` 골격
-     (Phase A1 에서 만들어둠, 모든 P_* 현재 None 반환)
-3. B1 의 첫 commit 단위: P7 (compactness — bbox_m 만 필요해서 가장 단순) 먼저
-   완성 → 그 다음 P1 (sort_order + layout 좌표 사용) → 그 다음 P2/P6.
-4. B1 끝나면 Phase B2 (strip-band 점수 측정 → output/baselines.json) → B3 (golden fixture).
+1. PROGRESS / decisions 읽고 D-020 완료 확인. mab 0.7230 (NNE 거의 도달),
+   avg +0.0194.
+2. **사용자 결정 받을 사항**:
+   - C2 (전실 편입) — P2 감소 보완. mab P2 0.9046 → 0.8152.
+   - C3 에 P2 surrogate 박기 — group 응집 회복.
+   - **B-001 default 변경 (`use_actual_mm=True`)** — baselines.json 재생성.
+     통합 결과 안정됐으므로 적절한 타이밍.
+   - URS 3.6 (팀원 별도) 후 4 시나리오 재측정.
+3. **C4 fallback** 명시화: 통합 안 풀리는 방은 row-major 실제 자동 (이미 작동).
 
-**대기 중 사용자 결정 없음** — CLAUDE.md 에 active/deferred 정해져 있어 즉시 진행 가능.
+**별도 트랙 (사용자 / 팀원)**:
+- URS 3.6 Critical Process Equipment List → rule_engine 연결.
+- 해소되면 baselines.json + C1+C3 통합 재측정.
+
+**다음에 보강할 수식 / 데이터**:
+- P1 흐름축 polyline 평균 방향 (PPO 가 U-shape 일 때).
+- P2 D_REF=20m 보정 + cross-room link 의 spec.adjacency 도어 거리.
+- P6 본 수식 (clearance_m 채워질 때).
+- P7 sweet=0.50 보정.
+- 장비 회전 (직사각 rect 좁은 방에서 필요할 수 있음).
+
+---
+
+## 백로그 / TODO (지금 안 함, 트리거 조건 명시)
+
+> 작업 도중 발견된 정리 / 개선 거리. 트리거 조건이 오기 전엔 baseline 흔들지
+> 않게 그대로 둠.
+
+### B-001: 시각 축소 (EQUIPMENT_VISUAL_SCALE=0.80) 와 점수 분리
+
+- **현상**: `layout_solver.py:360` `EQUIPMENT_VISUAL_SCALE = 0.80` (+ 자동
+  축소 0.9× 반복 ~ 0.25 하한) 이 `_place_equipment_grid` 안에서 적용 →
+  `PlacedEquipment.rect` 가 시각 축소된 크기로 박힘. P7 inner_compactness =
+  Σ(eq.rect 면적) / 외접 bbox 가 *축소된* 면적을 쓰므로 약간 왜곡.
+- **정리 방향**: "시각 축소는 renderer 단계로 분리하거나 0.8× 규칙 자체를
+  없애는 쪽으로 추후 결정. **점수·CP-SAT 는 실제 W_mm / D_mm 사용**." Layout
+  단계의 `PlacedEquipment.rect` 는 실제 치수, renderer 가 그릴 때만 시각 축소.
+- **트리거**: (a) Phase C3 — 층2 (방 안 장비) 를 CP-SAT 화할 때 (실제 W_mm
+  으로 풀어야 정합), 또는 (b) P7 정밀화가 필요해질 때 (D_REF·sweet 보정과
+  병합 가능).
+- **지금 안 하는 이유**: baselines.json (B2) 과 NNE golden (B3) 비교가 모두
+  현재 시각 축소된 좌표 위에 측정됨. 분리하면 두 baseline 다시 측정 필요 →
+  C1 흐름 흔듦. C3 / P7 정밀화 시점에 한꺼번에 처리.
+- **변경 시 영향 범위**: `layout_solver.py:360-362` 상수 + `_place_equipment_grid`
+  scale 적용부, `renderer.py` 의 장비 그리기 단계, `scripts/baselines.py` 및
+  `scripts/golden_nne.py` 재실행, `test_reward.py` / `test_golden_nne.py` 일부
+  수치 기대값 (회귀 검증 후 재고정).

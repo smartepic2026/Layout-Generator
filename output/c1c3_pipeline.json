@@ -1,0 +1,584 @@
+{
+  "schema_version": "1.0",
+  "phase": "C1+C3",
+  "decision_anchor": "D-020",
+  "scenarios": [
+    {
+      "scenario": "A_small_aseptic",
+      "urs_path": "examples/urs_A_small_aseptic.json",
+      "canvas_dim_mm": [
+        60000,
+        30000
+      ],
+      "c1_status": "OPTIMAL",
+      "c1_solve_ms": 2567.1,
+      "c3_total_ms": 1401.5,
+      "total_solve_ms": 3968.5,
+      "n_rooms_with_eq": 13,
+      "n_feasible_c3": 7,
+      "n_fallback": 6,
+      "p1": 0.6279747450218552,
+      "p2": 0.8449782654834916,
+      "p6": null,
+      "p7": 0.48534747417177765,
+      "normalized": 0.674,
+      "strip_band_normalized": 0.6687,
+      "delta_norm": 0.005300000000000082,
+      "room_reports": {
+        "R_MEDIA_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 39.0,
+          "density": 0.796,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 0.818,
+          "fallback": true,
+          "fallback_n_placed": 5
+        },
+        "R_BUFFER_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 100.0,
+          "eq_sum_m2": 43.8,
+          "density": 0.438,
+          "status": "OPTIMAL",
+          "solve_ms": 103.644,
+          "fallback": false
+        },
+        "R_INOCULATION": {
+          "n_eq": 4,
+          "rect_area_m2": 22.5,
+          "eq_sum_m2": 11.2,
+          "density": 0.496,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 1.05,
+          "fallback": true,
+          "fallback_n_placed": 4
+        },
+        "R_CELL_CULTURE": {
+          "n_eq": 6,
+          "rect_area_m2": 144.0,
+          "eq_sum_m2": 36.7,
+          "density": 0.255,
+          "status": "OPTIMAL",
+          "solve_ms": 1279.569,
+          "fallback": false
+        },
+        "R_HARVEST": {
+          "n_eq": 4,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 20.4,
+          "density": 0.816,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 0.487,
+          "fallback": true,
+          "fallback_n_placed": 4
+        },
+        "R_PURIFICATION_1": {
+          "n_eq": 23,
+          "rect_area_m2": 169.0,
+          "eq_sum_m2": 136.5,
+          "density": 0.808,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 3.16,
+          "fallback": true,
+          "fallback_n_placed": 23
+        },
+        "R_PURIFICATION_2": {
+          "n_eq": 6,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 26.9,
+          "density": 0.55,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 3.092,
+          "fallback": true,
+          "fallback_n_placed": 6
+        },
+        "R_PREPARATION": {
+          "n_eq": 2,
+          "rect_area_m2": 42.2,
+          "eq_sum_m2": 15.0,
+          "density": 0.355,
+          "status": "OPTIMAL",
+          "solve_ms": 1.169,
+          "fallback": false
+        },
+        "R_WASHING": {
+          "n_eq": 1,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 7.5,
+          "density": 0.3,
+          "status": "OPTIMAL",
+          "solve_ms": 0.185,
+          "fallback": false
+        },
+        "R_DS_STORAGE": {
+          "n_eq": 4,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 4.8,
+          "density": 0.192,
+          "status": "OPTIMAL",
+          "solve_ms": 5.406,
+          "fallback": false
+        },
+        "R_IPC": {
+          "n_eq": 3,
+          "rect_area_m2": 16.0,
+          "eq_sum_m2": 2.7,
+          "density": 0.169,
+          "status": "OPTIMAL",
+          "solve_ms": 2.302,
+          "fallback": false
+        },
+        "R_CELL_BANK_STORAGE": {
+          "n_eq": 2,
+          "rect_area_m2": 9.0,
+          "eq_sum_m2": 2.0,
+          "density": 0.222,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 0.375,
+          "fallback": true,
+          "fallback_n_placed": 2
+        },
+        "R_CIP_SUPPLY": {
+          "n_eq": 1,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 10.0,
+          "density": 0.4,
+          "status": "OPTIMAL",
+          "solve_ms": 0.202,
+          "fallback": false
+        }
+      }
+    },
+    {
+      "scenario": "mab_8000L",
+      "urs_path": "examples/urs_mab_8000L.json",
+      "canvas_dim_mm": [
+        78500,
+        42500
+      ],
+      "c1_status": "OPTIMAL",
+      "c1_solve_ms": 5020.5,
+      "c3_total_ms": 15253.8,
+      "total_solve_ms": 20274.3,
+      "n_rooms_with_eq": 13,
+      "n_feasible_c3": 12,
+      "n_fallback": 1,
+      "p1": 0.6818844099077221,
+      "p2": 0.815163337319891,
+      "p6": null,
+      "p7": 0.6755629892721826,
+      "normalized": 0.723,
+      "strip_band_normalized": 0.6615,
+      "delta_norm": 0.0615,
+      "room_reports": {
+        "R_MEDIA_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 39.0,
+          "density": 0.481,
+          "status": "OPTIMAL",
+          "solve_ms": 47.477,
+          "fallback": false
+        },
+        "R_BUFFER_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 156.2,
+          "eq_sum_m2": 43.8,
+          "density": 0.28,
+          "status": "FEASIBLE",
+          "solve_ms": 3001.746,
+          "fallback": false
+        },
+        "R_INOCULATION": {
+          "n_eq": 4,
+          "rect_area_m2": 36.0,
+          "eq_sum_m2": 11.2,
+          "density": 0.31,
+          "status": "OPTIMAL",
+          "solve_ms": 4.937,
+          "fallback": false
+        },
+        "R_CELL_CULTURE": {
+          "n_eq": 6,
+          "rect_area_m2": 256.0,
+          "eq_sum_m2": 36.7,
+          "density": 0.143,
+          "status": "FEASIBLE",
+          "solve_ms": 3001.41,
+          "fallback": false
+        },
+        "R_HARVEST": {
+          "n_eq": 4,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 20.4,
+          "density": 0.416,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 0.571,
+          "fallback": true,
+          "fallback_n_placed": 4
+        },
+        "R_PURIFICATION_1": {
+          "n_eq": 23,
+          "rect_area_m2": 272.2,
+          "eq_sum_m2": 136.5,
+          "density": 0.501,
+          "status": "FEASIBLE",
+          "solve_ms": 8002.462,
+          "fallback": false
+        },
+        "R_PURIFICATION_2": {
+          "n_eq": 6,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 26.9,
+          "density": 0.333,
+          "status": "OPTIMAL",
+          "solve_ms": 1167.936,
+          "fallback": false
+        },
+        "R_PREPARATION": {
+          "n_eq": 2,
+          "rect_area_m2": 64.0,
+          "eq_sum_m2": 15.0,
+          "density": 0.234,
+          "status": "OPTIMAL",
+          "solve_ms": 2.294,
+          "fallback": false
+        },
+        "R_WASHING": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 7.5,
+          "density": 0.153,
+          "status": "OPTIMAL",
+          "solve_ms": 0.206,
+          "fallback": false
+        },
+        "R_DS_STORAGE": {
+          "n_eq": 4,
+          "rect_area_m2": 42.2,
+          "eq_sum_m2": 4.8,
+          "density": 0.114,
+          "status": "OPTIMAL",
+          "solve_ms": 15.909,
+          "fallback": false
+        },
+        "R_IPC": {
+          "n_eq": 3,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 2.7,
+          "density": 0.108,
+          "status": "OPTIMAL",
+          "solve_ms": 6.725,
+          "fallback": false
+        },
+        "R_CELL_BANK_STORAGE": {
+          "n_eq": 2,
+          "rect_area_m2": 16.0,
+          "eq_sum_m2": 2.0,
+          "density": 0.125,
+          "status": "OPTIMAL",
+          "solve_ms": 1.848,
+          "fallback": false
+        },
+        "R_CIP_SUPPLY": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 10.0,
+          "density": 0.204,
+          "status": "OPTIMAL",
+          "solve_ms": 0.241,
+          "fallback": false
+        }
+      }
+    },
+    {
+      "scenario": "C_closed_sys",
+      "urs_path": "examples/urs_C_closed_system.json",
+      "canvas_dim_mm": [
+        60000,
+        40000
+      ],
+      "c1_status": "FEASIBLE",
+      "c1_solve_ms": 10008.1,
+      "c3_total_ms": 15117.9,
+      "total_solve_ms": 25126.0,
+      "n_rooms_with_eq": 13,
+      "n_feasible_c3": 12,
+      "n_fallback": 1,
+      "p1": 0.6420592520641087,
+      "p2": 0.8270639302315937,
+      "p6": null,
+      "p7": 0.6707460316513238,
+      "normalized": 0.705,
+      "strip_band_normalized": 0.6965,
+      "delta_norm": 0.008499999999999952,
+      "room_reports": {
+        "R_MEDIA_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 39.0,
+          "density": 0.481,
+          "status": "OPTIMAL",
+          "solve_ms": 41.069,
+          "fallback": false
+        },
+        "R_BUFFER_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 156.2,
+          "eq_sum_m2": 43.8,
+          "density": 0.28,
+          "status": "FEASIBLE",
+          "solve_ms": 3001.964,
+          "fallback": false
+        },
+        "R_INOCULATION": {
+          "n_eq": 4,
+          "rect_area_m2": 36.0,
+          "eq_sum_m2": 11.2,
+          "density": 0.31,
+          "status": "OPTIMAL",
+          "solve_ms": 4.943,
+          "fallback": false
+        },
+        "R_CELL_CULTURE": {
+          "n_eq": 6,
+          "rect_area_m2": 256.0,
+          "eq_sum_m2": 36.7,
+          "density": 0.143,
+          "status": "FEASIBLE",
+          "solve_ms": 3004.283,
+          "fallback": false
+        },
+        "R_HARVEST": {
+          "n_eq": 4,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 20.4,
+          "density": 0.416,
+          "status": "INFEASIBLE → row-major fallback",
+          "solve_ms": 0.55,
+          "fallback": true,
+          "fallback_n_placed": 4
+        },
+        "R_PURIFICATION_1": {
+          "n_eq": 23,
+          "rect_area_m2": 272.2,
+          "eq_sum_m2": 136.5,
+          "density": 0.501,
+          "status": "FEASIBLE",
+          "solve_ms": 8005.218,
+          "fallback": false
+        },
+        "R_PURIFICATION_2": {
+          "n_eq": 6,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 26.9,
+          "density": 0.333,
+          "status": "OPTIMAL",
+          "solve_ms": 1033.743,
+          "fallback": false
+        },
+        "R_PREPARATION": {
+          "n_eq": 2,
+          "rect_area_m2": 64.0,
+          "eq_sum_m2": 15.0,
+          "density": 0.234,
+          "status": "OPTIMAL",
+          "solve_ms": 1.767,
+          "fallback": false
+        },
+        "R_WASHING": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 7.5,
+          "density": 0.153,
+          "status": "OPTIMAL",
+          "solve_ms": 0.148,
+          "fallback": false
+        },
+        "R_DS_STORAGE": {
+          "n_eq": 4,
+          "rect_area_m2": 42.2,
+          "eq_sum_m2": 4.8,
+          "density": 0.114,
+          "status": "OPTIMAL",
+          "solve_ms": 14.619,
+          "fallback": false
+        },
+        "R_IPC": {
+          "n_eq": 3,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 2.7,
+          "density": 0.108,
+          "status": "OPTIMAL",
+          "solve_ms": 7.508,
+          "fallback": false
+        },
+        "R_CELL_BANK_STORAGE": {
+          "n_eq": 2,
+          "rect_area_m2": 16.0,
+          "eq_sum_m2": 2.0,
+          "density": 0.125,
+          "status": "OPTIMAL",
+          "solve_ms": 1.903,
+          "fallback": false
+        },
+        "R_CIP_SUPPLY": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 10.0,
+          "density": 0.204,
+          "status": "OPTIMAL",
+          "solve_ms": 0.194,
+          "fallback": false
+        }
+      }
+    },
+    {
+      "scenario": "B_large_multi",
+      "urs_path": "examples/urs_B_large_multiproduct.json",
+      "canvas_dim_mm": [
+        100000,
+        52000
+      ],
+      "c1_status": "OPTIMAL",
+      "c1_solve_ms": 1272.1,
+      "c3_total_ms": 15425.8,
+      "total_solve_ms": 16698.0,
+      "n_rooms_with_eq": 13,
+      "n_feasible_c3": 13,
+      "n_fallback": 0,
+      "p1": 0.5458960660514813,
+      "p2": 0.8170766277519952,
+      "p6": null,
+      "p7": 0.6841926700970256,
+      "normalized": 0.6534,
+      "strip_band_normalized": 0.6511,
+      "delta_norm": 0.0022999999999999687,
+      "room_reports": {
+        "R_MEDIA_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 39.0,
+          "density": 0.481,
+          "status": "OPTIMAL",
+          "solve_ms": 32.709,
+          "fallback": false
+        },
+        "R_BUFFER_PREP": {
+          "n_eq": 5,
+          "rect_area_m2": 156.2,
+          "eq_sum_m2": 43.8,
+          "density": 0.28,
+          "status": "FEASIBLE",
+          "solve_ms": 3001.789,
+          "fallback": false
+        },
+        "R_INOCULATION": {
+          "n_eq": 4,
+          "rect_area_m2": 39.0,
+          "eq_sum_m2": 11.2,
+          "density": 0.286,
+          "status": "OPTIMAL",
+          "solve_ms": 9.976,
+          "fallback": false
+        },
+        "R_CELL_CULTURE": {
+          "n_eq": 6,
+          "rect_area_m2": 256.0,
+          "eq_sum_m2": 36.7,
+          "density": 0.143,
+          "status": "FEASIBLE",
+          "solve_ms": 3001.579,
+          "fallback": false
+        },
+        "R_HARVEST": {
+          "n_eq": 4,
+          "rect_area_m2": 56.0,
+          "eq_sum_m2": 20.4,
+          "density": 0.364,
+          "status": "OPTIMAL",
+          "solve_ms": 4.243,
+          "fallback": false
+        },
+        "R_PURIFICATION_1": {
+          "n_eq": 23,
+          "rect_area_m2": 280.5,
+          "eq_sum_m2": 136.5,
+          "density": 0.487,
+          "status": "FEASIBLE",
+          "solve_ms": 8002.963,
+          "fallback": false
+        },
+        "R_PURIFICATION_2": {
+          "n_eq": 6,
+          "rect_area_m2": 81.0,
+          "eq_sum_m2": 26.9,
+          "density": 0.333,
+          "status": "OPTIMAL",
+          "solve_ms": 1346.354,
+          "fallback": false
+        },
+        "R_PREPARATION": {
+          "n_eq": 2,
+          "rect_area_m2": 64.0,
+          "eq_sum_m2": 15.0,
+          "density": 0.234,
+          "status": "OPTIMAL",
+          "solve_ms": 2.327,
+          "fallback": false
+        },
+        "R_WASHING": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 7.5,
+          "density": 0.153,
+          "status": "OPTIMAL",
+          "solve_ms": 0.211,
+          "fallback": false
+        },
+        "R_DS_STORAGE": {
+          "n_eq": 4,
+          "rect_area_m2": 42.2,
+          "eq_sum_m2": 4.8,
+          "density": 0.114,
+          "status": "OPTIMAL",
+          "solve_ms": 14.435,
+          "fallback": false
+        },
+        "R_IPC": {
+          "n_eq": 3,
+          "rect_area_m2": 25.0,
+          "eq_sum_m2": 2.7,
+          "density": 0.108,
+          "status": "OPTIMAL",
+          "solve_ms": 7.119,
+          "fallback": false
+        },
+        "R_CELL_BANK_STORAGE": {
+          "n_eq": 2,
+          "rect_area_m2": 16.0,
+          "eq_sum_m2": 2.0,
+          "density": 0.125,
+          "status": "OPTIMAL",
+          "solve_ms": 1.923,
+          "fallback": false
+        },
+        "R_CIP_SUPPLY": {
+          "n_eq": 1,
+          "rect_area_m2": 49.0,
+          "eq_sum_m2": 10.0,
+          "density": 0.204,
+          "status": "OPTIMAL",
+          "solve_ms": 0.216,
+          "fallback": false
+        }
+      }
+    }
+  ],
+  "strip_band_avg_norm": 0.6694,
+  "cpsat_avg_norm": 0.6888,
+  "delta_avg": 0.0194,
+  "nne_golden_norm": 0.7233,
+  "total_solve_time_s": 66.1
+}

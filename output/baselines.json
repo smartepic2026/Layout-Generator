@@ -1,0 +1,355 @@
+{
+  "schema_version": "1.0",
+  "phase": "B2",
+  "decision_anchor": "D-013",
+  "p_weights": {
+    "P1_flow_monotonicity": 10.0,
+    "P2_adjacency": 6.0,
+    "P3_environmental_protection_open": 0.0,
+    "P5_airflow_contaminant_alignment": 0.0,
+    "P6_cleaning_access": 4.0,
+    "P7_compactness": 3.0,
+    "P8_hse": 0.0
+  },
+  "p_deferred": [
+    "P3_environmental_protection_open",
+    "P5_airflow_contaminant_alignment",
+    "P8_hse"
+  ],
+  "p_active_denominator_constant": 23.0,
+  "limitations": [
+    "rule_engine 이 URS 의 culture_scale_L / n_product_types / building dim 을 spec 에 흘리지 않음 → 4 시나리오 장비 65 종 동일. 사용자(팀원) 가 URS 3.6 Critical Process Equipment List 채운 뒤 rule_engine 이 그를 읽도록 연결 예정. (D-010 책임 분리 — 장비 사양은 rule_engine 영역).",
+    "CP-SAT 솔버 미도입 (Phase C 예정). 현재 strip-band 격자 (결정론적, stripe_ratios 고정 — layout_solver.py:154) — 자유 배치 아님.",
+    "P3 (environmental_protection_open) / P5 (airflow_contaminant_alignment) / P8 (HSE) 보류 (P_DEFERRED). 도메인 검수자 부재 — 추론 데이터 오염 회피.",
+    "P6 (cleaning_access) 본 수식 미구현 + clearance_m 데이터 부재 → 현 시점 항상 None. status='skipped_no_data'. (D-009 epistemic honesty).",
+    "P-series 정규화 분모는 측정 가능한 active 가중치 합 — 현재 P6 빠진 19. 활성 4개 가중치 합 (상수 23) 도 함께 노출."
+  ],
+  "expected_variation_note": "현재 변동 폭이 좁은 것 (norm 0.6511~0.6965, ~7%p) 은 버그가 아닌 예상된 중간 상태. (1) 장비 변별 부재 + (2) CP-SAT 전 strip-band 격자 라는 두 제약 때문이며, 두 요인 모두 해소되면 변동 폭이 커지는 것이 논문 'before → after' 서사의 핵심 신호다.",
+  "scenarios": {
+    "A_small_aseptic": {
+      "meta": {
+        "urs_path": "examples/urs_A_small_aseptic.json",
+        "project_name": "Scenario A — Small mAb 2000L + Aseptic Filling onsite",
+        "modality": "mAb",
+        "rooms_count": 28,
+        "airlocks_count": 11,
+        "equipment_count": 66,
+        "building_dim_mm": [
+          60000.0,
+          30000.0
+        ],
+        "building_dim_source": "tier2_urs",
+        "ppo_length": 8
+      },
+      "p_series": {
+        "P1_flow_monotonicity": {
+          "raw": 0.6308887809616318,
+          "weight": 10.0,
+          "contrib": 6.3089,
+          "status": "active"
+        },
+        "P2_adjacency": {
+          "raw": 0.9136226909134972,
+          "weight": 6.0,
+          "contrib": 5.4817,
+          "status": "active"
+        },
+        "P3_environmental_protection_open": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P5_airflow_contaminant_alignment": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P6_cleaning_access": {
+          "raw": null,
+          "weight": 4.0,
+          "contrib": null,
+          "status": "skipped_no_data"
+        },
+        "P7_compactness": {
+          "raw": 0.3051328866053105,
+          "weight": 3.0,
+          "contrib": 0.9154,
+          "status": "active"
+        },
+        "P8_hse": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "_normalized": 0.6687,
+        "_measured_denominator": 19.0,
+        "_active_denominator": 23.0
+      },
+      "p_series_normalized": 0.6687,
+      "p_series_measured_denominator": 19.0,
+      "p_series_active_denominator": 23.0,
+      "geometric_quality": {
+        "total": 121.5,
+        "hard_violations_count": 0,
+        "soft_violations_count": 1,
+        "breakdown": {
+          "hard_penalty": -0.0,
+          "soft_penalty": -5.0,
+          "flow_separation": 8.0,
+          "pressure_smoothness": 6.0,
+          "corridor_efficiency": 4.0,
+          "equipment_margin": 3.93,
+          "area_ratio_fit": 2.77,
+          "aesthetics": 1.8
+        }
+      }
+    },
+    "mab_8000L": {
+      "meta": {
+        "urs_path": "examples/urs_mab_8000L.json",
+        "project_name": "mAb 8000L Conceptual Design — URS_051 baseline",
+        "modality": "mAb",
+        "rooms_count": 28,
+        "airlocks_count": 17,
+        "equipment_count": 66,
+        "building_dim_mm": [
+          78500.0,
+          42500.0
+        ],
+        "building_dim_source": "tier2_urs",
+        "ppo_length": 8
+      },
+      "p_series": {
+        "P1_flow_monotonicity": {
+          "raw": 0.6396308887809616,
+          "weight": 10.0,
+          "contrib": 6.3963,
+          "status": "active"
+        },
+        "P2_adjacency": {
+          "raw": 0.9045805786998988,
+          "weight": 6.0,
+          "contrib": 5.4275,
+          "status": "active"
+        },
+        "P3_environmental_protection_open": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P5_airflow_contaminant_alignment": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P6_cleaning_access": {
+          "raw": null,
+          "weight": 4.0,
+          "contrib": null,
+          "status": "skipped_no_data"
+        },
+        "P7_compactness": {
+          "raw": 0.24834965452038546,
+          "weight": 3.0,
+          "contrib": 0.745,
+          "status": "active"
+        },
+        "P8_hse": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "_normalized": 0.6615,
+        "_measured_denominator": 19.0,
+        "_active_denominator": 23.0
+      },
+      "p_series_normalized": 0.6615,
+      "p_series_measured_denominator": 19.0,
+      "p_series_active_denominator": 23.0,
+      "geometric_quality": {
+        "total": 121.68,
+        "hard_violations_count": 0,
+        "soft_violations_count": 1,
+        "breakdown": {
+          "hard_penalty": -0.0,
+          "soft_penalty": -5.0,
+          "flow_separation": 8.0,
+          "pressure_smoothness": 6.0,
+          "corridor_efficiency": 4.0,
+          "equipment_margin": 4.0,
+          "area_ratio_fit": 2.77,
+          "aesthetics": 1.91
+        }
+      }
+    },
+    "C_closed_sys": {
+      "meta": {
+        "urs_path": "examples/urs_C_closed_system.json",
+        "project_name": "Scenario C — Closed-system mAb 5000L (Grade D main)",
+        "modality": "mAb",
+        "rooms_count": 25,
+        "airlocks_count": 5,
+        "equipment_count": 66,
+        "building_dim_mm": [
+          60000.0,
+          40000.0
+        ],
+        "building_dim_source": "tier2_urs",
+        "ppo_length": 8
+      },
+      "p_series": {
+        "P1_flow_monotonicity": {
+          "raw": 0.697425934919864,
+          "weight": 10.0,
+          "contrib": 6.9743,
+          "status": "active"
+        },
+        "P2_adjacency": {
+          "raw": 0.9136226909134972,
+          "weight": 6.0,
+          "contrib": 5.4817,
+          "status": "active"
+        },
+        "P3_environmental_protection_open": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P5_airflow_contaminant_alignment": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P6_cleaning_access": {
+          "raw": null,
+          "weight": 4.0,
+          "contrib": null,
+          "status": "skipped_no_data"
+        },
+        "P7_compactness": {
+          "raw": 0.25947433040730083,
+          "weight": 3.0,
+          "contrib": 0.7784,
+          "status": "active"
+        },
+        "P8_hse": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "_normalized": 0.6965,
+        "_measured_denominator": 19.0,
+        "_active_denominator": 23.0
+      },
+      "p_series_normalized": 0.6965,
+      "p_series_measured_denominator": 19.0,
+      "p_series_active_denominator": 23.0,
+      "geometric_quality": {
+        "total": 127.06,
+        "hard_violations_count": 0,
+        "soft_violations_count": 0,
+        "breakdown": {
+          "hard_penalty": -0.0,
+          "soft_penalty": -0.0,
+          "flow_separation": 8.0,
+          "pressure_smoothness": 6.0,
+          "corridor_efficiency": 4.0,
+          "equipment_margin": 3.93,
+          "area_ratio_fit": 2.83,
+          "aesthetics": 2.31
+        }
+      }
+    },
+    "B_large_multi": {
+      "meta": {
+        "urs_path": "examples/urs_B_large_multiproduct.json",
+        "project_name": "Scenario B — Large mAb 15000L Multi-product (3 SKUs)",
+        "modality": "mAb",
+        "rooms_count": 29,
+        "airlocks_count": 17,
+        "equipment_count": 66,
+        "building_dim_mm": [
+          100000.0,
+          52000.0
+        ],
+        "building_dim_source": "tier2_urs",
+        "ppo_length": 8
+      },
+      "p_series": {
+        "P1_flow_monotonicity": {
+          "raw": 0.6260320543953375,
+          "weight": 10.0,
+          "contrib": 6.2603,
+          "status": "active"
+        },
+        "P2_adjacency": {
+          "raw": 0.8897939021600914,
+          "weight": 6.0,
+          "contrib": 5.3388,
+          "status": "active"
+        },
+        "P3_environmental_protection_open": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P5_airflow_contaminant_alignment": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "P6_cleaning_access": {
+          "raw": null,
+          "weight": 4.0,
+          "contrib": null,
+          "status": "skipped_no_data"
+        },
+        "P7_compactness": {
+          "raw": 0.25741724775086894,
+          "weight": 3.0,
+          "contrib": 0.7723,
+          "status": "active"
+        },
+        "P8_hse": {
+          "raw": null,
+          "weight": 0.0,
+          "contrib": null,
+          "status": "deferred"
+        },
+        "_normalized": 0.6511,
+        "_measured_denominator": 19.0,
+        "_active_denominator": 23.0
+      },
+      "p_series_normalized": 0.6511,
+      "p_series_measured_denominator": 19.0,
+      "p_series_active_denominator": 23.0,
+      "geometric_quality": {
+        "total": 121.67,
+        "hard_violations_count": 0,
+        "soft_violations_count": 1,
+        "breakdown": {
+          "hard_penalty": -0.0,
+          "soft_penalty": -5.0,
+          "flow_separation": 8.0,
+          "pressure_smoothness": 6.0,
+          "corridor_efficiency": 4.0,
+          "equipment_margin": 4.11,
+          "area_ratio_fit": 2.77,
+          "aesthetics": 1.79
+        }
+      }
+    }
+  },
+  "generated_at": "2026-05-29T18:46:04+00:00"
+}

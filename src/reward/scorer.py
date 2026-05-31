@@ -304,19 +304,192 @@ def _equipment_iter(spec: RuleEngineOutput):
             yield eq
 
 
-def _p1_flow_monotonicity(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
-    """P1 [ACTIVE]. SPEC §2 P1. 공정 단조성: proj(stepᵢ) ≤ proj(stepⱼ) for stepᵢ<stepⱼ.
-    필요 데이터: equipment.sort_order + layout 좌표 + room.airflow.direction_vector.
-    1차 1단계 작업에서는 수식 미구현 → None.
+# ──────────────────────────────────────────────────────────────────────
+# 좌표 기반 P-series 헬퍼 (D-009 — 점수는 배치 품질만 측정)
+# ──────────────────────────────────────────────────────────────────────
+# 거리 정규화 기준치 (mm). co_locate_group 응집·connects_to link 거리 평가에 사용.
+# 한 방 (대형 process room ~ √300 m² ≈ 17m = 17000mm) 의 한 변보다 약간 큼.
+# 거리가 이를 넘으면 score 0 (= 응집 실패 또는 link 멀음).
+P2_DIST_REF_MM: float = 20_000.0
+
+# P7 sweet spot — "방 안 장비 packing" 두 항:
+# inner_compactness = sum(eq.bbox) / envelope_bbox(장비 외접) ∈ [0,1] — 높을수록 빈틈없이 packed.
+# outer_efficiency  = envelope_bbox / room.rect — 0.50 sweet. 너무 작으면 빈공간/이동거리↑,
+#                    너무 크면 통로 부족.
+P7_OUTER_SWEET: float = 0.50
+P7_OUTER_HALF_BAND: float = 0.40   # outer ∈ [0.10, 0.90] → 점수 0~1
+
+
+def _placed_eq_iter(layout: Layout):
+    """layout 안 모든 (PlacedRoom, PlacedEquipment) 쌍 yield."""
+    for proom in layout.rooms.values():
+        for peq in proom.equipment:
+            yield proom, peq
+
+
+def _eq_center(peq) -> tuple:
+    """PlacedEquipment 좌표 중심 (mm)."""
+    return (peq.rect.cx, peq.rect.cy)
+
+
+def _placed_eq_by_name(layout: Layout) -> dict:
+    """장비 name → list of (PlacedRoom, PlacedEquipment). 동명 다중 가능."""
+    idx: dict = {}
+    for proom, peq in _placed_eq_iter(layout):
+        idx.setdefault(peq.equipment.name, []).append((proom, peq))
+    return idx
+
+
+def _flow_axis(spec: RuleEngineOutput, layout: Layout) -> Optional[tuple]:
+    """공정 흐름축 unit vector (dx, dy).
+
+    근거: spec.flow_paths.product_process_order (D-007 의 PPO) 의 첫 방 중심에서
+    마지막 방 중심으로 이은 벡터. PPO 가 비거나 layout 안에 방이 없으면 None.
+
+    PPO 가 굽은 경우 (예: U-shape) 도 첫↔끝 직선 근사 — 1차에서는 단순.
+    후속에 polyline 평균 방향으로 개선 가능.
     """
-    return None  # TODO Phase 1.1
+    ppo = spec.flow_paths.product_process_order
+    centers = []
+    for rid in ppo:
+        if rid in layout.rooms:
+            r = layout.rooms[rid].rect
+            centers.append((r.cx, r.cy))
+    if len(centers) < 2:
+        return None
+    dx = centers[-1][0] - centers[0][0]
+    dy = centers[-1][1] - centers[0][1]
+    norm = (dx * dx + dy * dy) ** 0.5
+    if norm < 1e-6:
+        return None
+    return (dx / norm, dy / norm)
+
+
+def _proj(pt: tuple, axis: tuple) -> float:
+    return pt[0] * axis[0] + pt[1] * axis[1]
+
+
+def _p1_flow_monotonicity(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
+    """P1 [ACTIVE]. SPEC §2 P1 — 흐름축 투영 단조성 (좌표 기반).
+
+    근거: ISPE Baseline Guide Vol.6 Ch.7.9 (Facility Conceptualization Tool) —
+    공정 흐름 단조성 (one-way flow). 좌표상 역행 = 동선 cross 위험.
+
+    수식 (D-009):
+      1. 흐름축 unit vector u = (마지막 PPO 방 중심) - (첫 PPO 방 중심) 정규화.
+      2. 각 장비 좌표 (eq.rect.cx, cy) 의 u 투영 = proj_i.
+      3. 모든 (i,j) 쌍 중 sort_order_i < sort_order_j 인 것에 대해:
+           proj_i ≤ proj_j → forward, proj_i > proj_j → reverse.
+         sort_order_i == sort_order_j → D-003 병렬, 분모 제외 (중립).
+      4. raw = forward / (forward + reverse).
+
+    layout=None → None (좌표 없으면 측정 불가). [D-009 원칙: 점수 = 배치 품질]
+    """
+    if layout is None:
+        return None
+    axis = _flow_axis(spec, layout)
+    if axis is None:
+        return None
+    # sort_order 있고 layout 에 좌표 잡힌 장비만
+    placed = []
+    for proom, peq in _placed_eq_iter(layout):
+        eq = peq.equipment
+        if eq.sort_order is None:
+            continue
+        placed.append((eq.sort_order, _proj(_eq_center(peq), axis)))
+    if len(placed) < 2:
+        return None
+    forward = 0
+    reverse = 0
+    for i in range(len(placed)):
+        so_i, pr_i = placed[i]
+        for j in range(i + 1, len(placed)):
+            so_j, pr_j = placed[j]
+            if so_i == so_j:
+                continue  # D-003 병렬 — 중립
+            # canonical: 작은 sort_order 가 src
+            if so_i < so_j:
+                src_pr, dst_pr = pr_i, pr_j
+            else:
+                src_pr, dst_pr = pr_j, pr_i
+            if src_pr <= dst_pr:
+                forward += 1
+            else:
+                reverse += 1
+    denom = forward + reverse
+    if denom == 0:
+        return None
+    return forward / denom
 
 
 def _p2_adjacency(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
-    """P2 [ACTIVE]. SPEC §2 P2. connects_to 가까이, incompatible_with 멀리.
-    필요 데이터: equipment.connects_to / incompatible_with + layout.
+    """P2 [ACTIVE]. SPEC §2 P2 — 좌표 거리 기반 응집/인접 (좌표 기반).
+
+    근거: ISPE Baseline Guide Vol.6 Ch.7.5 — process flow grouping.
+    "같은 단위공정군은 좌표상 가까이". room_id 동일성이 아닌 실제 거리.
+
+    두 항 별개 (D-009):
+      (a) group_term: co_locate_group 각 그룹의 멤버 좌표 평균 c_g, 멤버-c_g
+          평균 거리 d_g. s_g = max(0, 1 - d_g / D_REF). 그룹 점수 평균.
+          (D-007 의 그룹이 좌표상 실제로 뭉쳤는지)
+      (b) link_term: connects_to 각 link 의 (src 좌표 ↔ dst 좌표) 거리 d_link.
+          s_link = max(0, 1 - d_link / D_REF). link 점수 평균.
+
+    D_REF = P2_DIST_REF_MM (20m). 두 점이 이를 넘으면 score 0.
+    raw = mean(active terms). 측정 불가 항은 평균에서 제외.
+
+    layout=None → None. [D-009 원칙]
     """
-    return None  # TODO Phase 1.1
+    if layout is None:
+        return None
+    name_idx = _placed_eq_by_name(layout)
+
+    # (a) co_locate_group 좌표 응집
+    group_pts: dict = {}
+    for proom, peq in _placed_eq_iter(layout):
+        g = peq.equipment.co_locate_group
+        if g is None:
+            continue
+        group_pts.setdefault(g, []).append(_eq_center(peq))
+    group_scores = []
+    for g, pts in group_pts.items():
+        if len(pts) < 2:
+            # 그룹 멤버 1개 — 응집 평가 불가능 → 평균 점수 1.0 으로 보지 말고 제외.
+            continue
+        cx = sum(p[0] for p in pts) / len(pts)
+        cy = sum(p[1] for p in pts) / len(pts)
+        d_mean = sum(((p[0] - cx) ** 2 + (p[1] - cy) ** 2) ** 0.5 for p in pts) / len(pts)
+        group_scores.append(max(0.0, 1.0 - d_mean / P2_DIST_REF_MM))
+    group_term: Optional[float] = (
+        sum(group_scores) / len(group_scores) if group_scores else None
+    )
+
+    # (b) connects_to link 좌표 거리
+    link_scores = []
+    for proom, peq in _placed_eq_iter(layout):
+        src_pt = _eq_center(peq)
+        for dst_name in peq.equipment.connects_to:
+            cands = name_idx.get(dst_name, [])
+            if not cands:
+                continue
+            # 동명 다중일 때 가장 가까운 dst 선택 (도면 의도 매칭)
+            best = min(
+                cands,
+                key=lambda pr_pe: (
+                    (pr_pe[1].rect.cx - src_pt[0]) ** 2 + (pr_pe[1].rect.cy - src_pt[1]) ** 2
+                ),
+            )
+            dst_pt = _eq_center(best[1])
+            d = ((dst_pt[0] - src_pt[0]) ** 2 + (dst_pt[1] - src_pt[1]) ** 2) ** 0.5
+            link_scores.append(max(0.0, 1.0 - d / P2_DIST_REF_MM))
+    link_term: Optional[float] = (
+        sum(link_scores) / len(link_scores) if link_scores else None
+    )
+
+    parts = [t for t in (group_term, link_term) if t is not None]
+    if not parts:
+        return None
+    return sum(parts) / len(parts)
 
 
 def _p3_environmental_protection_open(
@@ -346,15 +519,76 @@ def _p5_airflow_contaminant_alignment(
 
 
 def _p6_cleaning_access(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
-    """P6 [ACTIVE]. SPEC §2 P6. 청소/유지보수 통로 연속성.
-    필요 데이터: equipment.clearance_m + layout.
+    """P6 [ACTIVE]. SPEC §2 P6 — 청소/유지보수 통로 연속성 (좌표 기반).
+
+    근거: ISO 14644-4 §6 (Design — cleanability), ISPE Baseline Guide Vol.6
+    Ch.7.6 — equipment clearance for cleaning / sanitization.
+
+    수식 (의도): 각 장비 4면 (front/back/left/right) 의 실제 gap 이 clearance_m
+    요구를 만족하는 비율.
+
+    현재 상태 (D-009 — 미구현 / 후속):
+      - fixture 의 clearance_m 가 모두 None → 측정 불가 → None.
+      - layout 없으면 통로 측정 불가 → None.
+      - clearance_m 데이터가 채워져도 본 수식은 아직 미구현 — return None 유지.
+        (epistemic honesty — proxy 0.5 plug 금지. silent 만점 방지.)
+      - 의도된 구현: gap_i = min(dist(eq_i, 다른 eq/벽)). gap_i ≥ clearance_m_i
+        이면 ok. P6 = ok / total_sides.
     """
-    return None  # TODO Phase 1.1
+    if layout is None:
+        return None
+    has_clearance = any(
+        eq.clearance_m is not None for eq in _equipment_iter(spec)
+    )
+    if not has_clearance:
+        return None  # 측정 불가 — clearance_m 미채움
+    return None  # 본 수식 미구현 (후속 Phase B/C)
 
 
 def _p7_compactness(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
-    """P7 [ACTIVE]. SPEC §2 P7. bbox 최소화 (IPS §1: optimal ft²)."""
-    return None  # TODO Phase 1.1
+    """P7 [ACTIVE]. SPEC §2 P7 — packing density (좌표 기반).
+
+    근거: ISPE Baseline Guide Vol.6 §1 / IPS facility planning + packing density
+    의 표준 정의. "장비들이 좌표상 얼마나 효율적으로 모여 있고, 방 안에서 적절히
+    공간을 차지하는가".
+
+    두 항 평균 (D-009):
+      inner_compactness = sum(eq.rect 면적) / 장비들의 axis-aligned 외접 bbox 면적.
+                          1.0 = 빈틈없이 packed (장비 끼리 닿음), 0 = 흩어짐.
+      outer_efficiency  = 외접 bbox / 방 rect 면적 의 점수.
+                          sweet 0.50 (방의 절반 차지) — 너무 작으면 빈공간 낭비,
+                          너무 크면 통로 부족.
+
+    process 방만 평가. layout=None → None. [D-009 원칙]
+    """
+    if layout is None:
+        return None
+    room_scores = []
+    for proom in layout.rooms.values():
+        if proom.room.category != "process":
+            continue
+        if proom.rect.area_m2 <= 0:
+            continue
+        eqs = proom.equipment
+        if not eqs:
+            continue
+        # 외접 axis-aligned bbox
+        xs = [peq.rect.x for peq in eqs] + [peq.rect.x2 for peq in eqs]
+        ys = [peq.rect.y for peq in eqs] + [peq.rect.y2 for peq in eqs]
+        env_w = max(xs) - min(xs)
+        env_h = max(ys) - min(ys)
+        env_area_m2 = (env_w * env_h) / 1_000_000
+        if env_area_m2 <= 0:
+            continue
+        # 장비 점유 면적 합 (좌표 기반)
+        eq_area_m2 = sum(peq.rect.w * peq.rect.h for peq in eqs) / 1_000_000
+        inner = min(1.0, eq_area_m2 / env_area_m2)  # 정의상 ≤ 1, 부동소수 보호
+        outer_fill = env_area_m2 / proom.rect.area_m2
+        outer = max(0.0, 1.0 - abs(outer_fill - P7_OUTER_SWEET) / P7_OUTER_HALF_BAND)
+        room_scores.append((inner + outer) / 2.0)
+    if not room_scores:
+        return None
+    return sum(room_scores) / len(room_scores)
 
 
 def _p8_hse(spec: RuleEngineOutput, layout: Optional[Layout]) -> Optional[float]:
@@ -393,25 +627,32 @@ def score_spec_p_series(spec: RuleEngineOutput, layout: Optional[Layout] = None)
     }
     out: dict = {}
     weighted_sum = 0.0
+    measured_denominator = 0.0  # 측정된 active 가중치 합 (None 인 active 는 제외)
     for key, fn in fns.items():
         raw = fn(spec, layout)
         w = P_WEIGHTS[key]
         deferred = key in P_DEFERRED
         if raw is None:
-            status = "deferred" if deferred else "skipped"
+            status = "deferred" if deferred else "skipped_no_data"
             contrib: Optional[float] = None
         else:
             status = "deferred" if deferred else "active"
             contrib = w * raw
             weighted_sum += contrib
+            if not deferred:
+                measured_denominator += w
         out[key] = {
             "raw": raw,
             "weight": w,
             "contrib": round(contrib, 4) if contrib is not None else None,
             "status": status,
         }
+    # 정규화: 분모 = "측정 가능했던 active 항목의 가중치 합" (epistemic honesty —
+    # 데이터 부재로 None 된 active 항은 분모에서도 빠짐, 점수 손해 없음).
+    # 비교용으로 정의 분모(상수 23)도 함께 노출.
     out["_normalized"] = (
-        round(weighted_sum / P_ACTIVE_DENOMINATOR, 4) if P_ACTIVE_DENOMINATOR else 0.0
+        round(weighted_sum / measured_denominator, 4) if measured_denominator else None
     )
-    out["_active_denominator"] = P_ACTIVE_DENOMINATOR
+    out["_measured_denominator"] = measured_denominator
+    out["_active_denominator"] = P_ACTIVE_DENOMINATOR  # 활성 4개 가중치 합 (상수)
     return out

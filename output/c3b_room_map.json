@@ -1,0 +1,439 @@
+{
+  "schema_version": "1.0",
+  "phase": "C3b",
+  "decision_anchor": "D-019",
+  "time_limit_s": 5.0,
+  "n_rooms": 13,
+  "feasible_count": 13,
+  "results": [
+    {
+      "room_id": "R_CIP_SUPPLY",
+      "category": "auxiliary",
+      "n_eq": 1,
+      "area_m2": 60.0,
+      "rect_mm": [
+        0,
+        0,
+        7746,
+        7746
+      ],
+      "eq_area_sum_m2": 10.0,
+      "density_eq_room": 0.1666652333456599,
+      "row_major_actual": {
+        "p7_room": 0.5833315416820749,
+        "p1_local": null,
+        "eq_area_m2": 10.0,
+        "env_area_m2": 10.0,
+        "outer_fill": 0.1666652333456599,
+        "inner": 1.0
+      },
+      "cpsat": {
+        "p7_room": 0.5833315416820749,
+        "p1_local": null,
+        "eq_area_m2": 10.0,
+        "env_area_m2": 10.0,
+        "outer_fill": 0.1666652333456599,
+        "inner": 1.0,
+        "status": "OPTIMAL",
+        "solve_ms": 23.604,
+        "objective": 0.0
+      }
+    },
+    {
+      "room_id": "R_WASHING",
+      "category": "process",
+      "n_eq": 1,
+      "area_m2": 60.0,
+      "rect_mm": [
+        0,
+        0,
+        7746,
+        7746
+      ],
+      "eq_area_sum_m2": 7.5,
+      "density_eq_room": 0.12499892500924492,
+      "row_major_actual": {
+        "p7_room": 0.5312486562615562,
+        "p1_local": null,
+        "eq_area_m2": 7.5,
+        "env_area_m2": 7.5,
+        "outer_fill": 0.12499892500924492,
+        "inner": 1.0
+      },
+      "cpsat": {
+        "p7_room": 0.5312486562615562,
+        "p1_local": null,
+        "eq_area_m2": 7.5,
+        "env_area_m2": 7.5,
+        "outer_fill": 0.12499892500924492,
+        "inner": 1.0,
+        "status": "OPTIMAL",
+        "solve_ms": 0.219,
+        "objective": 0.0
+      }
+    },
+    {
+      "room_id": "R_CELL_BANK_STORAGE",
+      "category": "auxiliary",
+      "n_eq": 2,
+      "area_m2": 20.0,
+      "rect_mm": [
+        0,
+        0,
+        4472,
+        4472
+      ],
+      "eq_area_sum_m2": 2.0,
+      "density_eq_room": 0.10000608036968647,
+      "row_major_actual": {
+        "p7_room": 0.4071534977898085,
+        "p1_local": 1.0,
+        "eq_area_m2": 2.0,
+        "env_area_m2": 2.8,
+        "outer_fill": 0.14000851251756105,
+        "inner": 0.7142857142857143
+      },
+      "cpsat": {
+        "p7_room": 0.4312595005776352,
+        "p1_local": 1.0,
+        "eq_area_m2": 2.0,
+        "env_area_m2": 2.5,
+        "outer_fill": 0.1250076004621081,
+        "inner": 0.8,
+        "status": "OPTIMAL",
+        "solve_ms": 12.302,
+        "objective": 140.0
+      }
+    },
+    {
+      "room_id": "R_PREPARATION",
+      "category": "process",
+      "n_eq": 2,
+      "area_m2": 80.0,
+      "rect_mm": [
+        0,
+        0,
+        8944,
+        8944
+      ],
+      "eq_area_sum_m2": 15.0,
+      "density_eq_room": 0.18751140069316213,
+      "row_major_actual": {
+        "p7_room": 0.5779260137637059,
+        "p1_local": 1.0,
+        "eq_area_m2": 15.0,
+        "env_area_m2": 17.4,
+        "outer_fill": 0.21751322480406807,
+        "inner": 0.8620689655172414
+      },
+      "cpsat": {
+        "p7_room": 0.5873736304985525,
+        "p1_local": 1.0,
+        "eq_area_m2": 15.0,
+        "env_area_m2": 16.5,
+        "outer_fill": 0.20626254076247835,
+        "inner": 0.9090909090909091,
+        "status": "OPTIMAL",
+        "solve_ms": 6.209,
+        "objective": 340.0
+      }
+    },
+    {
+      "room_id": "R_IPC",
+      "category": "auxiliary",
+      "n_eq": 3,
+      "area_m2": 30.0,
+      "rect_mm": [
+        0,
+        0,
+        5477,
+        5477
+      ],
+      "eq_area_sum_m2": 2.7,
+      "density_eq_room": 0.0900074136106344,
+      "row_major_actual": {
+        "p7_room": 0.3736011659421218,
+        "p1_local": 1.0,
+        "eq_area_m2": 2.7,
+        "env_area_m2": 4.14,
+        "outer_fill": 0.13801136753630605,
+        "inner": 0.6521739130434784
+      },
+      "cpsat": {
+        "p7_room": 0.41668039557524883,
+        "p1_local": 1.0,
+        "eq_area_m2": 3.0,
+        "env_area_m2": 4.0,
+        "outer_fill": 0.1333443164601991,
+        "inner": 0.75,
+        "status": "OPTIMAL",
+        "solve_ms": 9.328,
+        "objective": 200.0
+      }
+    },
+    {
+      "room_id": "R_DS_STORAGE",
+      "category": "auxiliary",
+      "n_eq": 4,
+      "area_m2": 50.0,
+      "rect_mm": [
+        0,
+        0,
+        7071,
+        7071
+      ],
+      "eq_area_sum_m2": 4.8,
+      "density_eq_room": 0.09600184131531643,
+      "row_major_actual": {
+        "p7_room": 0.3795036826306329,
+        "p1_local": 1.0,
+        "eq_area_m2": 4.8,
+        "env_area_m2": 7.68,
+        "outer_fill": 0.15360294610450628,
+        "inner": 0.625
+      },
+      "cpsat": {
+        "p7_room": 0.35125299693248124,
+        "p1_local": 1.0,
+        "eq_area_m2": 4.0,
+        "env_area_m2": 6.25,
+        "outer_fill": 0.12500239754598494,
+        "inner": 0.64,
+        "status": "OPTIMAL",
+        "solve_ms": 41.43,
+        "objective": 200.0
+      }
+    },
+    {
+      "room_id": "R_HARVEST",
+      "category": "process",
+      "n_eq": 4,
+      "area_m2": 60.0,
+      "rect_mm": [
+        0,
+        0,
+        7746,
+        7746
+      ],
+      "eq_area_sum_m2": 20.4,
+      "density_eq_room": 0.33999707602514617,
+      "row_major_actual": {
+        "p7_room": 0.8291615067110423,
+        "p1_local": 0.3333333333333333,
+        "eq_area_m2": 20.4,
+        "env_area_m2": 28.8,
+        "outer_fill": 0.47999587203550054,
+        "inner": 0.7083333333333333
+      },
+      "cpsat": {
+        "p7_room": 0.8012773929887793,
+        "p1_local": 1.0,
+        "eq_area_m2": 20.0,
+        "env_area_m2": 26.0,
+        "outer_fill": 0.43332960669871573,
+        "inner": 0.7692307692307693,
+        "status": "OPTIMAL",
+        "solve_ms": 11.616,
+        "objective": 420.0
+      }
+    },
+    {
+      "room_id": "R_INOCULATION",
+      "category": "process",
+      "n_eq": 4,
+      "area_m2": 40.0,
+      "rect_mm": [
+        0,
+        0,
+        6325,
+        6325
+      ],
+      "eq_area_sum_m2": 11.16,
+      "density_eq_room": 0.2789607711415582,
+      "row_major_actual": {
+        "p7_room": 0.5114796356762332,
+        "p1_local": 0.5,
+        "eq_area_m2": 11.16,
+        "env_area_m2": 26.4,
+        "outer_fill": 0.6599072005499226,
+        "inner": 0.42272727272727273
+      },
+      "cpsat": {
+        "p7_room": 0.7568653540040375,
+        "p1_local": 0.75,
+        "eq_area_m2": 11.5,
+        "env_area_m2": 18.0,
+        "outer_fill": 0.4499367276476745,
+        "inner": 0.6388888888888888,
+        "status": "OPTIMAL",
+        "solve_ms": 25.809,
+        "objective": 340.0
+      }
+    },
+    {
+      "room_id": "R_BUFFER_PREP",
+      "category": "process",
+      "n_eq": 5,
+      "area_m2": 200.0,
+      "rect_mm": [
+        0,
+        0,
+        14142,
+        14142
+      ],
+      "eq_area_sum_m2": 43.75,
+      "density_eq_room": 0.21875419570547364,
+      "row_major_actual": {
+        "p7_room": 0.6325119665201797,
+        "p1_local": 0.75,
+        "eq_area_m2": 43.75,
+        "env_area_m2": 73.73,
+        "outer_fill": 0.3686570708426188,
+        "inner": 0.5933812559338125
+      },
+      "cpsat": {
+        "p7_room": 0.614590525971288,
+        "p1_local": 1.0,
+        "eq_area_m2": 43.75,
+        "env_area_m2": 60.0,
+        "outer_fill": 0.30000575411036384,
+        "inner": 0.7291666666666666,
+        "status": "FEASIBLE",
+        "solve_ms": 5003.28,
+        "objective": 620.0
+      }
+    },
+    {
+      "room_id": "R_MEDIA_PREP",
+      "category": "process",
+      "n_eq": 5,
+      "area_m2": 100.0,
+      "rect_mm": [
+        0,
+        0,
+        10000,
+        10000
+      ],
+      "eq_area_sum_m2": 39.0,
+      "density_eq_room": 0.39,
+      "row_major_actual": {
+        "p7_room": 0.5555878126371214,
+        "p1_local": 0.5,
+        "eq_area_m2": 39.0,
+        "env_area_m2": 68.37,
+        "outer_fill": 0.6837000000000001,
+        "inner": 0.570425625274243
+      },
+      "cpsat": {
+        "p7_room": 0.8698529411764706,
+        "p1_local": 0.75,
+        "eq_area_m2": 39.0,
+        "env_area_m2": 51.0,
+        "outer_fill": 0.51,
+        "inner": 0.7647058823529411,
+        "status": "OPTIMAL",
+        "solve_ms": 222.781,
+        "objective": 580.0
+      }
+    },
+    {
+      "room_id": "R_CELL_CULTURE",
+      "category": "process",
+      "n_eq": 6,
+      "area_m2": 300.0,
+      "rect_mm": [
+        0,
+        0,
+        17321,
+        17321
+      ],
+      "eq_area_sum_m2": 36.72,
+      "density_eq_room": 0.1223930476669157,
+      "row_major_actual": {
+        "p7_room": 0.42890671241711514,
+        "p1_local": 0.7142857142857143,
+        "eq_area_m2": 36.72,
+        "env_area_m2": 69.93,
+        "outer_fill": 0.23308675989508212,
+        "inner": 0.525096525096525
+      },
+      "cpsat": {
+        "p7_room": 0.43795018293891097,
+        "p1_local": 1.0,
+        "eq_area_m2": 36.5,
+        "env_area_m2": 54.0,
+        "outer_fill": 0.17998977598075838,
+        "inner": 0.6759259259259259,
+        "status": "FEASIBLE",
+        "solve_ms": 5002.567,
+        "objective": 600.0
+      }
+    },
+    {
+      "room_id": "R_PURIFICATION_2",
+      "category": "process",
+      "n_eq": 6,
+      "area_m2": 100.0,
+      "rect_mm": [
+        0,
+        0,
+        10000,
+        10000
+      ],
+      "eq_area_sum_m2": 26.95,
+      "density_eq_room": 0.2695,
+      "row_major_actual": {
+        "p7_room": 0.5002712264150944,
+        "p1_local": 0.4444444444444444,
+        "eq_area_m2": 26.95,
+        "env_area_m2": 66.25,
+        "outer_fill": 0.6625,
+        "inner": 0.40679245283018867
+      },
+      "cpsat": {
+        "p7_room": 0.721875,
+        "p1_local": 1.0,
+        "eq_area_m2": 27.75,
+        "env_area_m2": 40.0,
+        "outer_fill": 0.4,
+        "inner": 0.69375,
+        "status": "OPTIMAL",
+        "solve_ms": 4421.216,
+        "objective": 520.0
+      }
+    },
+    {
+      "room_id": "R_PURIFICATION_1",
+      "category": "process",
+      "n_eq": 23,
+      "area_m2": 350.4,
+      "rect_mm": [
+        0,
+        0,
+        18719,
+        18719
+      ],
+      "eq_area_sum_m2": 136.5,
+      "density_eq_room": 0.3895537261383253,
+      "row_major_actual": {
+        "p7_room": 0.25849535964155945,
+        "p1_local": 0.49214659685863876,
+        "eq_area_m2": 136.5,
+        "env_area_m2": 305.52,
+        "outer_fill": 0.8719154169214736,
+        "inner": 0.44677926158680287
+      },
+      "cpsat": {
+        "p7_room": 0.7768042436174594,
+        "p1_local": 0.4816753926701571,
+        "eq_area_m2": 135.5,
+        "env_area_m2": 195.0,
+        "outer_fill": 0.5565053230547504,
+        "inner": 0.6948717948717948,
+        "status": "FEASIBLE",
+        "solve_ms": 5002.732,
+        "objective": 1120.0
+      }
+    }
+  ]
+}

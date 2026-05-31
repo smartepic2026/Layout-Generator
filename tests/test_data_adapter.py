@@ -12,7 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from src.drawing_agent.data import enrich_spec
+from src.drawing_agent.data import (
+    DEFAULT_BUILDING_H_MM,
+    DEFAULT_BUILDING_W_MM,
+    enrich_spec,
+    resolve_building_dims,
+)
 from src.drawing_agent.data.tier3_derive import derive_bbox_m, parse_sort_order
 from src.rule_engine.schemas import RuleEngineOutput
 
@@ -426,3 +431,89 @@ def test_d007_tier1_wins_when_process_no_filled():
     assert spec.rooms[0].equipment[0].sort_order == 99, (
         f"기대 99 (P9-9 파싱), 실제 {spec.rooms[0].equipment[0].sort_order}"
     )
+
+
+# ══════════════════════════════════════════════════════════════════════
+# D-010: building dim resolver (4-tier — URS → 룰엔진 → manual default)
+# ══════════════════════════════════════════════════════════════════════
+def _minimal_spec() -> RuleEngineOutput:
+    from src.rule_engine.schemas import (
+        Constraints, FlowPaths, RangeMM, RuleEngineOutput, Zones,
+    )
+    return RuleEngineOutput(
+        project_name="t", modality="mAb", rooms=[], airlocks=[], adjacency=[],
+        flow_paths=FlowPaths(), zones=Zones(),
+        constraints=Constraints(corridor_width_mm=RangeMM()),
+    )
+
+
+def test_resolve_building_dims_default_when_no_inputs():
+    """URS 없고 룰엔진 미반영 → manual stub default."""
+    w, h, src = resolve_building_dims(_minimal_spec(), urs_path=None)
+    assert w == DEFAULT_BUILDING_W_MM
+    assert h == DEFAULT_BUILDING_H_MM
+    assert src == "tier4_manual_stub_default"
+
+
+def test_resolve_building_dims_uses_urs_when_provided():
+    """urs_path 주어지면 URS.building.width_mm / depth_mm 우선."""
+    w, h, src = resolve_building_dims(
+        _minimal_spec(), urs_path="examples/urs_A_small_aseptic.json"
+    )
+    assert (w, h) == (60000.0, 30000.0)
+    assert src == "tier2_urs"
+
+
+def test_resolve_building_dims_4_scenarios_distinct():
+    """4 시나리오 각각 다른 building dim 으로 나와야 함."""
+    scenarios = [
+        ("examples/urs_A_small_aseptic.json", (60000.0, 30000.0)),
+        ("examples/urs_mab_8000L.json",       (78500.0, 42500.0)),
+        ("examples/urs_C_closed_system.json", (60000.0, 40000.0)),
+        ("examples/urs_B_large_multiproduct.json", (100000.0, 52000.0)),
+    ]
+    spec = _minimal_spec()
+    dims = []
+    for path, expected in scenarios:
+        w, h, src = resolve_building_dims(spec, urs_path=path)
+        assert (w, h) == expected, f"{path}: got ({w},{h}), expected {expected}"
+        assert src == "tier2_urs"
+        dims.append((w, h))
+    # 4 시나리오 모두 distinct
+    assert len(set(dims)) == 4
+
+
+def test_resolve_building_dims_bad_urs_falls_back():
+    """URS 파싱 실패해도 default fallback (D-003 anti-corruption layer)."""
+    w, h, src = resolve_building_dims(_minimal_spec(), urs_path="/nonexistent.json")
+    assert (w, h) == (DEFAULT_BUILDING_W_MM, DEFAULT_BUILDING_H_MM)
+    assert src == "tier4_manual_stub_default"
+
+
+def test_generate_floorplan_uses_urs_building_dim():
+    """generate_floorplan(urs_path=...) 가 URS 캔버스로 layout 생성."""
+    from src.drawing_agent.floorplan import generate_floorplan
+    from src.rule_engine.engine import run_rule_engine
+    from src.rule_engine.schemas import URSInput
+    import json
+    urs = URSInput(**json.loads(Path("examples/urs_A_small_aseptic.json").read_text()))
+    spec = run_rule_engine(urs, strict=False)
+    _, layout = generate_floorplan(spec, urs_path="examples/urs_A_small_aseptic.json")
+    assert layout.building_w_mm == 60000.0
+    assert layout.building_h_mm == 30000.0
+
+
+def test_generate_floorplan_explicit_dim_wins_over_urs():
+    """명시 building_w_mm 인자가 URS 보다 우선."""
+    from src.drawing_agent.floorplan import generate_floorplan
+    from src.rule_engine.engine import run_rule_engine
+    from src.rule_engine.schemas import URSInput
+    import json
+    urs = URSInput(**json.loads(Path("examples/urs_A_small_aseptic.json").read_text()))
+    spec = run_rule_engine(urs, strict=False)
+    _, layout = generate_floorplan(
+        spec, building_w_mm=12345, building_h_mm=6789,
+        urs_path="examples/urs_A_small_aseptic.json",
+    )
+    assert layout.building_w_mm == 12345
+    assert layout.building_h_mm == 6789

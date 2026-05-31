@@ -19,6 +19,11 @@ from src.drawing_agent.data.adapter import (
     SourceTracker,
     enrich_spec,
 )
+from src.drawing_agent.data.building import (
+    DEFAULT_BUILDING_H_MM,
+    DEFAULT_BUILDING_W_MM,
+    resolve_building_dims,
+)
 from src.drawing_agent.data.tier1_ruleengine import (
     adapt_external_dict,
     load_external_spec,
@@ -31,4 +36,7 @@ __all__ = [
     "load_external_spec",
     "adapt_external_dict",
     "parse_dimensions",
+    "resolve_building_dims",
+    "DEFAULT_BUILDING_W_MM",
+    "DEFAULT_BUILDING_H_MM",
 ]

@@ -6,3 +6,5 @@ matplotlib>=3.8
 gymnasium>=0.29
 stable-baselines3>=2.3
 pytest>=8.0
+# [D-015] Phase C0 — CP-SAT 솔버. 재현성 확보를 위해 고정.
+ortools==9.10.4067

@@ -1,0 +1,331 @@
+{
+  "_golden_meta": {
+    "source": "NNE Pharmaplan, Bacterial Bio PilotPlant — Equipment Layout, Green Cross Corp, Doc 0617C05016 Rev 001",
+    "extracted_from": "docs/reference/nne_equipment_layout.md",
+    "method": "B - structural golden (정밀 좌표 X, 구조만)",
+    "purpose": "P-series 점수 수식 타당성 검증 — 전문가 배치가 strip-band 보다 높은 점수 나와야",
+    "canvas_w_mm": 62000,
+    "canvas_h_mm": 42000,
+    "ppo_axis": "horizontal (Media&Buffer Prep → Purification III, left-to-right)",
+    "limitations": [
+      "방 좌표는 그리드(X4~X12 가로, Y1~Y6 세로) 근사. 정밀 (x,y) 는 방법 A 후속.",
+      "장비 W_mm/D_mm 은 NNE 표 면적 m² 를 정사각형 가정 (w = d = √m² × 1000 mm).",
+      "방 안 장비 좌표는 row-major 자동 pack (helper). NNE 도면 정확 위치 아님.",
+      "Airlock·PAL·MAL 구조는 spec.adjacency 로 supply/return 분리만 표현 (간소화)."
+    ],
+    "ppo_room_ids": [
+      "R_NNE_MEDIA_BUFFER_PREP",
+      "R_NNE_SEED_LAB",
+      "R_NNE_FERMENTATION",
+      "R_NNE_PURIFICATION_1",
+      "R_NNE_PURIFICATION_2",
+      "R_NNE_PURIFICATION_3"
+    ]
+  },
+
+  "spec": {
+    "project_name": "NNE Bacterial Bio PilotPlant Golden (structural)",
+    "modality": "mAb",
+    "rooms": [
+      {
+        "id": "R_NNE_SUPPLY_CORRIDOR",
+        "name_ko": "Supply Corridor",
+        "name_en": "Supply Corridor",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 100.0,
+        "is_corridor": true,
+        "corridor_role": "supply",
+        "equipment": []
+      },
+      {
+        "id": "R_NNE_RETURN_CORRIDOR",
+        "name_ko": "Return Corridor",
+        "name_en": "Return Corridor",
+        "category": "process",
+        "clean_grade": "D",
+        "area_m2": 100.0,
+        "is_corridor": true,
+        "corridor_role": "return",
+        "equipment": []
+      },
+      {
+        "id": "R_NNE_MEDIA_BUFFER_PREP",
+        "name_ko": "배지/버퍼 조제실",
+        "name_en": "Media & Buffer Preparation",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 60.0,
+        "equipment": [
+          {"name": "NNE-MB-Floor-Balance-1000kg", "W_mm": 1225, "D_mm": 1225, "H_mm": 1500, "bbox_m": [1.225, 1.225]},
+          {"name": "NNE-MB-Filter-Integrity-Tester", "W_mm": 1414, "D_mm": 1414, "H_mm": 1500, "bbox_m": [1.414, 1.414]},
+          {"name": "NNE-MB-Mobile-Cart-Filter-Kit", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-MB-Tank-300L", "W_mm": 1975, "D_mm": 1975, "H_mm": 2500, "bbox_m": [1.975, 1.975]},
+          {"name": "NNE-MB-Mobile-Tank-250L", "W_mm": 949, "D_mm": 949, "H_mm": 2000, "bbox_m": [0.949, 0.949]},
+          {"name": "NNE-MB-Mobile-Cart-Pump-A", "W_mm": 707, "D_mm": 707, "H_mm": 1200, "bbox_m": [0.707, 0.707]},
+          {"name": "NNE-MB-Mobile-Cart-Pump-B", "W_mm": 707, "D_mm": 707, "H_mm": 1200, "bbox_m": [0.707, 0.707]},
+          {"name": "NNE-MB-Palletank-A", "W_mm": 707, "D_mm": 707, "H_mm": 1500, "bbox_m": [0.707, 0.707]},
+          {"name": "NNE-MB-Palletank-B", "W_mm": 707, "D_mm": 707, "H_mm": 1500, "bbox_m": [0.707, 0.707]},
+          {"name": "NNE-MB-Palletank-C", "W_mm": 707, "D_mm": 707, "H_mm": 1500, "bbox_m": [0.707, 0.707]}
+        ]
+      },
+      {
+        "id": "R_NNE_SEED_LAB",
+        "name_ko": "Seed Lab",
+        "name_en": "Seed Lab",
+        "category": "process",
+        "clean_grade": "B",
+        "area_m2": 50.0,
+        "equipment": [
+          {"name": "NNE-SD-BSC", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-SD-Deep-Freezer-A", "W_mm": 1183, "D_mm": 1183, "H_mm": 2000, "bbox_m": [1.183, 1.183]},
+          {"name": "NNE-SD-Deep-Freezer-B", "W_mm": 1183, "D_mm": 1183, "H_mm": 2000, "bbox_m": [1.183, 1.183]},
+          {"name": "NNE-SD-Shaking-Incubator-A", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-SD-Shaking-Incubator-B", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-SD-Fermenter-40L", "W_mm": 1183, "D_mm": 1183, "H_mm": 1500, "bbox_m": [1.183, 1.183]},
+          {"name": "NNE-SD-Bench-pH-Micro-Water", "W_mm": 1304, "D_mm": 1304, "H_mm": 900, "bbox_m": [1.304, 1.304]}
+        ]
+      },
+      {
+        "id": "R_NNE_FERMENTATION",
+        "name_ko": "Fermentation",
+        "name_en": "Fermentation",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 100.0,
+        "equipment": [
+          {"name": "NNE-FM-Fermenter-300L", "W_mm": 3066, "D_mm": 3066, "H_mm": 3500, "bbox_m": [3.066, 3.066]},
+          {"name": "NNE-FM-Continuous-Centrifuge", "W_mm": 1225, "D_mm": 1225, "H_mm": 1800, "bbox_m": [1.225, 1.225]},
+          {"name": "NNE-FM-High-Speed-Centrifuge", "W_mm": 1225, "D_mm": 1225, "H_mm": 1500, "bbox_m": [1.225, 1.225]},
+          {"name": "NNE-FM-BSC", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-FM-Bench-pH", "W_mm": 1414, "D_mm": 1414, "H_mm": 900, "bbox_m": [1.414, 1.414]},
+          {"name": "NNE-FM-Filter-Integrity-Tester", "W_mm": 707, "D_mm": 707, "H_mm": 1200, "bbox_m": [0.707, 0.707]},
+          {"name": "NNE-FM-Mobile-Cart-Pump", "W_mm": 949, "D_mm": 949, "H_mm": 1200, "bbox_m": [0.949, 0.949]},
+          {"name": "NNE-FM-Mobile-Tank-300L", "W_mm": 1049, "D_mm": 1049, "H_mm": 2200, "bbox_m": [1.049, 1.049]},
+          {"name": "NNE-FM-Mobile-CIP", "W_mm": 1414, "D_mm": 1414, "H_mm": 2000, "bbox_m": [1.414, 1.414]},
+          {"name": "NNE-FM-Filter-Kit-02um", "W_mm": 1000, "D_mm": 1000, "H_mm": 1200, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-FM-Refrigerator", "W_mm": 1000, "D_mm": 1000, "H_mm": 2000, "bbox_m": [1.0, 1.0]}
+        ]
+      },
+      {
+        "id": "R_NNE_PURIFICATION_1",
+        "name_ko": "Purification I",
+        "name_en": "Purification I",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 80.0,
+        "equipment": [
+          {"name": "NNE-P1-BSC-FHA", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-P1-Filter-Kit-02um", "W_mm": 1000, "D_mm": 1000, "H_mm": 1200, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P1-Bench-Pump-pH", "W_mm": 949, "D_mm": 949, "H_mm": 900, "bbox_m": [0.949, 0.949]},
+          {"name": "NNE-P1-Filter-Integrity-Tester", "W_mm": 775, "D_mm": 775, "H_mm": 1200, "bbox_m": [0.775, 0.775]},
+          {"name": "NNE-P1-Akta-II-A", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P1-Akta-II-B", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P1-UF-DF-A", "W_mm": 1265, "D_mm": 1265, "H_mm": 1800, "bbox_m": [1.265, 1.265]},
+          {"name": "NNE-P1-UF-DF-B", "W_mm": 1265, "D_mm": 1265, "H_mm": 1800, "bbox_m": [1.265, 1.265]},
+          {"name": "NNE-P1-Mobile-Tank-HA-Ads-200L", "W_mm": 1183, "D_mm": 1183, "H_mm": 2000, "bbox_m": [1.183, 1.183]},
+          {"name": "NNE-P1-Bench-Balance-Pump-pH", "W_mm": 1414, "D_mm": 1414, "H_mm": 900, "bbox_m": [1.414, 1.414]}
+        ]
+      },
+      {
+        "id": "R_NNE_PURIFICATION_2",
+        "name_ko": "Purification II",
+        "name_en": "Purification II",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 50.0,
+        "equipment": [
+          {"name": "NNE-P2-BSC-Pump-pH-Balance", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-P2-Refrigerator", "W_mm": 1000, "D_mm": 1000, "H_mm": 2000, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P2-Incubator-40C", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P2-Table", "W_mm": 1000, "D_mm": 1000, "H_mm": 900, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-P2-Filter-Kit-02um", "W_mm": 1000, "D_mm": 1000, "H_mm": 1200, "bbox_m": [1.0, 1.0]}
+        ]
+      },
+      {
+        "id": "R_NNE_PURIFICATION_3",
+        "name_ko": "Purification III",
+        "name_en": "Purification III",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 70.0,
+        "equipment": [
+          {"name": "NNE-P3-BSC-PT", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-P3-BSC-PRN", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-P3-BSC-FHA", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-P3-Bench-Pump-pH-Welder", "W_mm": 1414, "D_mm": 1414, "H_mm": 900, "bbox_m": [1.414, 1.414]},
+          {"name": "NNE-P3-DF-System", "W_mm": 775, "D_mm": 775, "H_mm": 1500, "bbox_m": [0.775, 0.775]},
+          {"name": "NNE-P3-Refrigerator", "W_mm": 1000, "D_mm": 1000, "H_mm": 2000, "bbox_m": [1.0, 1.0]}
+        ]
+      },
+      {
+        "id": "R_NNE_IPC",
+        "name_ko": "공정중검사실",
+        "name_en": "In-Process Control",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 50.0,
+        "equipment": [
+          {"name": "NNE-IPC-Bench-Micro-pH-Water-Cent", "W_mm": 1304, "D_mm": 1304, "H_mm": 900, "bbox_m": [1.304, 1.304]},
+          {"name": "NNE-IPC-Bench-PC-Printer-Spec", "W_mm": 894, "D_mm": 894, "H_mm": 900, "bbox_m": [0.894, 0.894]},
+          {"name": "NNE-IPC-Bench-Cent-Shaker-Power", "W_mm": 1304, "D_mm": 1304, "H_mm": 900, "bbox_m": [1.304, 1.304]},
+          {"name": "NNE-IPC-Incubator-40C", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-IPC-Bench-ELISA", "W_mm": 1342, "D_mm": 1342, "H_mm": 900, "bbox_m": [1.342, 1.342]},
+          {"name": "NNE-IPC-Refrigerator", "W_mm": 1000, "D_mm": 1000, "H_mm": 2000, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-IPC-BSC", "W_mm": 1342, "D_mm": 1342, "H_mm": 2200, "bbox_m": [1.342, 1.342]}
+        ]
+      },
+      {
+        "id": "R_NNE_PREPARATION",
+        "name_ko": "준비실",
+        "name_en": "Preparation",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 30.0,
+        "equipment": [
+          {"name": "NNE-PREP-Hot-Air-Sterilizer", "W_mm": 1000, "D_mm": 1000, "H_mm": 1500, "bbox_m": [1.0, 1.0]},
+          {"name": "NNE-PREP-Autoclave-1000L-A", "W_mm": 1581, "D_mm": 1581, "H_mm": 2500, "bbox_m": [1.581, 1.581]},
+          {"name": "NNE-PREP-Autoclave-1000L-B", "W_mm": 1342, "D_mm": 1342, "H_mm": 2500, "bbox_m": [1.342, 1.342]}
+        ]
+      },
+      {
+        "id": "R_NNE_CLEANING",
+        "name_ko": "세척실",
+        "name_en": "Cleaning",
+        "category": "process",
+        "clean_grade": "D",
+        "area_m2": 30.0,
+        "equipment": [
+          {"name": "NNE-CL-Washing-Machine-680L", "W_mm": 1378, "D_mm": 1378, "H_mm": 2000, "bbox_m": [1.378, 1.378]},
+          {"name": "NNE-CL-Sinks", "W_mm": 1581, "D_mm": 1581, "H_mm": 1000, "bbox_m": [1.581, 1.581]},
+          {"name": "NNE-CL-Dryer", "W_mm": 1414, "D_mm": 1414, "H_mm": 2000, "bbox_m": [1.414, 1.414]},
+          {"name": "NNE-CL-Passbox", "W_mm": 949, "D_mm": 949, "H_mm": 1200, "bbox_m": [0.949, 0.949]},
+          {"name": "NNE-CL-Table", "W_mm": 894, "D_mm": 894, "H_mm": 900, "bbox_m": [0.894, 0.894]}
+        ]
+      },
+      {
+        "id": "R_NNE_WEIGHING",
+        "name_ko": "계량실",
+        "name_en": "Weighing",
+        "category": "process",
+        "clean_grade": "C",
+        "area_m2": 20.0,
+        "equipment": [
+          {"name": "NNE-WG-Table-Hood-Balance", "W_mm": 1414, "D_mm": 1414, "H_mm": 1500, "bbox_m": [1.414, 1.414]}
+        ]
+      },
+      {
+        "id": "R_NNE_KILLTANK",
+        "name_ko": "Killtank",
+        "name_en": "Killtank",
+        "category": "auxiliary",
+        "clean_grade": "D",
+        "area_m2": 25.0,
+        "equipment": [
+          {"name": "NNE-KT-Tank", "W_mm": 2000, "D_mm": 2000, "H_mm": 3000, "bbox_m": [2.0, 2.0]}
+        ]
+      },
+      {
+        "id": "R_NNE_STERILE_STORAGE",
+        "name_ko": "멸균보관실",
+        "name_en": "Sterile Storage",
+        "category": "auxiliary",
+        "clean_grade": "C",
+        "area_m2": 25.0,
+        "equipment": [
+          {"name": "NNE-SS-Rack-A", "W_mm": 1500, "D_mm": 1500, "H_mm": 2000, "bbox_m": [1.5, 1.5]},
+          {"name": "NNE-SS-Rack-B", "W_mm": 1500, "D_mm": 1500, "H_mm": 2000, "bbox_m": [1.5, 1.5]}
+        ]
+      },
+      {
+        "id": "R_NNE_STORAGE_BULK",
+        "name_ko": "벌크보관실",
+        "name_en": "Storage Bulk",
+        "category": "auxiliary",
+        "clean_grade": "D",
+        "area_m2": 30.0,
+        "equipment": [
+          {"name": "NNE-BK-Tank-A", "W_mm": 2000, "D_mm": 2000, "H_mm": 3000, "bbox_m": [2.0, 2.0]},
+          {"name": "NNE-BK-Tank-B", "W_mm": 2000, "D_mm": 2000, "H_mm": 3000, "bbox_m": [2.0, 2.0]}
+        ]
+      },
+      {
+        "id": "R_NNE_OFFICE",
+        "name_ko": "사무실",
+        "name_en": "Office",
+        "category": "NC",
+        "clean_grade": "NC",
+        "area_m2": 30.0,
+        "equipment": []
+      }
+    ],
+    "airlocks": [],
+    "adjacency": [
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_MEDIA_BUFFER_PREP", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_SEED_LAB", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_FERMENTATION", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_PURIFICATION_1", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_PURIFICATION_2", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_PURIFICATION_3", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_IPC", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_PREPARATION", "relationship": "door"},
+      {"from_id": "R_NNE_SUPPLY_CORRIDOR", "to_id": "R_NNE_WEIGHING", "relationship": "door"},
+      {"from_id": "R_NNE_MEDIA_BUFFER_PREP", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_SEED_LAB", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_FERMENTATION", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_FERMENTATION", "to_id": "R_NNE_KILLTANK", "relationship": "door"},
+      {"from_id": "R_NNE_PURIFICATION_1", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_PURIFICATION_1", "to_id": "R_NNE_PURIFICATION_2", "relationship": "door"},
+      {"from_id": "R_NNE_PURIFICATION_2", "to_id": "R_NNE_PURIFICATION_3", "relationship": "door"},
+      {"from_id": "R_NNE_PURIFICATION_3", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_PURIFICATION_3", "to_id": "R_NNE_STERILE_STORAGE", "relationship": "door"},
+      {"from_id": "R_NNE_KILLTANK", "to_id": "R_NNE_RETURN_CORRIDOR", "relationship": "door"},
+      {"from_id": "R_NNE_CLEANING", "to_id": "R_NNE_PREPARATION", "relationship": "passthrough_only"}
+    ],
+    "flow_paths": {
+      "personnel_entry": ["R_NNE_OFFICE", "R_NNE_SUPPLY_CORRIDOR"],
+      "personnel_exit": ["R_NNE_RETURN_CORRIDOR"],
+      "material_entry": ["R_NNE_WEIGHING", "R_NNE_SUPPLY_CORRIDOR"],
+      "waste_exit": ["R_NNE_KILLTANK", "R_NNE_RETURN_CORRIDOR"],
+      "product_process_order": [
+        "R_NNE_MEDIA_BUFFER_PREP",
+        "R_NNE_SEED_LAB",
+        "R_NNE_FERMENTATION",
+        "R_NNE_PURIFICATION_1",
+        "R_NNE_PURIFICATION_2",
+        "R_NNE_PURIFICATION_3"
+      ]
+    },
+    "zones": {
+      "process_zone": [
+        "R_NNE_MEDIA_BUFFER_PREP", "R_NNE_SEED_LAB", "R_NNE_FERMENTATION",
+        "R_NNE_PURIFICATION_1", "R_NNE_PURIFICATION_2", "R_NNE_PURIFICATION_3",
+        "R_NNE_IPC", "R_NNE_PREPARATION", "R_NNE_CLEANING", "R_NNE_WEIGHING"
+      ],
+      "auxiliary_zone": ["R_NNE_KILLTANK", "R_NNE_STERILE_STORAGE", "R_NNE_STORAGE_BULK"],
+      "nc_zone": ["R_NNE_OFFICE"]
+    },
+    "constraints": {
+      "corridor_width_mm": {"min": 1500, "preferred_min": 2000, "max": 3000}
+    }
+  },
+
+  "layout_rects_mm": {
+    "R_NNE_SUPPLY_CORRIDOR":     [2000, 11000, 58000, 4000],
+    "R_NNE_MEDIA_BUFFER_PREP":   [2000, 15500, 9000, 11500],
+    "R_NNE_SEED_LAB":            [11500, 15500, 9000, 11500],
+    "R_NNE_FERMENTATION":        [21000, 15500, 9000, 11500],
+    "R_NNE_PURIFICATION_1":      [30500, 15500, 9000, 11500],
+    "R_NNE_PURIFICATION_2":      [40000, 15500, 9000, 11500],
+    "R_NNE_PURIFICATION_3":      [49500, 15500, 10500, 11500],
+    "R_NNE_RETURN_CORRIDOR":     [2000, 27500, 58000, 4000],
+    "R_NNE_IPC":                 [2000, 32000, 9000, 8500],
+    "R_NNE_PREPARATION":         [11500, 32000, 7000, 8500],
+    "R_NNE_CLEANING":            [18800, 32000, 7000, 8500],
+    "R_NNE_WEIGHING":            [26100, 32000, 5000, 8500],
+    "R_NNE_KILLTANK":            [31400, 32000, 5500, 8500],
+    "R_NNE_STERILE_STORAGE":     [37200, 32000, 5500, 8500],
+    "R_NNE_STORAGE_BULK":        [43000, 32000, 7000, 8500],
+    "R_NNE_OFFICE":              [2000, 2000, 58000, 8500]
+  }
+}

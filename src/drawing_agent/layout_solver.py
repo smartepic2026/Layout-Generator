@@ -384,14 +384,20 @@ def _pack_row_major(equips, inner_w, inner_h, scale, eq_gap):
     return placed
 
 
-def _place_equipment_grid(layout):
+def _place_equipment_grid(layout, use_actual_mm: bool = False):
     """Room 내부에 장비를 process_step 순서대로 grid 배치.
     장비가 모두 방 안에 들어가도록 scale 을 자동 조정 (사용자 요청).
+
+    [B-001 / D-018] `use_actual_mm=True` 면 시각 축소 (EQUIPMENT_VISUAL_SCALE)
+    적용 안 하고 실제 W_mm/D_mm 사용. CP-SAT 측정 비교용. 기본은 False 로
+    기존 strip-band 동작 보존 (baselines.json / B3 NNE 비교 흔들지 않게).
     """
     wall_margin = 2200    # 좌/우
     top_label = 6000      # 위쪽 — 라벨 3줄 공간
     bottom_pad = 2500     # 아래쪽
     eq_gap = 800
+    base_scale = 1.0 if use_actual_mm else EQUIPMENT_VISUAL_SCALE
+    min_scale = 1.0 if use_actual_mm else EQUIPMENT_MIN_SCALE
     for proom in layout.rooms.values():
         equips = list(proom.room.equipment)
         if not equips:
@@ -403,16 +409,17 @@ def _place_equipment_grid(layout):
         inner_h = max(proom.rect.h - top_label - bottom_pad, 1000)
 
         # 기본 scale 부터 시작해, 다 들어갈 때까지 점진 축소
-        scale = EQUIPMENT_VISUAL_SCALE
+        # use_actual_mm=True 면 scale 고정 1.0 (축소 안 함)
+        scale = base_scale
         placed = None
-        while scale >= EQUIPMENT_MIN_SCALE:
+        while scale >= min_scale:
             placed = _pack_row_major(equips, inner_w, inner_h, scale, eq_gap)
             if placed is not None:
                 break
             scale *= 0.9   # 10% 씩 줄여가며 재시도
         if placed is None:
             # 하한까지 줄여도 안 들어감 → 강제로 하한 scale 로 packing(잘릴 수 있음)
-            scale = EQUIPMENT_MIN_SCALE
+            scale = min_scale
             placed = []
             cx, cy, row_h = 0.0, 0.0, 0.0
             for eq in equips:
