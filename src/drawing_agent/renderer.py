@@ -4,7 +4,6 @@
 """
 from __future__ import annotations
 
-import datetime as _dt
 import html
 from io import StringIO
 
@@ -741,7 +740,6 @@ def _emit_z12_titleblock(s: StringIO, x: float, y: float, w: float, h: float, sp
         ("MODALITY", spec.modality.upper()),
         ("ROOMS", str(len(spec.rooms))),
         ("AIRLOCKS", str(len(spec.airlocks))),
-        ("DATE", _dt.date.today().isoformat()),
         ("PREPARED BY", "Rule Engine v0.1"),
     ]
     col_w = w / len(cols)
