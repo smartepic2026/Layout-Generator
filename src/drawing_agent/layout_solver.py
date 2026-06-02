@@ -241,6 +241,241 @@ def _auto_canvas_for_rooms(spec: RuleEngineOutput, base_w: float, base_h: float)
     return base_w * scale, base_h * scale
 
 
+# ══════════════════════════════════════════════════════════════════════
+# [2026-06-02 v3] GMP 청정도 구배 토폴로지 (사용자 도면 피드백 ①②③⑤ 반영)
+#
+#   ┌─────────────────────────────────────────────────────────────────┐
+#   │ NC  │ Grade D    │D│      GRADE C 공정 구역                       │
+#   │ 구역│ 구역(저장) │c│  ┌──────────────────────────────────────┐  │
+#   │     │            │o│  │  RETURN CORRIDOR (상)                  │  │
+#   │ CIP │ storage    │r│  ├──────────────────────────────────────┤  │
+#   │ Mon │ IPC        │r│  │ 공정행(상): MEDIA BUFFER INOC CULT HARV │  │
+#   │ off │ 창고       │i│  ├──[GOWN(C)]───────────────────────────┤  │
+#   │ toil│ gowning F/M│d│  │  SUPPLY CORRIDOR (중앙)                │  │
+#   │     │            │o│  ├──────────────────────────────────────┤  │
+#   │     │            │r│  │ 공정행(하): PURIF1 PURIF2 PREP WASH     │  │
+#   │     │            │ │  ├──────────────────────────────────────┤  │
+#   │     │            │ │  │  RETURN CORRIDOR (하)                  │  │
+#   └─────────────────────────────────────────────────────────────────┘
+#
+# 설계 근거(논문/특허 원재료):
+#  - 가로 청정도 구배 NC→D→C (cross-contamination 차단, 인접은 한 등급차).
+#  - Grade D 세로 복도 = personnel/material 진입 + return 배출의 공용 통로.
+#  - 가운룸(C) 은 D복도 ↔ supply 복도 접점 = 입실 게이트(EU GMP Annex 1).
+#  - 중앙 supply(공급) → 공정행 통과 → 양측 return(회수) → D복도 배출 = one-way.
+#  - 양측 return 을 모두 실제 방으로 배치 → 정제실(하행) 포함 전 공정행이 return 인접.
+#  - 방 가로세로비 water-filling 클램프 → 작은 방 슬리버 방지 + 흰공간 없음.
+# ══════════════════════════════════════════════════════════════════════
+
+_SUPPLY_CORR = _re_dyn.compile(r"_SUPPLY_CORRIDOR", _re_dyn.IGNORECASE)
+_RETURN_CORR = _re_dyn.compile(r"_RETURN_CORRIDOR", _re_dyn.IGNORECASE)
+# Grade D 지원 복도 (supply/return/visitor 가 아닌 일반 복도)
+_AUX_CORR = _re_dyn.compile(r"^R_CORRIDOR$|_AUX_CORRIDOR$", _re_dyn.IGNORECASE)
+
+
+def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
+    """NC→D→C 구배 토폴로지용 방 분류.
+
+    Returns dict: nc[], d[], d_corridor, process_gowning, supply_corridor,
+                  return_corridor, top_row[], bottom_row[], skipped[].
+    """
+    by_id = {r.id: r for r in spec.rooms}
+    out = {
+        "nc": [], "d": [], "d_corridor": None,
+        "process_gowning": None, "supply_corridor": None, "return_corridor": None,
+        "top_row": [], "bottom_row": [], "skipped": [],
+    }
+    process_ids: list[str] = []
+    gowning_candidates: list[str] = []
+    for r in spec.rooms:
+        if _is_al_fake_room(r):
+            out["skipped"].append(r.id)
+            continue
+        rid = r.id
+        if _SUPPLY_CORR.search(rid):
+            out["supply_corridor"] = rid
+            continue
+        if _RETURN_CORR.search(rid):
+            out["return_corridor"] = rid
+            continue
+        if _AUX_CORR.search(rid) or (r.is_corridor and r.category != "NC"):
+            out["d_corridor"] = rid
+            continue
+        # 공정 가운(입실 게이트) — 청정등급(A/B/C) + GOWNING + 공정 카테고리
+        if "GOWNING" in rid and r.clean_grade in ("A", "B", "C") and r.category == "process":
+            gowning_candidates.append(rid)
+            continue
+        if r.category == "NC" or r.clean_grade == "NC":
+            out["nc"].append(rid)
+            continue
+        if r.category == "auxiliary":
+            out["d"].append(rid)
+            continue
+        process_ids.append(rid)  # 나머지 = 공정실
+
+    # 가운룸이 여러 개면 하나만 게이트(supply 접점), 나머지는 공정행에 배치(누락 방지)
+    if gowning_candidates:
+        gate = "R_GOWNING" if "R_GOWNING" in gowning_candidates else gowning_candidates[0]
+        out["process_gowning"] = gate
+        process_ids.extend(g for g in gowning_candidates if g != gate)
+
+    # 공정실 정렬: PPO 우선 + 나머지 area 내림차순
+    ppo = list(getattr(spec.flow_paths, "product_process_order", []) or [])
+    seen: set[str] = set()
+    sorted_proc: list[str] = []
+    for rid in ppo:
+        if rid in process_ids and rid not in seen:
+            sorted_proc.append(rid)
+            seen.add(rid)
+    extras = sorted([r for r in process_ids if r not in seen],
+                    key=lambda r: -(by_id[r].area_m2 or 0.0))
+    sorted_proc.extend(extras)
+    if len(sorted_proc) <= 5:
+        out["top_row"] = sorted_proc
+    else:
+        half = (len(sorted_proc) + 1) // 2
+        out["top_row"] = sorted_proc[:half]
+        out["bottom_row"] = sorted_proc[half:]
+    return out
+
+
+def _alloc_dim(areas: list[float], total: float, cross: float, max_aspect: float) -> list[float]:
+    """면적 비례로 total 길이를 분배하되 각 칸이 cross/max_aspect 미만으로
+    얇아지지 않게 water-filling 보정. 합 == total 보장 (슬리버 방지 + 흰공간 없음)."""
+    n = len(areas)
+    if n == 0:
+        return []
+    floor = min(cross / max_aspect, total / n)
+    s = sum(areas) or 1.0
+    dims = [total * a / s for a in areas]
+    for _ in range(6):
+        deficit = sum(floor - x for x in dims if x < floor)
+        if deficit <= 1e-6:
+            break
+        donors = [i for i, x in enumerate(dims) if x > floor]
+        excess = sum(dims[i] - floor for i in donors) or 1.0
+        for i in donors:
+            dims[i] -= deficit * (dims[i] - floor) / excess
+        dims = [max(x, floor) for x in dims]
+    return dims
+
+
+def _place_row_aspect(layout, by_id, ids, x0, y0, w, h, max_aspect=1.9):
+    """가로 행 배치 — 면적 비례 폭 + 종횡비 클램프(작은 방 세로 슬리버 방지)."""
+    present = [r for r in ids if r in by_id]
+    if not present:
+        return
+    areas = [max(by_id[r].area_m2 or 0.0, 15.0) for r in present]
+    widths = _alloc_dim(areas, w, h, max_aspect)
+    x = x0
+    for rid, wd in zip(present, widths):
+        layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(x, y0, wd, h))
+        x += wd
+
+
+def _place_stack_aspect(layout, by_id, ids, x0, y0, w, h, max_aspect=2.4):
+    """세로 스택 배치 — 면적 비례 높이 + 종횡비 클램프."""
+    present = [r for r in ids if r in by_id]
+    if not present:
+        return
+    areas = [max(by_id[r].area_m2 or 0.0, 15.0) for r in present]
+    heights = _alloc_dim(areas, h, w, max_aspect)
+    y = y0
+    for rid, ht in zip(present, heights):
+        layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(x0, y, w, ht))
+        y += ht
+
+
+def _add_synth_door(layout, a: "Rect", b: "Rect", swing_into: "Rect"):
+    """adjacency 에 없는 게이트(가운↔복도) 도어를 공유 벽에 합성."""
+    pos = _door_pos(a, b)
+    if pos is None:
+        return
+    x, y, rot = pos
+    layout.doors.append(PlacedDoor(adj=None, x=x, y=y, width_mm=1500,
+                                   rotation_deg=rot, swing_to_xy=(swing_into.cx, swing_into.cy)))
+
+
+def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
+    """NC→D→C 청정도 구배 토폴로지 솔버 (dynamic_rooms 경로)."""
+    layout = Layout(building_w_mm=W, building_h_mm=H)
+    by_id = {r.id: r for r in spec.rooms}
+    cls = _classify_rooms_gradient(spec)
+
+    has_nc = bool(cls["nc"])
+    has_d = bool(cls["d"])
+    has_dc = bool(cls["d_corridor"])
+    w_nc = W * 0.13 if has_nc else 0.0
+    w_d = W * 0.16 if has_d else 0.0
+    w_dc = W * 0.035 if has_dc else 0.0
+    c_x0 = w_nc + w_d + w_dc
+    c_w = W - c_x0
+
+    # 1) NC 스택(최좌)  2) Grade D 스택  3) Grade D 세로 복도
+    if has_nc:
+        _place_stack_aspect(layout, by_id, cls["nc"], 0.0, 0.0, w_nc, H)
+    if has_d:
+        _place_stack_aspect(layout, by_id, cls["d"], w_nc, 0.0, w_d, H)
+    if has_dc:
+        layout.rooms[cls["d_corridor"]] = PlacedRoom(
+            room=by_id[cls["d_corridor"]], rect=Rect(w_nc + w_d, 0.0, w_dc, H))
+
+    # 4) C 공정 구역 — 5밴드 (return상 / 공정상 / supply중앙 / 공정하 / return하)
+    ratios = [0.06, 0.36, 0.14, 0.36, 0.08]
+    ssum = sum(ratios)
+    ratios = [r / ssum for r in ratios]
+    yacc = 0.0
+    bands = []
+    for rr in ratios:
+        hh = H * rr
+        bands.append((yacc, yacc + hh))
+        yacc += hh
+    (ret_t, proc_t, sup, proc_b, ret_b) = bands
+
+    # return 복도 (상·하 모두 실제 방 — 정제실 하행도 return 인접)
+    rc = cls["return_corridor"]
+    if rc:
+        layout.rooms[rc] = PlacedRoom(room=by_id[rc],
+                                      rect=Rect(c_x0, ret_t[0], c_w, ret_t[1] - ret_t[0]))
+        bc = by_id[rc].model_copy(update={"id": rc + "_S"})
+        layout.rooms[bc.id] = PlacedRoom(room=bc,
+                                         rect=Rect(c_x0, ret_b[0], c_w, ret_b[1] - ret_b[0]))
+
+    # supply 밴드 = [가운 게이트][supply 복도]  (가운=D복도↔supply 접점)
+    sx = c_x0
+    gown = cls["process_gowning"]
+    if gown and gown in by_id:
+        gw = min(c_w * 0.16, max(c_w * 0.08, 6000.0))
+        layout.rooms[gown] = PlacedRoom(room=by_id[gown],
+                                        rect=Rect(sx, sup[0], gw, sup[1] - sup[0]))
+        sx += gw
+    sc = cls["supply_corridor"]
+    if sc:
+        layout.rooms[sc] = PlacedRoom(room=by_id[sc],
+                                      rect=Rect(sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0]))
+
+    # 공정행 (상·하) — 종횡비 클램프 적용
+    _place_row_aspect(layout, by_id, cls["top_row"], c_x0, proc_t[0], c_w, proc_t[1] - proc_t[0])
+    _place_row_aspect(layout, by_id, cls["bottom_row"], c_x0, proc_b[0], c_w, proc_b[1] - proc_b[0])
+
+    # 에어록(공정행 내측) + 양방향 AL(supply) + 장비
+    _place_airlocks_in_rooms(layout, spec, cls["top_row"], is_top=True)
+    _place_airlocks_in_rooms(layout, spec, cls["bottom_row"], is_top=False)
+    _place_both_way_als(layout, spec, sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0])
+    _place_equipment_grid(layout)
+
+    # 도어: adjacency 기반 + 가운 게이트 합성 도어(D복도↔가운, 가운↔supply)
+    _place_doors(layout, spec.adjacency)
+    if gown and gown in layout.rooms:
+        g = layout.rooms[gown].rect
+        if has_dc and cls["d_corridor"] in layout.rooms:
+            _add_synth_door(layout, layout.rooms[cls["d_corridor"]].rect, g, g)
+        if sc and sc in layout.rooms:
+            _add_synth_door(layout, g, layout.rooms[sc].rect, layout.rooms[sc].rect)
+    _place_airlock_doors(layout)
+    return layout
+
+
 def solve(
     spec: RuleEngineOutput,
     building_w_mm: float = 78500,
@@ -262,16 +497,15 @@ def solve(
         )
 
     if dynamic_rooms:
-        cls = _classify_rooms_dynamic(spec)
-        top_row_ids = cls["top_row"]
-        bottom_row_ids = cls["bottom_row"]
-        aux_left_ids = cls["aux_left"]
-        nc_right_ids = cls["nc_right"]
-    else:
-        top_row_ids = TOP_ROW
-        bottom_row_ids = BOTTOM_ROW
-        aux_left_ids = AUX_LEFT_STACK
-        nc_right_ids = NC_RIGHT_STACK
+        # [2026-06-02 v3] 외부(소연) spec → GMP 청정도 구배 토폴로지(NC→D→C).
+        # 사용자 도면 피드백(②③⑤) 반영: D복도 + 가운 게이트 + 양측 return 복도.
+        return _solve_gmp_gradient(spec, building_w_mm, building_h_mm)
+
+    # ── 하드코딩 strip-band (우리 default URS 전용; baselines/NNE/테스트 보존, 무수정) ──
+    top_row_ids = TOP_ROW
+    bottom_row_ids = BOTTOM_ROW
+    aux_left_ids = AUX_LEFT_STACK
+    nc_right_ids = NC_RIGHT_STACK
 
     layout = Layout(building_w_mm=building_w_mm, building_h_mm=building_h_mm)
     room_by_id = {r.id: r for r in spec.rooms}
@@ -418,7 +652,9 @@ def _place_al_edge(layout, als, rid, room_rect, y, h, side):
         return
     n = len(als)
     slot_w = room_rect.w / n
-    aw = min(slot_w * 0.8, room_rect.w * AL_SLOT_W_FRAC * 2)
+    # [2026-06-02 v3] AL 폭 절대 상한 — 큰 방(정제실 등)에서 에어록이 방의 40%까지
+    # 커지던 문제. 실제 전실은 ~3.5m 박스. slot 안에서 중앙 정렬.
+    aw = min(slot_w * 0.8, room_rect.w * AL_SLOT_W_FRAC, 3800.0)
     for i, al in enumerate(als):
         ax = room_rect.x + i * slot_w + (slot_w - aw) / 2
         layout.airlocks[al.id] = PlacedAirlock(

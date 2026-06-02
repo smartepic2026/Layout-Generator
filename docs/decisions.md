@@ -1331,3 +1331,80 @@ B-001 백로그 (시각 축소 분리) 같이 처리.
 
 **산출물**:
 - `output/c1c3_pipeline.json` (결정론적 통합 결과, 모든 시나리오 + 방별 메타).
+
+---
+
+## D-021: GMP 청정도 구배 토폴로지 (전문가 도면 피드백 → strip-band 재설계)
+
+**날짜**: 2026-06-02
+
+**무엇**: 사용자(GMP 전문가) 가 v2 도면을 검수하고 6건의 피드백을 줌. 이를
+drawing_agent 의 외부(소연) spec 경로(`dynamic_rooms=True`) 에 반영해 **가로
+청정도 구배 토폴로지** 로 재설계. 신규 `_solve_gmp_gradient`.
+
+```
+NC 구역 → Grade D 구역 → [Grade D 세로복도] → Grade C 공정구역
+                                              ├ RETURN 복도(상)
+                                              ├ 공정행(상)
+                                              ├ [가운(C)] SUPPLY 복도(중앙)
+                                              ├ 공정행(하)
+                                              └ RETURN 복도(하)
+```
+
+**6개 피드백 → 변경 매핑**:
+
+| # | 피드백 | 변경 | 함수 |
+|---|---|---|---|
+| ① | 작은 방(Inoc/Prep/Wash/Gowning) 세로로 길쭉 | water-filling 종횡비 클램프(면적비례+최소폭, 합 보존) | `_alloc_dim`, `_place_row_aspect`, `_place_stack_aspect` |
+| ② | 정제실(하행)도 return 복도 필요 | 양측 return 복도 모두 *실제 방*(기존 bottom 은 annotation 만) | `_solve_gmp_gradient` (return + `_S` 복제) |
+| ③ | D↔C 사이 복도 + 접점에 가운룸 | Grade D 세로복도 + 가운(C) 게이트 + 합성 도어 | `_solve_gmp_gradient`, `_add_synth_door` |
+| ④ | 도어 곡선 반대 | swing arc `sweep` 반전(가로·세로) | renderer `_emit_z6_doors` |
+| ⑤ | NC→D→C 순서 | 가로 구배(NC 최좌→D→C) — 기존 aux좌/NC우 대체 | `_solve_gmp_gradient`, `_classify_rooms_gradient` |
+| ⑥ | 화살표 논리 안 맞음 | one-way: supply→공정행 수직통과→양측 return→D복도 배출 | renderer `_emit_z9_flow_arrows` |
+
+부수: AL 폭 절대상한 3.8m (`_place_al_edge`) — 큰 방에서 전실이 방의 40%까지
+커지던 문제.
+
+**왜** (CLAUDE.md 4대 원칙):
+1. **성능 / 전문가 납득** — 가로 청정도 구배(NC→D→C, 한 등급차 인접)·가운
+   게이트·one-way 회수는 실제 무균/바이오 시설의 정석. 휴리스틱이나 도메인
+   규범에 정합.
+2. **실무 수준** — 외부 실측 spec 그대로 흡수. 방 종횡비 클램프로 면적 편차
+   (20~300㎡) 에서도 슬리버 없이 배치.
+3. **특허 / 논문 method** — 이 토폴로지가 **CP-SAT zone 제약(H3)의 도메인
+   근거**. 현재 H3 는 aux/proc/nc 3분할 → 향후 "NC/D/C 구배 + 한 등급차 +
+   가운 게이트 + 양방향 회수" 를 정수 제약으로 컴파일하면 규칙→제약 변환
+   청구항 강화. EU GMP Annex 1 / ISPE Vol.6 추적성.
+4. **재현성** — 결정론적. 같은 spec → 같은 좌표.
+
+**근거 / 출처**:
+- EU GMP Annex 1 (2022) — 가운/에어록 게이트, 단계적 청정도 진입.
+- ISPE Baseline Guide Vol.6 — clean/return corridor, one-way flow, 등급 구배.
+- 사용자(GMP 도면 전문가) 검수 피드백 6건 (2026-06-02).
+
+**핵심 설계 결정**:
+- **경계 보존**: 하드코딩 strip-band(`dynamic_rooms=False`) **무수정**. baselines
+  (D-013) / NNE(D-014) / before→after CP-SAT(D-017/D-020) 서사 보존. 새
+  토폴로지는 외부 spec 에서만.
+- **②-1(양측 return) 채택, ②-2(단일행) 보류**: 사용자가 (1)양측 return /
+  (2)정제실 supply 위쪽 단일행 둘 중 택일 제시. (2) 는 P1 흐름 단조성 ↑ 이나
+  캔버스 가로 왜곡. (1) 로 전 공정행 return 인접 충족. (2) 는 사용자 결정 시
+  행 분할만 변경.
+- **가운 다중 처리**: 무균충전 시 가운 2개 → 하나만 게이트, 나머지는 공정행.
+- **AL drop 방향**: `supply_cy` 기준 상행 ↑ / 하행 ↓. PAL/MAL/CAL 색 구분.
+
+**검증**:
+- 5 시나리오 재생성(배치 31/21/43/36/30). 무균충전은 Grade A(해치)+B(에메
+  랄드) 충전 suite 하행 등장 → "URS aseptic=True → A/B 출현" 시각 입증.
+- PNG 확대 검증: 도어 여닫이 호 정상 / 구배 순서(NC x=0→D→D복도→가운→
+  supply) / 양측 return 실제 / one-way 화살표 일관 / 슬리버 없음.
+- **회귀 0**: 변경 전·후 모두 17 fail·100 pass·6 err(동일). 런간 차이는
+  CP-SAT 결정성 테스트(c1a/c1b) flakiness(내 코드 무관). 실패군은 옛 fixture
+  (`R_MEDIA_PREP`)·옛 엔진 e2e(엔진 교체 잔재).
+
+**한계 / 이월**:
+- 휴리스틱 strip-band 품질 개선. 솔버=CP-SAT 결정 불변. 다음: H3 를 NC/D/C
+  구배+등급차+게이트로 확장해 CP-SAT 가 *최적화*(현재 고정 배치)하게.
+- HARVEST(상행 끝)→PURIFICATION_1(하행 시작) 행 전환이라 공유벽 없음(복도
+  경유). ②-2 채택 시 해소.
+- perimeter_ring 은 구버전 분류 유지 — 의도적 토폴로지 다양성(ㅁ자 복도).

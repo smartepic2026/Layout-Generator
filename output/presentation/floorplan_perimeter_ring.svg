@@ -304,164 +304,164 @@
 <g stroke="#1C1917" fill="none" stroke-linecap="round">
 <line x1="481.59" y1="220.69" x2="481.59" y2="236.69" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="481.59" y1="220.69" x2="465.59" y2="220.69" stroke-width="1.5"/>
-<path d="M 465.59 220.69 A 16.00 16.00 0 0 1 481.59 236.69" stroke-width="0.75"/>
+<path d="M 465.59 220.69 A 16.00 16.00 0 0 0 481.59 236.69" stroke-width="0.75"/>
 <line x1="889.00" y1="220.69" x2="889.00" y2="236.69" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="889.00" y1="220.69" x2="873.00" y2="220.69" stroke-width="1.5"/>
-<path d="M 873.00 220.69 A 16.00 16.00 0 0 1 889.00 236.69" stroke-width="0.75"/>
+<path d="M 873.00 220.69 A 16.00 16.00 0 0 0 889.00 236.69" stroke-width="0.75"/>
 <line x1="970.48" y1="220.69" x2="970.48" y2="236.69" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="970.48" y1="220.69" x2="954.48" y2="220.69" stroke-width="1.5"/>
-<path d="M 954.48 220.69 A 16.00 16.00 0 0 1 970.48 236.69" stroke-width="0.75"/>
+<path d="M 954.48 220.69 A 16.00 16.00 0 0 0 970.48 236.69" stroke-width="0.75"/>
 <line x1="388.79" y1="442.00" x2="388.79" y2="458.00" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="388.79" y1="442.00" x2="372.79" y2="442.00" stroke-width="1.5"/>
-<path d="M 372.79 442.00 A 16.00 16.00 0 0 1 388.79 458.00" stroke-width="0.75"/>
+<path d="M 372.79 442.00 A 16.00 16.00 0 0 0 388.79 458.00" stroke-width="0.75"/>
 <line x1="943.32" y1="442.00" x2="943.32" y2="458.00" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="943.32" y1="442.00" x2="927.32" y2="442.00" stroke-width="1.5"/>
-<path d="M 927.32 442.00 A 16.00 16.00 0 0 1 943.32 458.00" stroke-width="0.75"/>
-<line x1="913.85" y1="299.51" x2="945.62" y2="299.51" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="913.85" y1="299.51" x2="913.85" y2="267.73" stroke-width="1.5"/>
-<path d="M 913.85 267.73 A 31.78 31.78 0 0 0 945.62 299.51" stroke-width="0.75"/>
-<line x1="913.85" y1="339.34" x2="945.62" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="913.85" y1="339.34" x2="913.85" y2="371.12" stroke-width="1.5"/>
-<path d="M 913.85 371.12 A 31.78 31.78 0 0 1 945.62 339.34" stroke-width="0.75"/>
-<line x1="913.85" y1="118.04" x2="945.62" y2="118.04" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="913.85" y1="118.04" x2="913.85" y2="86.26" stroke-width="1.5"/>
-<path d="M 913.85 86.26 A 31.78 31.78 0 0 0 945.62 118.04" stroke-width="0.75"/>
-<line x1="913.85" y1="157.87" x2="945.62" y2="157.87" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="913.85" y1="157.87" x2="913.85" y2="189.65" stroke-width="1.5"/>
-<path d="M 913.85 189.65 A 31.78 31.78 0 0 1 945.62 157.87" stroke-width="0.75"/>
+<path d="M 927.32 442.00 A 16.00 16.00 0 0 0 943.32 458.00" stroke-width="0.75"/>
+<line x1="921.79" y1="299.51" x2="937.68" y2="299.51" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="921.79" y1="299.51" x2="921.79" y2="283.62" stroke-width="1.5"/>
+<path d="M 921.79 283.62 A 15.89 15.89 0 0 1 937.68 299.51" stroke-width="0.75"/>
+<line x1="921.79" y1="339.34" x2="937.68" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="921.79" y1="339.34" x2="921.79" y2="355.23" stroke-width="1.5"/>
+<path d="M 921.79 355.23 A 15.89 15.89 0 0 0 937.68 339.34" stroke-width="0.75"/>
+<line x1="921.79" y1="118.04" x2="937.68" y2="118.04" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="921.79" y1="118.04" x2="921.79" y2="102.15" stroke-width="1.5"/>
+<path d="M 921.79 102.15 A 15.89 15.89 0 0 1 937.68 118.04" stroke-width="0.75"/>
+<line x1="921.79" y1="157.87" x2="937.68" y2="157.87" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="921.79" y1="157.87" x2="921.79" y2="173.76" stroke-width="1.5"/>
+<path d="M 921.79 173.76 A 15.89 15.89 0 0 0 937.68 157.87" stroke-width="0.75"/>
 <line x1="1029.26" y1="299.51" x2="1064.46" y2="299.51" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1029.26" y1="299.51" x2="1029.26" y2="264.31" stroke-width="1.5"/>
-<path d="M 1029.26 264.31 A 35.20 35.20 0 0 0 1064.46 299.51" stroke-width="0.75"/>
+<path d="M 1029.26 264.31 A 35.20 35.20 0 0 1 1064.46 299.51" stroke-width="0.75"/>
 <line x1="1029.26" y1="339.34" x2="1064.46" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1029.26" y1="339.34" x2="1029.26" y2="374.54" stroke-width="1.5"/>
-<path d="M 1029.26 374.54 A 35.20 35.20 0 0 1 1064.46 339.34" stroke-width="0.75"/>
+<path d="M 1029.26 374.54 A 35.20 35.20 0 0 0 1064.46 339.34" stroke-width="0.75"/>
 <line x1="1182.04" y1="299.51" x2="1217.24" y2="299.51" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1182.04" y1="299.51" x2="1182.04" y2="264.31" stroke-width="1.5"/>
-<path d="M 1182.04 264.31 A 35.20 35.20 0 0 0 1217.24 299.51" stroke-width="0.75"/>
+<path d="M 1182.04 264.31 A 35.20 35.20 0 0 1 1217.24 299.51" stroke-width="0.75"/>
 <line x1="1182.04" y1="339.34" x2="1217.24" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1182.04" y1="339.34" x2="1182.04" y2="374.54" stroke-width="1.5"/>
-<path d="M 1182.04 374.54 A 35.20 35.20 0 0 1 1217.24 339.34" stroke-width="0.75"/>
+<path d="M 1182.04 374.54 A 35.20 35.20 0 0 0 1217.24 339.34" stroke-width="0.75"/>
 <line x1="1029.26" y1="118.04" x2="1064.46" y2="118.04" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1029.26" y1="118.04" x2="1029.26" y2="82.84" stroke-width="1.5"/>
-<path d="M 1029.26 82.84 A 35.20 35.20 0 0 0 1064.46 118.04" stroke-width="0.75"/>
+<path d="M 1029.26 82.84 A 35.20 35.20 0 0 1 1064.46 118.04" stroke-width="0.75"/>
 <line x1="1029.26" y1="157.87" x2="1064.46" y2="157.87" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1029.26" y1="157.87" x2="1029.26" y2="193.07" stroke-width="1.5"/>
-<path d="M 1029.26 193.07 A 35.20 35.20 0 0 1 1064.46 157.87" stroke-width="0.75"/>
+<path d="M 1029.26 193.07 A 35.20 35.20 0 0 0 1064.46 157.87" stroke-width="0.75"/>
 <line x1="1182.04" y1="118.04" x2="1217.24" y2="118.04" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1182.04" y1="118.04" x2="1182.04" y2="82.84" stroke-width="1.5"/>
-<path d="M 1182.04 82.84 A 35.20 35.20 0 0 0 1217.24 118.04" stroke-width="0.75"/>
+<path d="M 1182.04 82.84 A 35.20 35.20 0 0 1 1217.24 118.04" stroke-width="0.75"/>
 <line x1="1182.04" y1="157.87" x2="1217.24" y2="157.87" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1182.04" y1="157.87" x2="1182.04" y2="193.07" stroke-width="1.5"/>
-<path d="M 1182.04 193.07 A 35.20 35.20 0 0 1 1217.24 157.87" stroke-width="0.75"/>
-<line x1="291.20" y1="520.81" x2="320.03" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="291.20" y1="520.81" x2="291.20" y2="491.98" stroke-width="1.5"/>
-<path d="M 291.20 491.98 A 28.84 28.84 0 0 0 320.03 520.81" stroke-width="0.75"/>
-<line x1="291.20" y1="560.65" x2="320.03" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="291.20" y1="560.65" x2="291.20" y2="589.48" stroke-width="1.5"/>
-<path d="M 291.20 589.48 A 28.84 28.84 0 0 1 320.03 560.65" stroke-width="0.75"/>
-<line x1="346.65" y1="520.81" x2="375.48" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="346.65" y1="520.81" x2="346.65" y2="491.98" stroke-width="1.5"/>
-<path d="M 346.65 491.98 A 28.84 28.84 0 0 0 375.48 520.81" stroke-width="0.75"/>
-<line x1="346.65" y1="560.65" x2="375.48" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="346.65" y1="560.65" x2="346.65" y2="589.48" stroke-width="1.5"/>
-<path d="M 346.65 589.48 A 28.84 28.84 0 0 1 375.48 560.65" stroke-width="0.75"/>
-<line x1="291.20" y1="339.34" x2="320.03" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="291.20" y1="339.34" x2="291.20" y2="310.51" stroke-width="1.5"/>
-<path d="M 291.20 310.51 A 28.84 28.84 0 0 0 320.03 339.34" stroke-width="0.75"/>
-<line x1="291.20" y1="379.18" x2="320.03" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="291.20" y1="379.18" x2="291.20" y2="408.01" stroke-width="1.5"/>
-<path d="M 291.20 408.01 A 28.84 28.84 0 0 1 320.03 379.18" stroke-width="0.75"/>
-<line x1="346.65" y1="339.34" x2="375.48" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="346.65" y1="339.34" x2="346.65" y2="310.51" stroke-width="1.5"/>
-<path d="M 346.65 310.51 A 28.84 28.84 0 0 0 375.48 339.34" stroke-width="0.75"/>
-<line x1="346.65" y1="379.18" x2="375.48" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
-<line x1="346.65" y1="379.18" x2="346.65" y2="408.01" stroke-width="1.5"/>
-<path d="M 346.65 408.01 A 28.84 28.84 0 0 1 375.48 379.18" stroke-width="0.75"/>
+<path d="M 1182.04 193.07 A 35.20 35.20 0 0 0 1217.24 157.87" stroke-width="0.75"/>
+<line x1="294.80" y1="520.81" x2="316.43" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="294.80" y1="520.81" x2="294.80" y2="499.19" stroke-width="1.5"/>
+<path d="M 294.80 499.19 A 21.63 21.63 0 0 1 316.43 520.81" stroke-width="0.75"/>
+<line x1="294.80" y1="560.65" x2="316.43" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="294.80" y1="560.65" x2="294.80" y2="582.28" stroke-width="1.5"/>
+<path d="M 294.80 582.28 A 21.63 21.63 0 0 0 316.43 560.65" stroke-width="0.75"/>
+<line x1="350.25" y1="520.81" x2="371.88" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="350.25" y1="520.81" x2="350.25" y2="499.19" stroke-width="1.5"/>
+<path d="M 350.25 499.19 A 21.63 21.63 0 0 1 371.88 520.81" stroke-width="0.75"/>
+<line x1="350.25" y1="560.65" x2="371.88" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="350.25" y1="560.65" x2="350.25" y2="582.28" stroke-width="1.5"/>
+<path d="M 350.25 582.28 A 21.63 21.63 0 0 0 371.88 560.65" stroke-width="0.75"/>
+<line x1="294.80" y1="339.34" x2="316.43" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="294.80" y1="339.34" x2="294.80" y2="317.72" stroke-width="1.5"/>
+<path d="M 294.80 317.72 A 21.63 21.63 0 0 1 316.43 339.34" stroke-width="0.75"/>
+<line x1="294.80" y1="379.18" x2="316.43" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="294.80" y1="379.18" x2="294.80" y2="400.81" stroke-width="1.5"/>
+<path d="M 294.80 400.81 A 21.63 21.63 0 0 0 316.43 379.18" stroke-width="0.75"/>
+<line x1="350.25" y1="339.34" x2="371.88" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="350.25" y1="339.34" x2="350.25" y2="317.72" stroke-width="1.5"/>
+<path d="M 350.25 317.72 A 21.63 21.63 0 0 1 371.88 339.34" stroke-width="0.75"/>
+<line x1="350.25" y1="379.18" x2="371.88" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
+<line x1="350.25" y1="379.18" x2="350.25" y2="400.81" stroke-width="1.5"/>
+<path d="M 350.25 400.81 A 21.63 21.63 0 0 0 371.88 379.18" stroke-width="0.75"/>
 <line x1="509.82" y1="520.81" x2="545.02" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="509.82" y1="520.81" x2="509.82" y2="485.61" stroke-width="1.5"/>
-<path d="M 509.82 485.61 A 35.20 35.20 0 0 0 545.02 520.81" stroke-width="0.75"/>
+<path d="M 509.82 485.61 A 35.20 35.20 0 0 1 545.02 520.81" stroke-width="0.75"/>
 <line x1="509.82" y1="560.65" x2="545.02" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="509.82" y1="560.65" x2="509.82" y2="595.85" stroke-width="1.5"/>
-<path d="M 509.82 595.85 A 35.20 35.20 0 0 1 545.02 560.65" stroke-width="0.75"/>
+<path d="M 509.82 595.85 A 35.20 35.20 0 0 0 545.02 560.65" stroke-width="0.75"/>
 <line x1="787.09" y1="520.81" x2="822.29" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="787.09" y1="520.81" x2="787.09" y2="485.61" stroke-width="1.5"/>
-<path d="M 787.09 485.61 A 35.20 35.20 0 0 0 822.29 520.81" stroke-width="0.75"/>
+<path d="M 787.09 485.61 A 35.20 35.20 0 0 1 822.29 520.81" stroke-width="0.75"/>
 <line x1="787.09" y1="560.65" x2="822.29" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="787.09" y1="560.65" x2="787.09" y2="595.85" stroke-width="1.5"/>
-<path d="M 787.09 595.85 A 35.20 35.20 0 0 1 822.29 560.65" stroke-width="0.75"/>
+<path d="M 787.09 595.85 A 35.20 35.20 0 0 0 822.29 560.65" stroke-width="0.75"/>
 <line x1="509.82" y1="339.34" x2="545.02" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="509.82" y1="339.34" x2="509.82" y2="304.14" stroke-width="1.5"/>
-<path d="M 509.82 304.14 A 35.20 35.20 0 0 0 545.02 339.34" stroke-width="0.75"/>
+<path d="M 509.82 304.14 A 35.20 35.20 0 0 1 545.02 339.34" stroke-width="0.75"/>
 <line x1="509.82" y1="379.18" x2="545.02" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="509.82" y1="379.18" x2="509.82" y2="414.38" stroke-width="1.5"/>
-<path d="M 509.82 414.38 A 35.20 35.20 0 0 1 545.02 379.18" stroke-width="0.75"/>
+<path d="M 509.82 414.38 A 35.20 35.20 0 0 0 545.02 379.18" stroke-width="0.75"/>
 <line x1="787.09" y1="339.34" x2="822.29" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="787.09" y1="339.34" x2="787.09" y2="304.14" stroke-width="1.5"/>
-<path d="M 787.09 304.14 A 35.20 35.20 0 0 0 822.29 339.34" stroke-width="0.75"/>
+<path d="M 787.09 304.14 A 35.20 35.20 0 0 1 822.29 339.34" stroke-width="0.75"/>
 <line x1="787.09" y1="379.18" x2="822.29" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="787.09" y1="379.18" x2="787.09" y2="414.38" stroke-width="1.5"/>
-<path d="M 787.09 414.38 A 35.20 35.20 0 0 1 822.29 379.18" stroke-width="0.75"/>
+<path d="M 787.09 414.38 A 35.20 35.20 0 0 0 822.29 379.18" stroke-width="0.75"/>
 <line x1="971.93" y1="520.81" x2="1007.13" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="971.93" y1="520.81" x2="971.93" y2="485.61" stroke-width="1.5"/>
-<path d="M 971.93 485.61 A 35.20 35.20 0 0 0 1007.13 520.81" stroke-width="0.75"/>
+<path d="M 971.93 485.61 A 35.20 35.20 0 0 1 1007.13 520.81" stroke-width="0.75"/>
 <line x1="971.93" y1="560.65" x2="1007.13" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="971.93" y1="560.65" x2="971.93" y2="595.85" stroke-width="1.5"/>
-<path d="M 971.93 595.85 A 35.20 35.20 0 0 1 1007.13 560.65" stroke-width="0.75"/>
+<path d="M 971.93 595.85 A 35.20 35.20 0 0 0 1007.13 560.65" stroke-width="0.75"/>
 <line x1="1064.35" y1="520.81" x2="1099.55" y2="520.81" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1064.35" y1="520.81" x2="1064.35" y2="485.61" stroke-width="1.5"/>
-<path d="M 1064.35 485.61 A 35.20 35.20 0 0 0 1099.55 520.81" stroke-width="0.75"/>
+<path d="M 1064.35 485.61 A 35.20 35.20 0 0 1 1099.55 520.81" stroke-width="0.75"/>
 <line x1="1064.35" y1="560.65" x2="1099.55" y2="560.65" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1064.35" y1="560.65" x2="1064.35" y2="595.85" stroke-width="1.5"/>
-<path d="M 1064.35 595.85 A 35.20 35.20 0 0 1 1099.55 560.65" stroke-width="0.75"/>
+<path d="M 1064.35 595.85 A 35.20 35.20 0 0 0 1099.55 560.65" stroke-width="0.75"/>
 <line x1="971.93" y1="339.34" x2="1007.13" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="971.93" y1="339.34" x2="971.93" y2="304.14" stroke-width="1.5"/>
-<path d="M 971.93 304.14 A 35.20 35.20 0 0 0 1007.13 339.34" stroke-width="0.75"/>
+<path d="M 971.93 304.14 A 35.20 35.20 0 0 1 1007.13 339.34" stroke-width="0.75"/>
 <line x1="971.93" y1="379.18" x2="1007.13" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="971.93" y1="379.18" x2="971.93" y2="414.38" stroke-width="1.5"/>
-<path d="M 971.93 414.38 A 35.20 35.20 0 0 1 1007.13 379.18" stroke-width="0.75"/>
+<path d="M 971.93 414.38 A 35.20 35.20 0 0 0 1007.13 379.18" stroke-width="0.75"/>
 <line x1="1064.35" y1="339.34" x2="1099.55" y2="339.34" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1064.35" y1="339.34" x2="1064.35" y2="304.14" stroke-width="1.5"/>
-<path d="M 1064.35 304.14 A 35.20 35.20 0 0 0 1099.55 339.34" stroke-width="0.75"/>
+<path d="M 1064.35 304.14 A 35.20 35.20 0 0 1 1099.55 339.34" stroke-width="0.75"/>
 <line x1="1064.35" y1="379.18" x2="1099.55" y2="379.18" stroke="#FFFFFF" stroke-width="3.5"/>
 <line x1="1064.35" y1="379.18" x2="1064.35" y2="414.38" stroke-width="1.5"/>
-<path d="M 1064.35 414.38 A 35.20 35.20 0 0 1 1099.55 379.18" stroke-width="0.75"/>
+<path d="M 1064.35 414.38 A 35.20 35.20 0 0 0 1099.55 379.18" stroke-width="0.75"/>
 </g>
 <g>
-<rect x="905.29" y="299.51" width="48.89" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="917.51" y="299.51" width="24.44" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="929.74" y="319.43" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_in</text>
-<rect x="905.29" y="118.04" width="48.89" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="917.51" y="118.04" width="24.44" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="929.74" y="137.96" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_out</text>
-<rect x="985.75" y="299.51" width="122.22" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1016.46" y="299.51" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1046.86" y="319.43" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="1138.53" y="299.51" width="122.22" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1169.24" y="299.51" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1199.64" y="319.43" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="985.75" y="118.04" width="122.22" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1016.46" y="118.04" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1046.86" y="137.96" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="1138.53" y="118.04" width="122.22" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1169.24" y="118.04" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1199.64" y="137.96" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
-<rect x="283.43" y="520.81" width="44.36" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="288.98" y="520.81" width="33.27" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="305.61" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="338.89" y="520.81" width="44.36" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="344.43" y="520.81" width="33.27" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="361.07" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="283.43" y="339.34" width="44.36" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="288.98" y="339.34" width="33.27" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="305.61" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="338.89" y="339.34" width="44.36" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="344.43" y="339.34" width="33.27" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="361.07" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
-<rect x="416.52" y="520.81" width="221.81" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="497.02" y="520.81" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="527.42" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="693.78" y="520.81" width="221.81" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="774.29" y="520.81" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="804.69" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="416.52" y="339.34" width="221.81" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="497.02" y="339.34" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="527.42" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="693.78" y="339.34" width="221.81" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="774.29" y="339.34" width="60.80" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="804.69" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
-<rect x="952.56" y="520.81" width="73.94" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="961.80" y="520.81" width="55.45" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="989.53" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="1044.98" y="520.81" width="73.94" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1054.22" y="520.81" width="55.45" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1081.95" y="540.73" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="952.56" y="339.34" width="73.94" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="961.80" y="339.34" width="55.45" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="989.53" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="1044.98" y="339.34" width="73.94" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
+<rect x="1054.22" y="339.34" width="55.45" height="39.83" fill="#FCD34D" fill-opacity="0.50" stroke="#1C1917" stroke-width="3.5"/>
 <text x="1081.95" y="359.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#1C1917" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
 </g>
 <g clip-path="url(#clip_R_DS_STORAGE)">
@@ -602,24 +602,25 @@
 <text x="332.29" y="672.65" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">COP sys.</text>
 </g>
 <g>
-<line x1="84.00" y1="91.02" x2="1469.92" y2="91.02" stroke="#4F46E5" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
-<line x1="1469.92" y1="808.97" x2="84.00" y2="808.97" stroke="#E11D48" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-waste)"/>
-<line x1="929.74" y1="355.34" x2="929.74" y2="283.51" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-product)"/>
+<line x1="82.00" y1="91.02" x2="1471.92" y2="91.02" stroke="#4F46E5" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1471.92" y1="808.97" x2="82.00" y2="808.97" stroke="#E11D48" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-waste)"/>
+<line x1="170.94" y1="529.24" x2="170.94" y2="538.41" stroke="#4F46E5" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="929.74" y1="283.51" x2="929.74" y2="355.34" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-product)"/>
 <line x1="929.74" y1="102.04" x2="929.74" y2="173.87" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-product)"/>
-<line x1="1046.86" y1="355.34" x2="1046.86" y2="283.51" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
-<line x1="1199.64" y1="355.34" x2="1199.64" y2="283.51" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="1046.86" y1="283.51" x2="1046.86" y2="355.34" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1199.64" y1="283.51" x2="1199.64" y2="355.34" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 <line x1="1046.86" y1="102.04" x2="1046.86" y2="173.87" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
 <line x1="1199.64" y1="102.04" x2="1199.64" y2="173.87" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
-<line x1="305.61" y1="576.65" x2="305.61" y2="504.81" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
-<line x1="361.07" y1="576.65" x2="361.07" y2="504.81" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="305.61" y1="504.81" x2="305.61" y2="576.65" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="361.07" y1="504.81" x2="361.07" y2="576.65" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 <line x1="305.61" y1="323.34" x2="305.61" y2="395.18" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
 <line x1="361.07" y1="323.34" x2="361.07" y2="395.18" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
-<line x1="527.42" y1="576.65" x2="527.42" y2="504.81" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
-<line x1="804.69" y1="576.65" x2="804.69" y2="504.81" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="527.42" y1="504.81" x2="527.42" y2="576.65" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="804.69" y1="504.81" x2="804.69" y2="576.65" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 <line x1="527.42" y1="323.34" x2="527.42" y2="395.18" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
 <line x1="804.69" y1="323.34" x2="804.69" y2="395.18" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
-<line x1="989.53" y1="576.65" x2="989.53" y2="504.81" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
-<line x1="1081.95" y1="576.65" x2="1081.95" y2="504.81" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="989.53" y1="504.81" x2="989.53" y2="576.65" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1081.95" y1="504.81" x2="1081.95" y2="576.65" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 <line x1="989.53" y1="323.34" x2="989.53" y2="395.18" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
 <line x1="1081.95" y1="323.34" x2="1081.95" y2="395.18" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 </g>

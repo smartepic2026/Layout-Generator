@@ -369,7 +369,9 @@ def _emit_z6_doors(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
                 f'stroke-width="{T.STROKE["door"]}"/>\n'
             )
             # swing arc (90° quarter-circle, 실선)
-            sweep = 1 if arc_dir > 0 else 0
+            # [2026-06-02 v3] sweep 반전 — 곡선이 swing 쪽(여닫이 방향)으로 볼록하게.
+            # 이전 sweep=1(arc_dir>0)은 호가 hinge 반대편으로 오목 → 도어가 반대로 보임.
+            sweep = 0 if arc_dir > 0 else 1
             s.write(
                 f'<path d="M {cx - half:.2f} {leaf_end_y:.2f} A {leaf:.2f} {leaf:.2f} 0 0 {sweep} {cx + half:.2f} {cy:.2f}" '
                 f'stroke-width="{T.STROKE["door_swing"]}"/>\n'
@@ -386,7 +388,8 @@ def _emit_z6_doors(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
                 f'<line x1="{cx:.2f}" y1="{cy - half:.2f}" x2="{leaf_end_x:.2f}" y2="{cy - half:.2f}" '
                 f'stroke-width="{T.STROKE["door"]}"/>\n'
             )
-            sweep = 0 if arc_dir > 0 else 1
+            # [2026-06-02 v3] sweep 반전 (위 가로벽과 동일 이유)
+            sweep = 1 if arc_dir > 0 else 0
             s.write(
                 f'<path d="M {leaf_end_x:.2f} {cy - half:.2f} A {leaf:.2f} {leaf:.2f} 0 0 {sweep} {cx:.2f} {cy + half:.2f}" '
                 f'stroke-width="{T.STROKE["door_swing"]}"/>\n'
@@ -601,76 +604,73 @@ def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, s
 
 
 def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    """Supply Corridor / Return Corridor 내부에 방향 화살표 + 각 AL에 drop 화살표.
+    """청정도 구배 토폴로지 one-way flow 화살표 (사용자 '별도 로직 필요' 요청).
 
-    - Supply (양압, 좌→우): personnel 색
-    - Return (음압, 우→좌): waste 색
-    - AL drop: 외부 boundary → corridor → AL 위치까지 짧은 수직 화살표
+    로직:
+      - Supply 복도(중앙): 가운 입구(좌) → 우 분배.        personnel 색
+      - Return 복도(상·하): 우 → 좌, D복도 배출 방향.       waste 색
+      - Grade D 세로 복도: 하→상 인원/자재 진입.            personnel 색
+      - AL drop(공정행 수직 통과): supply → room → return.
+            공정행이 supply 위면 ↑(return상으로), 아래면 ↓(return하로).
+            PAL=personnel, MAL=material, CAL=product 색.
     """
     s.write('<g>\n')
 
-    # ── 1. Corridor 메인 흐름 ──
-    supply_id = "R_SUPPLY_CORRIDOR"
-    return_id = "R_RETURN_CORRIDOR"
-
-    BLACK = "#000000"
-
-    if supply_id in layout.rooms:
-        r = layout.rooms[supply_id].rect
-        x0, y0, w, h = _r(r, ox, oy)
-        # 좌→우
-        y_mid = y0 + h / 2
+    def _harrow(rect, l2r: bool, key: str):
+        x0, y0, w, h = _r(rect, ox, oy)
+        ym = y0 + h / 2
+        x1, x2 = (x0 + 18, x0 + w - 18) if l2r else (x0 + w - 18, x0 + 18)
+        if abs(x2 - x1) < 6:
+            return
         s.write(
-            f'<line x1="{x0 + 20:.2f}" y1="{y_mid:.2f}" '
-            f'x2="{x0 + w - 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
-            f'stroke-dasharray="7 4" '
-            f'marker-end="url(#arrow-personnel)"/>\n'
+            f'<line x1="{x1:.2f}" y1="{ym:.2f}" x2="{x2:.2f}" y2="{ym:.2f}" '
+            f'stroke="{T.FLOW[key]}" stroke-width="2.2" fill="none" '
+            f'stroke-dasharray="7 4" marker-end="url(#arrow-{key})"/>\n'
         )
 
-    if return_id in layout.rooms:
-        r = layout.rooms[return_id].rect
-        x0, y0, w, h = _r(r, ox, oy)
-        # 우→좌
-        y_mid = y0 + h / 2
-        s.write(
-            f'<line x1="{x0 + w - 20:.2f}" y1="{y_mid:.2f}" '
-            f'x2="{x0 + 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{T.FLOW["waste"]}" stroke-width="2.2" fill="none" '
-            f'stroke-dasharray="7 4" '
-            f'marker-end="url(#arrow-waste)"/>\n'
-        )
+    # ── 1. 복도 메인 흐름 ──
+    supply_cy_mm = layout.building_h_mm / 2
+    for rid, pr in layout.rooms.items():
+        if "SUPPLY_CORRIDOR" in rid:
+            supply_cy_mm = pr.rect.cy
+            _harrow(pr.rect, True, "personnel")     # 좌(가운)→우
+        elif "RETURN_CORRIDOR" in rid:
+            _harrow(pr.rect, False, "waste")        # 우→좌(D복도 배출)
 
-    # ── 2. 각 AL의 drop 화살표 (corridor 측 → AL 안으로 살짝) ──
+    # ── 2. Grade D 세로 복도: 하→상 진입 ──
+    for rid, pr in layout.rooms.items():
+        if rid == "R_CORRIDOR" or rid.endswith("_AUX_CORRIDOR"):
+            x0, y0, w, h = _r(pr.rect, ox, oy)
+            xm = x0 + w / 2
+            s.write(
+                f'<line x1="{xm:.2f}" y1="{y0 + h - 18:.2f}" x2="{xm:.2f}" y2="{y0 + 18:.2f}" '
+                f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
+                f'stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>\n'
+            )
+
+    # ── 3. AL drop: 공정행 수직 통과 (supply→room→return 방향) ──
+    ext = 16
     for pa in layout.airlocks.values():
         x, y, w, h = _r(pa.rect, ox, oy)
         cx = x + w / 2
-        al_type = pa.airlock.type
-        flow_key = (
+        al_type = pa.airlock.type or ""
+        key = (
             "personnel" if al_type.startswith("PAL")
             else "material" if al_type.startswith("MAL")
             else "product"
         )
-        marker = f"arrow-{flow_key}"
-        color = T.FLOW[flow_key]
-        # AL drop: corridor 안쪽 → AL 통과 → 룸 안쪽 (중간 길이)
-        ext = 16  # AL 양쪽으로 16px 연장 (변경전 2 / 직전 30의 중간)
-        if pa.side == "north":
-            # AL 위쪽 corridor에서 룸 쪽(아래)로
-            s.write(
-                f'<line x1="{cx:.2f}" y1="{y - ext:.2f}" x2="{cx:.2f}" y2="{y + h + ext:.2f}" '
-                f'stroke="{color}" stroke-width="2.5" fill="none" '
-                f'stroke-dasharray="7 4" '
-                f'marker-end="url(#{marker})"/>\n'
-            )
-        elif pa.side == "south":
-            # AL 아래쪽 corridor에서 룸 쪽(위)로
-            s.write(
-                f'<line x1="{cx:.2f}" y1="{y + h + ext:.2f}" x2="{cx:.2f}" y2="{y - ext:.2f}" '
-                f'stroke="{color}" stroke-width="2.5" fill="none" '
-                f'stroke-dasharray="7 4" '
-                f'marker-end="url(#{marker})"/>\n'
-            )
+        if pa.side not in ("north", "south"):
+            continue
+        up = pa.rect.cy < supply_cy_mm   # 공정행이 supply 위 → ↑(return 상으로)
+        if up:
+            y1, y2 = y + h + ext, y - ext
+        else:
+            y1, y2 = y - ext, y + h + ext
+        s.write(
+            f'<line x1="{cx:.2f}" y1="{y1:.2f}" x2="{cx:.2f}" y2="{y2:.2f}" '
+            f'stroke="{T.FLOW[key]}" stroke-width="2.5" fill="none" '
+            f'stroke-dasharray="7 4" marker-end="url(#arrow-{key})"/>\n'
+        )
 
     s.write('</g>\n')
 

@@ -1,5 +1,45 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-02] 도면 v3 — GMP 청정도 구배 토폴로지 (전문가 피드백 반영) — 브랜치 `drawing/floorplan-v2`
+
+사용자(GMP 도면) 피드백 6건을 drawing_agent 에 반영. decisions.md **D-021**.
+
+- **④ 도어 곡선 버그**: z6 swing arc 의 `sweep` 플래그가 반대로 박혀 호가
+  hinge 반대편으로 오목(=여닫이 반대). 가로·세로 도어 모두 sweep 반전 →
+  건축 표준 여닫이문. (renderer.py)
+- **① 작은 방 세로 슬리버**: `_alloc_dim` water-filling 도입 — 면적 비례
+  분배 + 각 칸 cross/max_aspect 미만으로 안 얇아지게 보정(합 보존, 흰공간 0).
+  `_place_row_aspect`/`_place_stack_aspect`. (Inoc/Prep/Wash/Gowning 정상비율)
+- **②③⑤ 토폴로지 재설계 → `_solve_gmp_gradient`** (dynamic_rooms=True 경로):
+  가로 청정도 구배 **NC → Grade D → [D 세로복도] → Grade C 공정**.
+  공정구역 = return(상)·공정행(상)·[가운]supply(중앙)·공정행(하)·return(하).
+  - 양측 return 복도 모두 *실제 방*으로 배치(기존 bottom 은 annotation 뿐) →
+    정제실 하행 포함 전 공정행이 return 인접 (②).
+  - 가운룸(C)을 D복도↔supply 접점에 게이트로 배치 + 합성 도어 2개 (③).
+  - NC 를 D 와 같은 쪽으로 모아 NC→D→C 한 방향 구배 (⑤).
+- **⑥ 동선 화살표 재작성** (`_emit_z9_flow_arrows`): one-way flow —
+  supply(좌→우) → 공정행 수직 통과(상행 ↑/하행 ↓) → 양측 return(우→좌) →
+  D복도(하→상 진입). AL drop 은 supply_cy 기준 방향 결정, PAL/MAL/CAL 색 구분.
+- **AL 폭 절대상한 3.8m** (`_place_al_edge`) — 큰 방(정제실)에서 에어록이
+  방의 40%까지 커지던 문제. 실제 전실 크기로.
+
+- **경계 보존**: 하드코딩 strip-band 경로(dynamic_rooms=False)는 **무수정** →
+  baselines.json / golden NNE / 우리 default URS 보존. 새 토폴로지는 외부(소연)
+  spec = dynamic_rooms=True 에서만. solve_perimeter_ring 도 그대로(토폴로지 다양성).
+- **회귀 검증 (stash diff)**: 변경 전/후 모두 **17 fail / 100 pass / 6 err** (동일).
+  유일한 런간 차이는 `test_c1a_deterministic`↔`test_c1b_deterministic` 가
+  번갈아 — CP-SAT 타이밍 의존 테스트의 *기존* flakiness(내 코드 무관).
+  실패 17+err6 은 전부 옛 fixture(`R_MEDIA_PREP`)·옛 엔진 e2e (엔진 교체 잔재).
+- **산출물**: `output/presentation/` 5종 재생성(light+blueprint, svg+png) +
+  `ppt_png/` 라이트 5종 갱신 + README 토폴로지 표/공통표현 갱신.
+- **다음**: (a) 옛 fixture 테스트들 소연 ID 로 갱신(별도). (b) 선택 — 정제실
+  하행을 supply 위쪽 단일행으로 빼는 안(②-2, 흐름 단조성 ↑, 캔버스 가로↑)을
+  쓸지 사용자 결정. 현재는 ②-1(양측 return) 채택. (c) CP-SAT 를 이 구배
+  토폴로지의 zone 제약으로 확장(H3 를 NC/D/C 3구역으로).
+
+> 위는 strip-band(휴리스틱) 도면 품질 개선. CLAUDE.md 의 솔버=CP-SAT 결정
+> 불변 — 이 토폴로지는 CP-SAT zone 제약(H3)·목적함수의 도메인 근거가 됨.
+
 ## [2026-06-01] 소연 룰엔진 모노레포 통합 (옵션 2) — 브랜치 `integrate-soyeon-engine`
 - **레포 이전**: origin = `smartepic2026/Layout-Generator` (공용), 기존 헤민 레포는 `hyemin` 리모트로 보존. teammate = `smartepic2026/rule_engine_validation_agent` (소연 최신 엔진, private, Hyemin 협업자 추가됨). 베이스라인 main 푸시 완료(c19d318).
 - **구조**: ① `src/contract/` 신설 — 우리 pydantic 계약(schemas/validators/working_state/kb_loader/kb) 분리. ② `src/rule_engine/` = 소연 최신 엔진(dataclass models.py)으로 교체. ③ 소연 절대 import 64곳 → `src.` 접두사 정렬. ④ `cli.py rule-engine` = URS xlsx → 소연 엔진 → to_json → tier1 어댑터 → 우리 pydantic spec.
