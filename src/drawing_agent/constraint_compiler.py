@@ -140,6 +140,11 @@ ADJ_MAX_DEFAULT_MM: int = 25_000  # 인접 쌍 중심 거리 한계 (Manhattan)
 ASPECT_MIN: float = 0.7
 ASPECT_MAX: float = 1.4
 
+# [2026-06-02 / H5] supply↔return corridor 직결금지 — 두 코리도가 직접 인접
+# (공유 벽)하지 않도록 어느 한 축으로 확보할 최소 간격.
+# 근거: constraints.supply_return_no_direct_connection (EU GMP 동선 분리 원칙).
+SUPPLY_RETURN_MIN_GAP_MM: int = 2_000
+
 
 @dataclass
 class RoomVarsC1a:
@@ -178,6 +183,8 @@ class CompiledModelC1a:
     n_adjacency_pairs: int                       # 실제 추가된 adjacency hard pair 수
     adj_pair_vars: list = field(default_factory=list)  # AdjPairVars list (C1b reuse)
     has_objective: bool = True                   # compile_c1a 가 objective 박았나
+    enforce_supply_return: bool = True           # H5 supply↔return 직결금지 활성?
+    n_supply_return_separations: int = 0         # 실제 추가된 분리 제약 쌍 수
 
 
 def _zone_x_bounds(
@@ -214,8 +221,9 @@ def compile_c1a(
     aspect_min: float = ASPECT_MIN,
     aspect_max: float = ASPECT_MAX,
     add_compactness_objective: bool = True,
+    enforce_supply_return: bool = True,
 ) -> CompiledModelC1a:
-    """C1a — 전체 spec.rooms 에 대해 hard 제약 (H1~H4) 모델 생성.
+    """C1a — 전체 spec.rooms 에 대해 hard 제약 (H1~H5) 모델 생성.
 
     완화 플래그 (`enforce_zones`, `enforce_adjacency`) — infeasible/timeout 시
     어떤 제약이 충돌인지 격리하기 위한 진단용. False 면 해당 제약 skip.
@@ -312,6 +320,32 @@ def compile_c1a(
             ))
             adj_pair_count += 1
 
+    # H5 [2026-06-02] supply↔return corridor 직결금지 —
+    # 두 코리도가 직접 인접(공유 벽)하지 못하도록, 어느 한 축으로 최소 간격 분리.
+    # 비볼록(분리) 제약이라 4방향 reified BoolVar + AddBoolOr 로 표현.
+    # constraints.supply_return_no_direct_connection 의 정수제약 컴파일.
+    sr_sep_count = 0
+    if enforce_supply_return:
+        def _is_sr(room, role: str) -> bool:
+            cr = getattr(room, "corridor_role", None)
+            return cr == role or f"{role.upper()}_CORRIDOR" in room.id
+        sup_ids = [rid for rid, rv in room_vars.items() if _is_sr(rv.room, "supply")]
+        ret_ids = [rid for rid, rv in room_vars.items() if _is_sr(rv.room, "return")]
+        gap = max(1, SUPPLY_RETURN_MIN_GAP_MM // grid_resolution_mm)
+        for s in sup_ids:
+            for r in ret_ids:
+                if s == r:
+                    continue
+                a, b = room_vars[s], room_vars[r]
+                sep = [model.NewBoolVar(f"sr_sep_{sr_sep_count}_{k}") for k in range(4)]
+                # a 가 b 좌측 / b 가 a 좌측 / a 가 b 위 / b 가 a 위 — 중 하나 이상 (간격 gap)
+                model.Add(a.x_var + a.w_var + gap <= b.x_var).OnlyEnforceIf(sep[0])
+                model.Add(b.x_var + b.w_var + gap <= a.x_var).OnlyEnforceIf(sep[1])
+                model.Add(a.y_var + a.h_var + gap <= b.y_var).OnlyEnforceIf(sep[2])
+                model.Add(b.y_var + b.h_var + gap <= a.y_var).OnlyEnforceIf(sep[3])
+                model.AddBoolOr(sep)
+                sr_sep_count += 1
+
     # 목적함수 (C1a 임시) — 좌상단 모으기. C1b 가 P-series surrogate 로 override.
     if room_vars and add_compactness_objective:
         model.Minimize(sum(rv.x_var + rv.y_var for rv in room_vars.values()))
@@ -330,6 +364,8 @@ def compile_c1a(
         n_adjacency_pairs=adj_pair_count,
         adj_pair_vars=adj_pair_vars,
         has_objective=add_compactness_objective,
+        enforce_supply_return=enforce_supply_return,
+        n_supply_return_separations=sr_sep_count,
     )
 
 
