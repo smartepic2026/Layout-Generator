@@ -101,7 +101,11 @@ def gen_ring(spec_dict, out_path, label):
           f"doors={len(layout.doors)} → {out_path}")
 
 
+OUT = "output/presentation"
+
 if __name__ == "__main__":
-    gen_stripband(build_small(), "output/floorplan_small_pilot_2000L.svg", "SMALL")
-    gen_stripband(build_large(), "output/floorplan_large_multiproduct.svg", "LARGE")
-    gen_ring(base, "output/floorplan_perimeter_ring.svg", "RING")
+    import os
+    os.makedirs(OUT, exist_ok=True)
+    gen_stripband(build_small(), f"{OUT}/floorplan_small_pilot_2000L.svg", "SMALL")
+    gen_stripband(build_large(), f"{OUT}/floorplan_large_multiproduct.svg", "LARGE")
+    gen_ring(base, f"{OUT}/floorplan_perimeter_ring.svg", "RING")
