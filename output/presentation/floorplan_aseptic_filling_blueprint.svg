@@ -724,99 +724,99 @@
 <line x1="970.21" y1="852.66" x2="970.21" y2="762.10" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
 </g>
 <g>
-<text x="792.59" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Return corridor</text>
-<text x="792.59" y="93.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 250m²</text>
-<text x="792.59" y="429.73" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Supply corridor</text>
-<text x="792.59" y="442.73" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">공급복도</text>
-<text x="792.59" y="455.73" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 150m²</text>
-<text x="337.73" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Media preparation</text>
-<text x="337.73" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">배지조제실</text>
-<text x="337.73" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 100m²</text>
-<text x="482.90" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Buffer preparation</text>
-<text x="482.90" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">버퍼조제실</text>
-<text x="482.90" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 200m²</text>
+<text x="792.59" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Return corridor</text>
+<text x="792.59" y="93.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 250m²</text>
+<text x="792.59" y="429.73" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Supply corridor</text>
+<text x="792.59" y="442.73" text-anchor="middle" font-size="9" fill="#9DB2D8" >공급복도</text>
+<text x="792.59" y="455.73" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 150m²</text>
+<text x="337.73" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Media preparation</text>
+<text x="337.73" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >배지조제실</text>
+<text x="337.73" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 100m²</text>
+<text x="482.90" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Buffer preparation</text>
+<text x="482.90" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >버퍼조제실</text>
+<text x="482.90" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 200m²</text>
 <text x="599.03" y="263.20" text-anchor="middle" font-size="10" fill="#E8EEFB" font-weight="600">INOCULATION</text>
-<text x="690.97" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Cell Culture</text>
-<text x="690.97" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">배양실</text>
-<text x="690.97" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 150m²</text>
-<text x="792.59" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Harvest</text>
-<text x="792.59" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">회수실</text>
-<text x="792.59" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 60m²</text>
-<text x="966.80" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Purification 1</text>
-<text x="966.80" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">정제실1</text>
-<text x="966.80" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 300m²</text>
-<text x="1160.36" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Purification 2</text>
-<text x="1160.36" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">정제실2</text>
-<text x="1160.36" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 100m²</text>
-<text x="1252.30" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Filling Background</text>
-<text x="1252.30" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Filling Background</text>
-<text x="1252.30" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">B · +30Pa · 90m²</text>
-<text x="407.75" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Preparation</text>
-<text x="407.75" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">공정 준비실</text>
-<text x="407.75" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 80m²</text>
-<text x="614.97" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Washing</text>
-<text x="614.97" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">세척실</text>
-<text x="614.97" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 60m²</text>
-<text x="792.59" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Lyophilizer</text>
-<text x="792.59" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Lyophilizer</text>
-<text x="792.59" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 60m²</text>
-<text x="940.61" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Aseptic Filling</text>
-<text x="940.61" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Aseptic Filling</text>
-<text x="940.61" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">A · +30Pa · 40m²</text>
-<text x="1059.02" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Capping</text>
-<text x="1059.02" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Capping</text>
-<text x="1059.02" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 40m²</text>
-<text x="1162.63" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Gowning</text>
-<text x="1162.63" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">착의실</text>
-<text x="1162.63" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 30m²</text>
-<text x="1251.44" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Grade B Gowning</text>
-<text x="1251.44" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Grade B Gowning</text>
-<text x="1251.44" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">B · +30Pa · 30m²</text>
-<text x="176.67" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Material storage</text>
-<text x="176.67" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">자재 보관실</text>
-<text x="176.67" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 100m²</text>
-<text x="176.67" y="244.31" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Equipment storage</text>
-<text x="176.67" y="257.31" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">장비 보관실</text>
-<text x="176.67" y="270.31" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 100m²</text>
-<text x="176.67" y="408.62" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">DS storage</text>
-<text x="176.67" y="421.62" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">DS 보관실</text>
-<text x="176.67" y="434.62" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 50m²</text>
-<text x="176.67" y="490.77" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">IPC</text>
-<text x="176.67" y="503.77" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 30m²</text>
-<text x="176.67" y="540.06" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Cell bank storage</text>
-<text x="176.67" y="572.92" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Corridor</text>
+<text x="690.97" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Cell Culture</text>
+<text x="690.97" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >배양실</text>
+<text x="690.97" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 150m²</text>
+<text x="792.59" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Harvest</text>
+<text x="792.59" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >회수실</text>
+<text x="792.59" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 60m²</text>
+<text x="966.80" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Purification 1</text>
+<text x="966.80" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >정제실1</text>
+<text x="966.80" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 300m²</text>
+<text x="1160.36" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Purification 2</text>
+<text x="1160.36" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >정제실2</text>
+<text x="1160.36" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 100m²</text>
+<text x="1252.30" y="120.67" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Filling Background</text>
+<text x="1252.30" y="133.67" text-anchor="middle" font-size="9" fill="#9DB2D8" >Filling Background</text>
+<text x="1252.30" y="146.67" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >B · +30Pa · 90m²</text>
+<text x="407.75" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Preparation</text>
+<text x="407.75" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >공정 준비실</text>
+<text x="407.75" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 80m²</text>
+<text x="614.97" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Washing</text>
+<text x="614.97" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >세척실</text>
+<text x="614.97" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 60m²</text>
+<text x="792.59" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Lyophilizer</text>
+<text x="792.59" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >Lyophilizer</text>
+<text x="792.59" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 60m²</text>
+<text x="940.61" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Aseptic Filling</text>
+<text x="940.61" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >Aseptic Filling</text>
+<text x="940.61" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >A · +30Pa · 40m²</text>
+<text x="1059.02" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Capping</text>
+<text x="1059.02" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >Capping</text>
+<text x="1059.02" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 40m²</text>
+<text x="1162.63" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Gowning</text>
+<text x="1162.63" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >착의실</text>
+<text x="1162.63" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >C · +30Pa · 30m²</text>
+<text x="1251.44" y="527.33" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Grade B Gowning</text>
+<text x="1251.44" y="540.33" text-anchor="middle" font-size="9" fill="#9DB2D8" >Grade B Gowning</text>
+<text x="1251.44" y="553.33" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >B · +30Pa · 30m²</text>
+<text x="176.67" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Material storage</text>
+<text x="176.67" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" >자재 보관실</text>
+<text x="176.67" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 100m²</text>
+<text x="176.67" y="244.31" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Equipment storage</text>
+<text x="176.67" y="257.31" text-anchor="middle" font-size="9" fill="#9DB2D8" >장비 보관실</text>
+<text x="176.67" y="270.31" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 100m²</text>
+<text x="176.67" y="408.62" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >DS storage</text>
+<text x="176.67" y="421.62" text-anchor="middle" font-size="9" fill="#9DB2D8" >DS 보관실</text>
+<text x="176.67" y="434.62" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 50m²</text>
+<text x="176.67" y="490.77" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >IPC</text>
+<text x="176.67" y="503.77" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >D · +15Pa · 30m²</text>
+<text x="176.67" y="540.06" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Cell bank storage</text>
+<text x="176.67" y="572.92" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Corridor</text>
 <text x="176.67" y="606.11" text-anchor="middle" font-size="10" fill="#E8EEFB" font-weight="600">MATERIAL_IN</text>
-<text x="176.67" y="630.43" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Waste-out</text>
-<text x="176.67" y="643.43" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">CNC · +5Pa · 30m²</text>
-<text x="176.67" y="679.72" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Gowning Female</text>
-<text x="176.67" y="692.72" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">갱의실 (여)</text>
-<text x="176.67" y="705.72" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">CNC · +5Pa · 50m²</text>
-<text x="176.67" y="761.88" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Gowning Male</text>
-<text x="176.67" y="774.88" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">갱의실 (남)</text>
-<text x="176.67" y="787.88" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">CNC · +5Pa · 80m²</text>
-<text x="1431.05" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">CIP supply</text>
-<text x="1431.05" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">CIP 공급실</text>
-<text x="1431.05" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 60m²</text>
-<text x="1431.05" y="213.70" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Monitoring</text>
-<text x="1431.05" y="226.70" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">모니터링실</text>
-<text x="1431.05" y="239.70" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 50m²</text>
-<text x="1431.05" y="325.11" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Office</text>
-<text x="1431.05" y="338.11" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">사무실</text>
-<text x="1431.05" y="351.11" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 100m²</text>
-<text x="1431.05" y="547.94" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Toilet (Female)</text>
-<text x="1431.05" y="560.94" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 20m²</text>
-<text x="1431.05" y="592.50" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Toilet (Male)</text>
-<text x="1431.05" y="605.50" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">화장실 (남)</text>
-<text x="1431.05" y="618.50" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 25m²</text>
-<text x="1431.05" y="648.21" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Lobby</text>
-<text x="1431.05" y="661.21" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">로비</text>
-<text x="1431.05" y="674.21" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 50m²</text>
-<text x="1431.05" y="759.63" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Corridor visitor</text>
-<text x="1431.05" y="772.63" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">관람복도</text>
-<text x="1431.05" y="785.63" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 30m²</text>
-<text x="1431.05" y="826.47" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Lounge</text>
-<text x="1431.05" y="839.47" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">휴게실</text>
-<text x="1431.05" y="852.47" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 30m²</text>
+<text x="176.67" y="630.43" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Waste-out</text>
+<text x="176.67" y="643.43" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >CNC · +5Pa · 30m²</text>
+<text x="176.67" y="679.72" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Gowning Female</text>
+<text x="176.67" y="692.72" text-anchor="middle" font-size="9" fill="#9DB2D8" >갱의실 (여)</text>
+<text x="176.67" y="705.72" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >CNC · +5Pa · 50m²</text>
+<text x="176.67" y="761.88" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Gowning Male</text>
+<text x="176.67" y="774.88" text-anchor="middle" font-size="9" fill="#9DB2D8" >갱의실 (남)</text>
+<text x="176.67" y="787.88" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >CNC · +5Pa · 80m²</text>
+<text x="1431.05" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >CIP supply</text>
+<text x="1431.05" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" >CIP 공급실</text>
+<text x="1431.05" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 60m²</text>
+<text x="1431.05" y="213.70" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Monitoring</text>
+<text x="1431.05" y="226.70" text-anchor="middle" font-size="9" fill="#9DB2D8" >모니터링실</text>
+<text x="1431.05" y="239.70" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 50m²</text>
+<text x="1431.05" y="325.11" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Office</text>
+<text x="1431.05" y="338.11" text-anchor="middle" font-size="9" fill="#9DB2D8" >사무실</text>
+<text x="1431.05" y="351.11" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 100m²</text>
+<text x="1431.05" y="547.94" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Toilet (Female)</text>
+<text x="1431.05" y="560.94" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 20m²</text>
+<text x="1431.05" y="592.50" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Toilet (Male)</text>
+<text x="1431.05" y="605.50" text-anchor="middle" font-size="9" fill="#9DB2D8" >화장실 (남)</text>
+<text x="1431.05" y="618.50" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 25m²</text>
+<text x="1431.05" y="648.21" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Lobby</text>
+<text x="1431.05" y="661.21" text-anchor="middle" font-size="9" fill="#9DB2D8" >로비</text>
+<text x="1431.05" y="674.21" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 50m²</text>
+<text x="1431.05" y="759.63" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Corridor visitor</text>
+<text x="1431.05" y="772.63" text-anchor="middle" font-size="9" fill="#9DB2D8" >관람복도</text>
+<text x="1431.05" y="785.63" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 30m²</text>
+<text x="1431.05" y="826.47" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" >Lounge</text>
+<text x="1431.05" y="839.47" text-anchor="middle" font-size="9" fill="#9DB2D8" >휴게실</text>
+<text x="1431.05" y="852.47" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" >NC · 0Pa · 30m²</text>
 </g>
 <g font-weight="700" font-size="11">
 <text x="14.00" y="470.66" text-anchor="middle" fill="#E8EEFB" transform="rotate(-90 14.00 470.66)">Personnel ↔</text>

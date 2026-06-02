@@ -521,7 +521,7 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
         s.write(
             f'<text x="{x + w/2:.2f}" y="{y + 16:.2f}" text-anchor="middle" '
             f'font-size="{T.TEXT["sm"]}" fill="{label_color}" font-weight="700" '
-            f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
+            f'>'
             f'{_esc(room.name_en)}</text>\n'
         )
         # ─ 한글 부제 ─
@@ -529,7 +529,7 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{y + 29:.2f}" text-anchor="middle" '
                 f'font-size="9" fill="{T.NEUTRAL["600"]}" '
-                f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
+                f'>'
                 f'{_esc(room.name_ko)}</text>\n'
             )
         # ─ 메타 (Grade · DP · Area) ─ 방 이름 바로 아래
@@ -540,7 +540,7 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{meta_y:.2f}" text-anchor="middle" '
                 f'font-size="8" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)} '
-                f'stroke="#FFFFFF" stroke-width="3" paint-order="stroke fill">'
+                f'>'
                 f'{_esc(meta_text)}</text>\n'
             )
     s.write('</g>\n')
