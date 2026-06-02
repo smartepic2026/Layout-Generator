@@ -649,18 +649,19 @@ def _place_airlock_doors(layout):
         if pa.side in ("north", "south"):
             cx = r.cx
             dw = min(r.w * 0.65, 2200)
-            # 위 변 (swing 안쪽=아래), 아래 변 (swing 안쪽=위)
+            # 두 문이 AL 안쪽으로 휘면 반원처럼 합쳐짐 → *바깥쪽*으로 열리게.
+            # 위 변 문 = 위로(swing target y < y), 아래 변 문 = 아래로.
             layout.doors.append(PlacedDoor(adj=None, x=cx, y=r.y, width_mm=dw,
-                                           rotation_deg=0, swing_to_xy=(cx, r.cy)))
+                                           rotation_deg=0, swing_to_xy=(cx, r.y - 1000)))
             layout.doors.append(PlacedDoor(adj=None, x=cx, y=r.y2, width_mm=dw,
-                                           rotation_deg=0, swing_to_xy=(cx, r.cy)))
-        else:  # inline — 좌/우 세로 도어
+                                           rotation_deg=0, swing_to_xy=(cx, r.y2 + 1000)))
+        else:  # inline — 좌/우 세로 도어 (바깥쪽으로)
             cy = r.cy
             dh = min(r.h * 0.65, 2200)
             layout.doors.append(PlacedDoor(adj=None, x=r.x, y=cy, width_mm=dh,
-                                           rotation_deg=90, swing_to_xy=(r.cx, cy)))
+                                           rotation_deg=90, swing_to_xy=(r.x - 1000, cy)))
             layout.doors.append(PlacedDoor(adj=None, x=r.x2, y=cy, width_mm=dh,
-                                           rotation_deg=90, swing_to_xy=(r.cx, cy)))
+                                           rotation_deg=90, swing_to_xy=(r.x2 + 1000, cy)))
 
 
 def _lookup_rect(layout, node_id) -> Optional[Rect]:
