@@ -694,3 +694,68 @@ def _door_pos(a: Rect, b: Rect) -> Optional[tuple[float, float, float]]:
         x = (a.x2 + b.x) / 2 if a.x < b.x else (b.x2 + a.x) / 2
         return x, (oy0 + oy1) / 2, 90
     return None  # 공유 벽 없음 → 도어 없음
+
+
+# ══════════════════════════════════════════════════════════════════════
+# [2026-06-02] 토폴로지 변형 — 중앙 공정 블록 + 좌/우 지원 + 상/하 갤러리
+# (참조: ISPE 컨셉 도면 — central process bays + perimeter support/gallery)
+# ══════════════════════════════════════════════════════════════════════
+def solve_perimeter_ring(
+    spec: RuleEngineOutput,
+    building_w_mm: float = 78500,
+    building_h_mm: float = 42500,
+    auto_canvas: bool = True,
+) -> Layout:
+    """중앙 공정 블록(다행 그리드) + 좌(지원)·우(유틸) 스택 + 상/하 visitor gallery 띠.
+
+    참조 도면형 토폴로지: 가운데에 공정 bay 들이 그리드로 배치되고, 주변을
+    warehouse/QC(좌), utilities/waste(우), visitor gallery(상·하)가 ㅁ자로 감싼다.
+    strip-band 의 중앙 supply/return 가로 코리도 대신 외곽 갤러리 프레임을 둠.
+    """
+    import math
+    if auto_canvas:
+        building_w_mm, building_h_mm = _auto_canvas_for_rooms(spec, building_w_mm, building_h_mm)
+    W, H = building_w_mm, building_h_mm
+    layout = Layout(building_w_mm=W, building_h_mm=H)
+    room_by_id = {r.id: r for r in spec.rooms}
+    cls = _classify_rooms_dynamic(spec)
+
+    gallery = H * 0.07           # 상/하 visitor gallery 띠 높이
+    side = W * 0.15              # 좌/우 지원 스택 폭
+    cx0, cx1 = side, W - side    # 중앙 블록 x 범위
+    cw = cx1 - cx0
+    cy0 = gallery
+    ch = H - 2 * gallery         # 중앙 블록 높이
+
+    # ── 상/하 visitor gallery (전폭 코리도 프레임) ──
+    corr_ids = cls["corridors"]
+    top_c = corr_ids[0] if corr_ids else None
+    bot_c = corr_ids[1] if len(corr_ids) > 1 else top_c
+    if top_c:
+        layout.rooms[top_c] = PlacedRoom(room=room_by_id[top_c], rect=Rect(0, 0, W, gallery))
+    if bot_c:
+        bc = room_by_id[bot_c]
+        if bot_c == top_c:                       # 코리도 1개면 복제해 하단 갤러리
+            bc = bc.model_copy(update={"id": bot_c + "_S"})
+        layout.rooms[bc.id] = PlacedRoom(room=bc, rect=Rect(0, H - gallery, W, gallery))
+
+    # ── 좌 지원(warehouse/QC/locker) · 우 유틸(utilities/waste) 스택 ──
+    _place_left_stack(layout, room_by_id, cls["aux_left"], 0, cy0, side, ch)
+    _place_right_stack(layout, room_by_id, cls["nc_right"], cx1, cy0, side, ch)
+
+    # ── 중앙 공정 블록 — 다행 그리드 (각 행 area 비례 폭) ──
+    process = [r for r in (cls["top_row"] + cls["bottom_row"]) if r in room_by_id]
+    n_rows = 2 if len(process) <= 8 else 3
+    per = max(1, math.ceil(len(process) / n_rows))
+    rh = ch / n_rows
+    for ri in range(n_rows):
+        chunk = process[ri * per:(ri + 1) * per]
+        if chunk:
+            _place_process_row(layout, room_by_id, chunk, cx0, cy0 + ri * rh, cw, rh)
+
+    # ── 에어록(공정 방 내측) + 장비 + 도어 ──
+    _place_airlocks_in_rooms(layout, spec, process, is_top=True)
+    _place_equipment_grid(layout)
+    _place_doors(layout, spec.adjacency)
+    _place_airlock_doors(layout)
+    return layout
