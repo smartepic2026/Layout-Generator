@@ -126,7 +126,7 @@ def _emit_defs(s: StringIO) -> None:
         s.write(
             f'<marker id="arrow-{k}" viewBox="0 0 10 10" refX="0" refY="5" '
             f'markerWidth="8" markerHeight="8" orient="auto-start-reverse">'
-            f'<path d="M 0 3 L 10 5 L 0 7 z" fill="#000000"/>'
+            f'<path d="M 0 3 L 10 5 L 0 7 z" fill="{T.FLOW[k]}"/>'
             '</marker>\n'
         )
     s.write("</defs>\n")
@@ -622,7 +622,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
         s.write(
             f'<line x1="{x0 + 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + w - 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{BLACK}" stroke-width="2.2" fill="none" '
+            f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
             f'marker-end="url(#arrow-personnel)"/>\n'
         )
 
@@ -634,7 +634,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
         s.write(
             f'<line x1="{x0 + w - 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + 20:.2f}" y2="{y_mid:.2f}" '
-            f'stroke="{BLACK}" stroke-width="2.2" fill="none" '
+            f'stroke="{T.FLOW["waste"]}" stroke-width="2.2" fill="none" '
             f'marker-end="url(#arrow-waste)"/>\n'
         )
 
@@ -643,25 +643,27 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
         x, y, w, h = _r(pa.rect, ox, oy)
         cx = x + w / 2
         al_type = pa.airlock.type
-        marker = (
-            "arrow-personnel" if al_type.startswith("PAL")
-            else "arrow-material" if al_type.startswith("MAL")
-            else "arrow-product"
+        flow_key = (
+            "personnel" if al_type.startswith("PAL")
+            else "material" if al_type.startswith("MAL")
+            else "product"
         )
+        marker = f"arrow-{flow_key}"
+        color = T.FLOW[flow_key]
         # AL drop: corridor 안쪽 → AL 통과 → 룸 안쪽 (중간 길이)
         ext = 16  # AL 양쪽으로 16px 연장 (변경전 2 / 직전 30의 중간)
         if pa.side == "north":
             # AL 위쪽 corridor에서 룸 쪽(아래)로
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y - ext:.2f}" x2="{cx:.2f}" y2="{y + h + ext:.2f}" '
-                f'stroke="{BLACK}" stroke-width="2.5" fill="none" '
+                f'stroke="{color}" stroke-width="2.5" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
         elif pa.side == "south":
             # AL 아래쪽 corridor에서 룸 쪽(위)로
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y + h + ext:.2f}" x2="{cx:.2f}" y2="{y - ext:.2f}" '
-                f'stroke="{BLACK}" stroke-width="2.5" fill="none" '
+                f'stroke="{color}" stroke-width="2.5" fill="none" '
                 f'marker-end="url(#{marker})"/>\n'
             )
 

@@ -283,11 +283,10 @@ def solve(
     core_x1 = building_w_mm - nc_w
     core_w = core_x1 - core_x0
 
-    # ── Core 내부: 위에서부터 [return-top, AL_out row, process top, AL_in row, supply, AL_in row, process bottom, AL_out row, return-bottom] ──
-    # 9개 stripe 비율 (위→아래)
-    stripe_ratios = [0.06, 0.07, 0.17, 0.07, 0.10, 0.07, 0.22, 0.07, 0.10, 0.07]
-    # ↑ return-top, ALo top, Process top, ALi top, supply, ALi bot, Process bot, ALo bot, return-bot, footer (NC strip)
-    # normalize
+    # ── Core 내부: 5개 stripe (위→아래). [2026-06-02 v2] 에어록 밴드 제거 —
+    # 에어록을 방 *안쪽 가장자리*에 배치해 흰공간 제거 + 참조 도면 구조 일치.
+    #   return-top, Process top, Supply corridor(중앙), Process bottom, return-bottom
+    stripe_ratios = [0.05, 0.38, 0.12, 0.40, 0.05]
     s = sum(stripe_ratios)
     stripe_ratios = [r / s for r in stripe_ratios]
     y_acc = 0.0
@@ -296,8 +295,7 @@ def solve(
         h = building_h_mm * ratio
         bands.append((y_acc, y_acc + h))
         y_acc += h
-    (ret_top, alo_top, proc_top, ali_top, supply, ali_bot,
-     proc_bot, alo_bot, ret_bot, footer_band) = bands
+    (ret_top, proc_top, supply, proc_bot, ret_bot) = bands
 
     # ── Return corridors (top + bottom) ──
     _place_corridor(layout, room_by_id, "R_RETURN_CORRIDOR",
@@ -311,7 +309,7 @@ def solve(
     _place_corridor(layout, room_by_id, "R_SUPPLY_CORRIDOR",
                     core_x0, supply[0], core_w, supply[1] - supply[0])
 
-    # ── Process rows ──
+    # ── Process rows (full band height) ──
     _place_process_row(
         layout, room_by_id, top_row_ids, core_x0, proc_top[0], core_w, proc_top[1] - proc_top[0]
     )
@@ -319,23 +317,9 @@ def solve(
         layout, room_by_id, bottom_row_ids, core_x0, proc_bot[0], core_w, proc_bot[1] - proc_bot[0]
     )
 
-    # ── Airlocks (top/bottom of each process row) ──
-    _place_al_row(
-        layout, spec, top_row_ids, suffix="_out",
-        x0=core_x0, y0=alo_top[0], w=core_w, h=alo_top[1] - alo_top[0],
-    )
-    _place_al_row(
-        layout, spec, top_row_ids, suffix="_in",
-        x0=core_x0, y0=ali_top[0], w=core_w, h=ali_top[1] - ali_top[0],
-    )
-    _place_al_row(
-        layout, spec, bottom_row_ids, suffix="_in",
-        x0=core_x0, y0=ali_bot[0], w=core_w, h=ali_bot[1] - ali_bot[0],
-    )
-    _place_al_row(
-        layout, spec, bottom_row_ids, suffix="_out",
-        x0=core_x0, y0=alo_bot[0], w=core_w, h=alo_bot[1] - alo_bot[0],
-    )
+    # ── Airlocks INSIDE each process room (supply-facing=_in, return-facing=_out) ──
+    _place_airlocks_in_rooms(layout, spec, top_row_ids, is_top=True)
+    _place_airlocks_in_rooms(layout, spec, bottom_row_ids, is_top=False)
     # 양방향(CAL) AL은 supply에 작은 spot 배치
     _place_both_way_als(layout, spec, core_x0, supply[0], core_w, supply[1] - supply[0])
 
@@ -396,50 +380,48 @@ def _is_grade_b_four_al(room, all_als) -> bool:
     return len(als) == 4
 
 
-def _place_al_row(layout, spec, row_room_ids, suffix, x0, y0, w, h):
-    """주어진 Process row의 각 Room에 대해 _in/_out AL을 상단/하단 stripe에 배치.
-    Grade B + 4-AL Room은 좌/우 corner로 분산해 4-AL 룰 시각화 (Phase B).
+# [2026-06-02 v2] 방 안쪽 가장자리 AL 배치 — 참조 도면 구조.
+AL_BAND_H_FRAC = 0.18     # AL box 높이 = 방 높이의 18%
+AL_BAND_H_MAX_MM = 4500   # 상한
+AL_SLOT_W_FRAC = 0.30     # AL box 폭 = slot 의 30%
+
+
+def _place_airlocks_in_rooms(layout, spec, row_room_ids, is_top: bool):
+    """각 process room *안쪽 가장자리*에 _in/_out AL 작은 box 배치.
+
+    top row: supply 가 아래쪽 → _in 은 방 하단, _out 은 방 상단(return 쪽).
+    bottom row: supply 가 위쪽 → _in 은 방 상단, _out 은 방 하단(return 쪽).
+    같은 변에 여러 AL 이면 좌→우 균등 분할. (흰 에어록 밴드 제거 효과)
     """
     for rid in row_room_ids:
         if rid not in layout.rooms:
             continue
-        proom = layout.rooms[rid]
-        # 이 Room에 붙은 AL 중 suffix(_in/_out) 매칭
-        als = [
-            al for al in spec.airlocks
-            if al.connects_higher == rid and al.type.endswith(suffix)
-        ]
-        if not als:
-            continue
+        r = layout.rooms[rid].rect
+        ins = [a for a in spec.airlocks if a.connects_higher == rid and a.type.endswith("_in")]
+        outs = [a for a in spec.airlocks if a.connects_higher == rid and a.type.endswith("_out")]
+        al_h = min(r.h * AL_BAND_H_FRAC, AL_BAND_H_MAX_MM)
+        if is_top:
+            in_y, out_y = r.y2 - al_h, r.y           # in=하단(supply), out=상단(return)
+            in_side, out_side = "south", "north"
+        else:
+            in_y, out_y = r.y, r.y2 - al_h           # in=상단(supply), out=하단(return)
+            in_side, out_side = "north", "south"
+        _place_al_edge(layout, ins, rid, r, in_y, al_h, in_side)
+        _place_al_edge(layout, outs, rid, r, out_y, al_h, out_side)
 
-        side = "north" if y0 < proom.rect.y else "south"
 
-        # ─── Phase B: Grade B 4-AL Room — corner placement ───
-        if _is_grade_b_four_al(proom.room, spec.airlocks) and len(als) == 2:
-            # 2개 AL을 Room 좌측 corner와 우측 corner에 배치
-            slot_w = proom.rect.w * 0.30
-            # PAL은 좌측 corner, MAL은 우측 corner (personnel/material 분리 시각화)
-            sorted_als = sorted(als, key=lambda a: 0 if a.type.startswith("PAL") else 1)
-            for i, al in enumerate(sorted_als):
-                if i == 0:  # PAL → 좌측 corner
-                    ax = proom.rect.x + proom.rect.w * 0.05
-                else:        # MAL → 우측 corner
-                    ax = proom.rect.x + proom.rect.w * 0.65
-                rect = Rect(ax, y0, slot_w, h)
-                layout.airlocks[al.id] = PlacedAirlock(
-                    airlock=al, rect=rect, attached_room_id=rid, side=side
-                )
-            continue
-
-        # ─── 기본: 가로 균등 분할 ───
-        slot_w = proom.rect.w / len(als)
-        for i, al in enumerate(als):
-            ax = proom.rect.x + i * slot_w + slot_w * 0.1
-            aw = slot_w * 0.8
-            rect = Rect(ax, y0, aw, h)
-            layout.airlocks[al.id] = PlacedAirlock(
-                airlock=al, rect=rect, attached_room_id=rid, side=side
-            )
+def _place_al_edge(layout, als, rid, room_rect, y, h, side):
+    """주어진 AL 목록을 방 한 변(y)에 좌→우 균등 분할로 배치."""
+    if not als:
+        return
+    n = len(als)
+    slot_w = room_rect.w / n
+    aw = min(slot_w * 0.8, room_rect.w * AL_SLOT_W_FRAC * 2)
+    for i, al in enumerate(als):
+        ax = room_rect.x + i * slot_w + (slot_w - aw) / 2
+        layout.airlocks[al.id] = PlacedAirlock(
+            airlock=al, rect=Rect(ax, y, aw, h), attached_room_id=rid, side=side
+        )
 
 
 def _place_both_way_als(layout, spec, x0, y0, w, h):
