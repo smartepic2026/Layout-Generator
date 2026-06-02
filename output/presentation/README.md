@@ -7,7 +7,18 @@
 | `floorplan_v2_soyeon` | mAb 8000L (기준) | strip-band (중앙 supply/return + 좌 지원/우 NC) | 방 48 / 배치 30 |
 | `floorplan_small_pilot_2000L` | 소규모 파일럿 2000L | strip-band | 방 34 / 배치 20 (Purif_2 제거, 면적 ×0.55) |
 | `floorplan_large_multiproduct` | 대규모 멀티프로덕트 | strip-band | 방 60 / 배치 42 (병렬 suite B + QC/창고/유틸) |
+| `floorplan_aseptic_filling` | 무균충전 온사이트 | strip-band | 방 53 / 배치 35 (**Grade A/B 충전 suite 신규**) |
 | `floorplan_perimeter_ring` | 중앙 공정블록형 | 중앙 공정 그리드 + 좌/우 지원 + 상/하 visitor gallery | 방 48 / 배치 30 |
+
+## ★ 발표 스토리 — URS 입력 노브 → 출력 변화 (같은 엔진, 다른 입력)
+| 시나리오 | 바꾼 URS 입력(노브) | 출력에서 달라지는 곳 |
+|---|---|---|
+| 기준(v2_soyeon) | culture_scale 8000L, 단일품목 | — (기준 도면) |
+| 소규모 파일럿 | culture_scale ↓(2000L), Purification 2 미사용 | 방·면적 축소, 정제 suite 1개로 |
+| 대규모 멀티프로덕트 | multi_product + QC 온사이트 | **병렬 공정 suite B 추가** + QC/창고/유틸 방 증가 |
+| 무균충전 | **aseptic_filling_onsite: False→True** | **Grade A/B 무균충전 suite(에메랄드) 신규 등장** (베이스는 전부 C/D) |
+| 중앙블록 | (동일 입력, 배치 전략 변경) | 중앙 공정블록 + 외곽 갤러리 토폴로지 |
+→ "URS 한 곳을 바꾸면 적합한 도면이 그에 맞게 달라진다"를 시각적으로 입증.
 
 ## 테마 (각 도면 2종)
 - `floorplan_*.svg/.png` — **라이트**(흰 배경, 도면 인쇄용)

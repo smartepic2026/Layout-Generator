@@ -90,6 +90,39 @@ def build_large() -> dict:
     return s
 
 
+# ──────────────────────────────────────────────────────────────────
+# 3b) ASEPTIC — URS aseptic_filling_onsite=True → Grade A/B 무균충전 suite 추가
+#     (베이스는 전부 C/D → A/B 방 등장이 "입력→출력" 차이를 시각적으로 입증)
+# ──────────────────────────────────────────────────────────────────
+def build_aseptic() -> dict:
+    s = copy.deepcopy(base)
+    proc_t = next(r for r in base["rooms"] if r["room_id"] == "R_CELL_CULTURE")
+    al_t = base["airlocks"][0]
+
+    def mk(rid, name, grade, area, flow="One-way"):
+        r = copy.deepcopy(proc_t)
+        r.update(room_id=rid, name_en=name, name_ko=name, category="process",
+                 clean_grade=grade, area_m2=area, room_flow=flow, equipment=[], process_no=[])
+        return r
+
+    s["rooms"] += [
+        mk("R_FILLING", "Aseptic Filling", "A", 40),
+        mk("R_FILLING_BACKGROUND", "Filling Background", "B", 90),
+        mk("R_FILL_GOWNING", "Grade B Gowning", "B", 30),
+        mk("R_CAPPING", "Capping", "C", 40),
+        mk("R_LYO", "Lyophilizer", "C", 60),
+    ]
+
+    def mk_al(alid, kind, higher):
+        a = copy.deepcopy(al_t)
+        a.update(al_id=alid, kind=kind, connects_higher_room=higher)
+        return a
+
+    for k in ["PAL_in", "PAL_out", "MAL_in", "MAL_out"]:
+        s["airlocks"].append(mk_al(f"R_{k.upper()}_FILLING", k, "R_FILLING"))
+    return s
+
+
 def _emit(svg, name, label, meta=""):
     """라이트 + 블루프린트(다크) SVG·PNG 동시 저장."""
     os.makedirs(OUT, exist_ok=True)
@@ -122,4 +155,5 @@ if __name__ == "__main__":
     gen_stripband(base, "v2_soyeon", "BASE")
     gen_stripband(build_small(), "small_pilot_2000L", "SMALL")
     gen_stripband(build_large(), "large_multiproduct", "LARGE")
+    gen_stripband(build_aseptic(), "aseptic_filling", "ASEPTIC")
     gen_ring(base, "perimeter_ring", "RING")
