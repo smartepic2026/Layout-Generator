@@ -597,13 +597,22 @@ def _place_doors(layout, adjacency: list[Adjacency]):
         if adj.relationship == "passthrough_only":
             continue  # passthrough는 도어 아님
 
+        # [2026-06-02 v2] 에어록은 이제 방 *안*에 그려지므로 room↔airlock 인접엔
+        # 벽 도어를 그리지 않는다 (AL box + flow 화살표가 통로를 표현). 안 그러면
+        # 공유 변이 없어 방 한가운데 fallback 도어가 찍힘.
+        if adj.from_id in layout.airlocks or adj.to_id in layout.airlocks:
+            continue
+
         a = _lookup_rect(layout, adj.from_id)
         b = _lookup_rect(layout, adj.to_id)
         if a is None or b is None:
             continue
 
-        # 공유 변 추정
-        x, y, rot = _door_pos(a, b)
+        # 공유 변 추정 — 공유 벽이 없으면 (None) 도어 생략 (fallback 금지)
+        pos = _door_pos(a, b)
+        if pos is None:
+            continue
+        x, y, rot = pos
 
         # Phase C: swing 방향 결정 (adj.door_swing_to → 차압 fallback → 모호 경고)
         swing_target_id, warnings = _resolve_swing(layout, adj)
@@ -634,18 +643,25 @@ def _lookup_rect(layout, node_id) -> Optional[Rect]:
     return None
 
 
-def _door_pos(a: Rect, b: Rect) -> tuple[float, float, float]:
-    """두 사각형 사이의 도어 위치 + 회전. 0=수평, 90=수직."""
-    # 세로 인접 (a 위, b 아래 또는 반대)
-    if abs(a.y2 - b.y) < 50 or abs(b.y2 - a.y) < 50:
+def _door_pos(a: Rect, b: Rect) -> Optional[tuple[float, float, float]]:
+    """두 사각형이 공유하는 벽 위 도어 위치 + 회전 (0=수평벽, 90=수직벽).
+
+    공유 벽이 없으면 (겹침/포함/원격) None — 호출자가 도어 생략.
+    공유 변에 *겹치는 구간*이 있을 때만 그 구간 중앙에 도어를 둔다.
+    """
+    TOL = 50  # mm
+    # 세로 인접 (a 위 b 아래 또는 반대) — 공유 가로 벽
+    if abs(a.y2 - b.y) < TOL or abs(b.y2 - a.y) < TOL:
+        ox0, ox1 = max(a.x, b.x), min(a.x2, b.x2)
+        if ox1 - ox0 <= TOL:        # x 구간 겹침 없음 → 실제 공유 벽 아님
+            return None
         y = (a.y2 + b.y) / 2 if a.y < b.y else (b.y2 + a.y) / 2
-        x = max(a.x, b.x) + min(a.x2, b.x2) - max(a.x, b.x)
-        x = (max(a.x, b.x) + min(a.x2, b.x2)) / 2
-        return x, y, 0
-    # 가로 인접
-    if abs(a.x2 - b.x) < 50 or abs(b.x2 - a.x) < 50:
+        return (ox0 + ox1) / 2, y, 0
+    # 가로 인접 — 공유 세로 벽
+    if abs(a.x2 - b.x) < TOL or abs(b.x2 - a.x) < TOL:
+        oy0, oy1 = max(a.y, b.y), min(a.y2, b.y2)
+        if oy1 - oy0 <= TOL:        # y 구간 겹침 없음
+            return None
         x = (a.x2 + b.x) / 2 if a.x < b.x else (b.x2 + a.x) / 2
-        y = (max(a.y, b.y) + min(a.y2, b.y2)) / 2
-        return x, y, 90
-    # 겹침/포함/원격 — 중심 사이 중간점 fallback
-    return (a.cx + b.cx) / 2, (a.cy + b.cy) / 2, 0
+        return x, (oy0 + oy1) / 2, 90
+    return None  # 공유 벽 없음 → 도어 없음

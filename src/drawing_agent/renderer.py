@@ -623,6 +623,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
             f'<line x1="{x0 + 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + w - 20:.2f}" y2="{y_mid:.2f}" '
             f'stroke="{T.FLOW["personnel"]}" stroke-width="2.2" fill="none" '
+            f'stroke-dasharray="7 4" '
             f'marker-end="url(#arrow-personnel)"/>\n'
         )
 
@@ -635,6 +636,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
             f'<line x1="{x0 + w - 20:.2f}" y1="{y_mid:.2f}" '
             f'x2="{x0 + 20:.2f}" y2="{y_mid:.2f}" '
             f'stroke="{T.FLOW["waste"]}" stroke-width="2.2" fill="none" '
+            f'stroke-dasharray="7 4" '
             f'marker-end="url(#arrow-waste)"/>\n'
         )
 
@@ -657,6 +659,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y - ext:.2f}" x2="{cx:.2f}" y2="{y + h + ext:.2f}" '
                 f'stroke="{color}" stroke-width="2.5" fill="none" '
+                f'stroke-dasharray="7 4" '
                 f'marker-end="url(#{marker})"/>\n'
             )
         elif pa.side == "south":
@@ -664,6 +667,7 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> N
             s.write(
                 f'<line x1="{cx:.2f}" y1="{y + h + ext:.2f}" x2="{cx:.2f}" y2="{y - ext:.2f}" '
                 f'stroke="{color}" stroke-width="2.5" fill="none" '
+                f'stroke-dasharray="7 4" '
                 f'marker-end="url(#{marker})"/>\n'
             )
 
