@@ -332,8 +332,10 @@ def solve(
     # ── Equipment in each placed process Room ──
     _place_equipment_grid(layout)
 
-    # ── Doors from adjacency ──
+    # ── Doors from adjacency (방↔방, 방↔복도 공유 벽) ──
     _place_doors(layout, spec.adjacency)
+    # ── Airlock doors: 각 에어록의 복도쪽 + 방쪽 가장자리 (참조 도면) ──
+    _place_airlock_doors(layout)
 
     return layout
 
@@ -633,6 +635,32 @@ def _place_doors(layout, adjacency: list[Adjacency]):
                 swing_to_xy=swing_xy,
             )
         )
+
+
+def _place_airlock_doors(layout):
+    """각 에어록의 *복도쪽 + 방쪽* 가장자리에 도어 2개 생성 (참조 도면).
+
+    in-room AL (side north/south) 은 방 가장자리에 가로로 놓여 있으므로, AL box
+    의 위/아래 변에 가로 도어를 둔다 (한쪽=복도↔AL, 다른쪽=AL↔방). 두 도어 모두
+    AL 안쪽으로 swing. inline(both-way, supply 안) AL 은 좌우 세로 도어.
+    """
+    for pa in layout.airlocks.values():
+        r = pa.rect
+        if pa.side in ("north", "south"):
+            cx = r.cx
+            dw = min(r.w * 0.65, 2200)
+            # 위 변 (swing 안쪽=아래), 아래 변 (swing 안쪽=위)
+            layout.doors.append(PlacedDoor(adj=None, x=cx, y=r.y, width_mm=dw,
+                                           rotation_deg=0, swing_to_xy=(cx, r.cy)))
+            layout.doors.append(PlacedDoor(adj=None, x=cx, y=r.y2, width_mm=dw,
+                                           rotation_deg=0, swing_to_xy=(cx, r.cy)))
+        else:  # inline — 좌/우 세로 도어
+            cy = r.cy
+            dh = min(r.h * 0.65, 2200)
+            layout.doors.append(PlacedDoor(adj=None, x=r.x, y=cy, width_mm=dh,
+                                           rotation_deg=90, swing_to_xy=(r.cx, cy)))
+            layout.doors.append(PlacedDoor(adj=None, x=r.x2, y=cy, width_mm=dh,
+                                           rotation_deg=90, swing_to_xy=(r.cx, cy)))
 
 
 def _lookup_rect(layout, node_id) -> Optional[Rect]:
