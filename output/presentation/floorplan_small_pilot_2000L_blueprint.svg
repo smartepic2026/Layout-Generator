@@ -196,48 +196,48 @@
 </g>
 <rect x="64" y="64" width="1256.0" height="680.0" fill="none" stroke="#E8EEFB" stroke-width="5.0"/>
 <g>
-<rect x="252.40" y="64.00" width="841.52" height="34.00" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="252.40" y="356.40" width="841.52" height="81.60" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="252.40" y="98.00" width="153.00" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="405.40" y="98.00" width="306.01" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="711.41" y="98.00" width="61.20" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="772.61" y="98.00" width="229.51" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="1002.12" y="98.00" width="91.80" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="252.40" y="438.00" width="537.14" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="789.54" y="438.00" width="143.24" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="932.78" y="438.00" width="107.43" height="272.00" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="1040.21" y="438.00" width="53.71" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
-<rect x="64.00" y="64.00" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="64.00" y="276.50" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="64.00" y="489.00" width="188.40" height="106.25" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="64.00" y="595.25" width="188.40" height="63.75" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="64.00" y="659.00" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="64.00" y="701.50" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.50"/>
-<rect x="1093.92" y="64.00" width="226.08" height="468.97" fill="#1C2742" fill-opacity="0.50"/>
-<rect x="1093.92" y="532.97" width="226.08" height="93.79" fill="#1C2742" fill-opacity="0.50"/>
-<rect x="1093.92" y="626.76" width="226.08" height="117.24" fill="#1C2742" fill-opacity="0.50"/>
+<rect x="252.40" y="64.00" width="841.52" height="34.00" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="252.40" y="356.40" width="841.52" height="81.60" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="252.40" y="98.00" width="153.00" height="258.40" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="405.40" y="98.00" width="306.01" height="258.40" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="711.41" y="98.00" width="61.20" height="258.40" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="772.61" y="98.00" width="229.51" height="258.40" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="1002.12" y="98.00" width="91.80" height="258.40" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="252.40" y="438.00" width="537.14" height="272.00" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="789.54" y="438.00" width="143.24" height="272.00" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="932.78" y="438.00" width="107.43" height="272.00" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="1040.21" y="438.00" width="53.71" height="272.00" fill="#FCD34D" fill-opacity="0.13"/>
+<rect x="64.00" y="64.00" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="64.00" y="276.50" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="64.00" y="489.00" width="188.40" height="106.25" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="64.00" y="595.25" width="188.40" height="63.75" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="64.00" y="659.00" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="64.00" y="701.50" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.13"/>
+<rect x="1093.92" y="64.00" width="226.08" height="468.97" fill="#1C2742" fill-opacity="0.13"/>
+<rect x="1093.92" y="532.97" width="226.08" height="93.79" fill="#1C2742" fill-opacity="0.13"/>
+<rect x="1093.92" y="626.76" width="226.08" height="117.24" fill="#1C2742" fill-opacity="0.13"/>
 </g>
-<g fill="none" stroke="#000000">
-<rect x="252.40" y="64.00" width="841.52" height="34.00" stroke-width="3.5"/>
-<rect x="252.40" y="356.40" width="841.52" height="81.60" stroke-width="3.5"/>
-<rect x="252.40" y="98.00" width="153.00" height="258.40" stroke-width="3.5"/>
-<rect x="405.40" y="98.00" width="306.01" height="258.40" stroke-width="3.5"/>
-<rect x="711.41" y="98.00" width="61.20" height="258.40" stroke-width="3.5"/>
-<rect x="772.61" y="98.00" width="229.51" height="258.40" stroke-width="3.5"/>
-<rect x="1002.12" y="98.00" width="91.80" height="258.40" stroke-width="3.5"/>
-<rect x="252.40" y="438.00" width="537.14" height="272.00" stroke-width="3.5"/>
-<rect x="789.54" y="438.00" width="143.24" height="272.00" stroke-width="3.5"/>
-<rect x="932.78" y="438.00" width="107.43" height="272.00" stroke-width="3.5"/>
-<rect x="1040.21" y="438.00" width="53.71" height="272.00" stroke-width="3.5"/>
-<rect x="64.00" y="64.00" width="188.40" height="212.50" stroke-width="3.5"/>
-<rect x="64.00" y="276.50" width="188.40" height="212.50" stroke-width="3.5"/>
-<rect x="64.00" y="489.00" width="188.40" height="106.25" stroke-width="3.5"/>
-<rect x="64.00" y="595.25" width="188.40" height="63.75" stroke-width="3.5"/>
-<rect x="64.00" y="659.00" width="188.40" height="42.50" stroke-width="3.5"/>
-<rect x="64.00" y="701.50" width="188.40" height="42.50" stroke-width="3.5"/>
-<rect x="1093.92" y="64.00" width="226.08" height="468.97" stroke-width="3.5"/>
-<rect x="1093.92" y="532.97" width="226.08" height="93.79" stroke-width="3.5"/>
-<rect x="1093.92" y="626.76" width="226.08" height="117.24" stroke-width="3.5"/>
+<g fill="none">
+<rect x="252.40" y="64.00" width="841.52" height="34.00" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="252.40" y="356.40" width="841.52" height="81.60" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="252.40" y="98.00" width="153.00" height="258.40" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="405.40" y="98.00" width="306.01" height="258.40" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="711.41" y="98.00" width="61.20" height="258.40" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="772.61" y="98.00" width="229.51" height="258.40" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="1002.12" y="98.00" width="91.80" height="258.40" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="252.40" y="438.00" width="537.14" height="272.00" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="789.54" y="438.00" width="143.24" height="272.00" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="932.78" y="438.00" width="107.43" height="272.00" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="1040.21" y="438.00" width="53.71" height="272.00" stroke="#FBBF24" stroke-width="3.5"/>
+<rect x="64.00" y="64.00" width="188.40" height="212.50" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="64.00" y="276.50" width="188.40" height="212.50" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="64.00" y="489.00" width="188.40" height="106.25" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="64.00" y="595.25" width="188.40" height="63.75" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="64.00" y="659.00" width="188.40" height="42.50" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="64.00" y="701.50" width="188.40" height="42.50" stroke="#60A5FA" stroke-width="3.5"/>
+<rect x="1093.92" y="64.00" width="226.08" height="468.97" stroke="#5E7099" stroke-width="3.5"/>
+<rect x="1093.92" y="532.97" width="226.08" height="93.79" stroke="#5E7099" stroke-width="3.5"/>
+<rect x="1093.92" y="626.76" width="226.08" height="117.24" stroke="#5E7099" stroke-width="3.5"/>
 </g>
 <g stroke="#E8EEFB" fill="none" stroke-linecap="round">
 <line x1="405.40" y1="219.20" x2="405.40" y2="235.20" stroke="#0C1426" stroke-width="3.5"/>
@@ -338,33 +338,33 @@
 <path d="M 637.66 745.20 A 35.20 35.20 0 0 1 672.86 710.00" stroke-width="0.75"/>
 </g>
 <g>
-<rect x="723.65" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="723.65" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="742.01" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_in</text>
-<rect x="723.65" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="723.65" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="742.01" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_out</text>
-<rect x="784.09" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="784.09" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="829.99" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="898.84" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="898.84" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="944.74" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="784.09" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="784.09" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="829.99" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="898.84" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="898.84" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="944.74" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
-<rect x="1006.71" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="1006.71" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="1025.07" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="1052.61" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="1052.61" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="1070.97" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="1006.71" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="1006.71" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="1025.07" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="1052.61" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="1052.61" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="1070.97" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
-<rect x="279.26" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="279.26" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="386.69" y="462.48" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
-<rect x="547.83" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="547.83" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="655.26" y="462.48" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
-<rect x="279.26" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="279.26" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="386.69" y="685.52" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
-<rect x="547.83" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<rect x="547.83" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.13" stroke="#E8EEFB" stroke-width="3.5"/>
 <text x="655.26" y="685.52" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
 </g>
 <g clip-path="url(#clip_R_MEDIA_PREPARATION)">
@@ -574,19 +574,19 @@
 <rect x="1356.0" y="97" width="20" height="14" fill="url(#patA)" fill-opacity="1.00" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="108" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade A</text>
 <text x="1434.0" y="108" font-size="9" fill="#5E7099">Emerald-200 + diagonal Black (Sterile Barrier)</text>
-<rect x="1356.0" y="115" width="20" height="14" fill="#6EE7B7" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<rect x="1356.0" y="115" width="20" height="14" fill="#6EE7B7" fill-opacity="0.13" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="126" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade B</text>
 <text x="1434.0" y="126" font-size="9" fill="#5E7099">Emerald-300 (Barrier Surround)</text>
-<rect x="1356.0" y="133" width="20" height="14" fill="#FCD34D" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<rect x="1356.0" y="133" width="20" height="14" fill="#FCD34D" fill-opacity="0.13" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="144" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade C</text>
 <text x="1434.0" y="144" font-size="9" fill="#5E7099">Amber-300 (Main Process — default)</text>
-<rect x="1356.0" y="151" width="20" height="14" fill="#93C5FD" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<rect x="1356.0" y="151" width="20" height="14" fill="#93C5FD" fill-opacity="0.13" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="162" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade D</text>
 <text x="1434.0" y="162" font-size="9" fill="#5E7099">Blue-300 (Support / Closed Process)</text>
 <rect x="1356.0" y="169" width="20" height="14" fill="url(#patCNC)" fill-opacity="1.00" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="180" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade CNC</text>
 <text x="1434.0" y="180" font-size="9" fill="#5E7099">Stone-300 + dotted (Controlled Non-Classified)</text>
-<rect x="1356.0" y="187" width="20" height="14" fill="#1C2742" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<rect x="1356.0" y="187" width="20" height="14" fill="#1C2742" fill-opacity="0.13" stroke="#000000" stroke-width="1"/>
 <text x="1384.0" y="198" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade NC</text>
 <text x="1434.0" y="198" font-size="9" fill="#5E7099">Stone-200 (Non-Classified)</text>
 <text x="1356.0" y="224" font-size="10" font-weight="700" fill="#E8EEFB">FLOW</text>

@@ -323,14 +323,16 @@ def _emit_z4_room_fills(s: StringIO, ox: float, oy: float, layout: Layout) -> No
 
 
 def _emit_z5_room_borders(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    # 모노톤 — 모든 방 테두리 검정 (사용자 요청). Grade 식별은 fill 색으로 유지.
-    s.write('<g fill="none" stroke="#000000">\n')
+    # [2026-06-02] 방 테두리를 등급색으로 — 라이트에선 등급 컬러 외곽선,
+    # blueprint 후처리에선 네온으로 밝아짐 (레퍼런스: 내부 다크 + 외곽선 네온).
+    s.write('<g fill="none">\n')
     for pr in layout.rooms.values():
         x, y, w, h = _r(pr.rect, ox, oy)
+        border = T.GRADE[pr.room.clean_grade]["border"]
         weight = T.STROKE["inner_wall"]
         s.write(
             f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" '
-            f'stroke-width="{weight}"/>\n'
+            f'stroke="{border}" stroke-width="{weight}"/>\n'
         )
     s.write('</g>\n')
 
