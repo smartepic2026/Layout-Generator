@@ -1,0 +1,612 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1644" height="908" viewBox="0 0 1644 908" font-family="&quot;Inter&quot;,&quot;Pretendard&quot;,-apple-system,&quot;Helvetica Neue&quot;,sans-serif" fill="#E8EEFB">
+<defs>
+<pattern id="patA" patternUnits="userSpaceOnUse" width="6" height="6"><rect width="6" height="6" fill="#A7F3D0" fill-opacity="0.5"/><path d="M -1 7 l 8 -8 M -1 3 l 4 -4 M 3 7 l 4 -4" stroke="#000000" stroke-width="0.6"/></pattern>
+<pattern id="patCNC" patternUnits="userSpaceOnUse" width="6" height="6"><rect width="6" height="6" fill="#D6D3D1" fill-opacity="0.5"/><circle cx="3" cy="3" r="0.7" fill="#44403C"/></pattern>
+<marker id="arrow-personnel" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 3 L 10 5 L 0 7 z" fill="#4F46E5"/></marker>
+<marker id="arrow-material" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 3 L 10 5 L 0 7 z" fill="#0D9488"/></marker>
+<marker id="arrow-waste" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 3 L 10 5 L 0 7 z" fill="#E11D48"/></marker>
+<marker id="arrow-product" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 3 L 10 5 L 0 7 z" fill="#7C3AED"/></marker>
+</defs>
+<defs>
+<clipPath id="clip_R_RETURN_CORRIDOR"><rect x="252.40" y="64.00" width="841.52" height="34.00"/></clipPath>
+<clipPath id="clip_R_SUPPLY_CORRIDOR"><rect x="252.40" y="356.40" width="841.52" height="81.60"/></clipPath>
+<clipPath id="clip_R_MEDIA_PREPARATION"><rect x="252.40" y="98.00" width="153.00" height="258.40"/></clipPath>
+<clipPath id="clip_R_BUFFER_PREPARATION"><rect x="405.40" y="98.00" width="306.01" height="258.40"/></clipPath>
+<clipPath id="clip_R_INOCULATION"><rect x="711.41" y="98.00" width="61.20" height="258.40"/></clipPath>
+<clipPath id="clip_R_CELL_CULTURE"><rect x="772.61" y="98.00" width="229.51" height="258.40"/></clipPath>
+<clipPath id="clip_R_HARVEST"><rect x="1002.12" y="98.00" width="91.80" height="258.40"/></clipPath>
+<clipPath id="clip_R_PURIFICATION_1"><rect x="252.40" y="438.00" width="537.14" height="272.00"/></clipPath>
+<clipPath id="clip_R_PREPARATION"><rect x="789.54" y="438.00" width="143.24" height="272.00"/></clipPath>
+<clipPath id="clip_R_WASHING"><rect x="932.78" y="438.00" width="107.43" height="272.00"/></clipPath>
+<clipPath id="clip_R_GOWNING"><rect x="1040.21" y="438.00" width="53.71" height="272.00"/></clipPath>
+<clipPath id="clip_R_MATERIAL_STORAGE"><rect x="64.00" y="64.00" width="188.40" height="212.50"/></clipPath>
+<clipPath id="clip_R_EQUIPMENT_STORAGE"><rect x="64.00" y="276.50" width="188.40" height="212.50"/></clipPath>
+<clipPath id="clip_R_DS_STORAGE"><rect x="64.00" y="489.00" width="188.40" height="106.25"/></clipPath>
+<clipPath id="clip_R_IPC"><rect x="64.00" y="595.25" width="188.40" height="63.75"/></clipPath>
+<clipPath id="clip_R_CELL_BANK_STORAGE"><rect x="64.00" y="659.00" width="188.40" height="42.50"/></clipPath>
+<clipPath id="clip_R_CORRIDOR"><rect x="64.00" y="701.50" width="188.40" height="42.50"/></clipPath>
+<clipPath id="clip_R_OFFICE"><rect x="1093.92" y="64.00" width="226.08" height="468.97"/></clipPath>
+<clipPath id="clip_R_TOILET_FEMALE"><rect x="1093.92" y="532.97" width="226.08" height="93.79"/></clipPath>
+<clipPath id="clip_R_TOILET_MALE"><rect x="1093.92" y="626.76" width="226.08" height="117.24"/></clipPath>
+</defs>
+<rect x="0" y="0" width="1644.0" height="908.0" fill="#0A0F1E"/>
+<g stroke="#141E36" stroke-width="0.5">
+<line x1="64.00" y1="64" x2="64.00" y2="744.0"/><line x1="80.00" y1="64" x2="80.00" y2="744.0"/><line x1="96.00" y1="64" x2="96.00" y2="744.0"/><line x1="112.00" y1="64" x2="112.00" y2="744.0"/><line x1="128.00" y1="64" x2="128.00" y2="744.0"/><line x1="144.00" y1="64" x2="144.00" y2="744.0"/><line x1="160.00" y1="64" x2="160.00" y2="744.0"/><line x1="176.00" y1="64" x2="176.00" y2="744.0"/><line x1="192.00" y1="64" x2="192.00" y2="744.0"/><line x1="208.00" y1="64" x2="208.00" y2="744.0"/><line x1="224.00" y1="64" x2="224.00" y2="744.0"/><line x1="240.00" y1="64" x2="240.00" y2="744.0"/><line x1="256.00" y1="64" x2="256.00" y2="744.0"/><line x1="272.00" y1="64" x2="272.00" y2="744.0"/><line x1="288.00" y1="64" x2="288.00" y2="744.0"/><line x1="304.00" y1="64" x2="304.00" y2="744.0"/><line x1="320.00" y1="64" x2="320.00" y2="744.0"/><line x1="336.00" y1="64" x2="336.00" y2="744.0"/><line x1="352.00" y1="64" x2="352.00" y2="744.0"/><line x1="368.00" y1="64" x2="368.00" y2="744.0"/><line x1="384.00" y1="64" x2="384.00" y2="744.0"/><line x1="400.00" y1="64" x2="400.00" y2="744.0"/><line x1="416.00" y1="64" x2="416.00" y2="744.0"/><line x1="432.00" y1="64" x2="432.00" y2="744.0"/><line x1="448.00" y1="64" x2="448.00" y2="744.0"/><line x1="464.00" y1="64" x2="464.00" y2="744.0"/><line x1="480.00" y1="64" x2="480.00" y2="744.0"/><line x1="496.00" y1="64" x2="496.00" y2="744.0"/><line x1="512.00" y1="64" x2="512.00" y2="744.0"/><line x1="528.00" y1="64" x2="528.00" y2="744.0"/><line x1="544.00" y1="64" x2="544.00" y2="744.0"/><line x1="560.00" y1="64" x2="560.00" y2="744.0"/><line x1="576.00" y1="64" x2="576.00" y2="744.0"/><line x1="592.00" y1="64" x2="592.00" y2="744.0"/><line x1="608.00" y1="64" x2="608.00" y2="744.0"/><line x1="624.00" y1="64" x2="624.00" y2="744.0"/><line x1="640.00" y1="64" x2="640.00" y2="744.0"/><line x1="656.00" y1="64" x2="656.00" y2="744.0"/><line x1="672.00" y1="64" x2="672.00" y2="744.0"/><line x1="688.00" y1="64" x2="688.00" y2="744.0"/><line x1="704.00" y1="64" x2="704.00" y2="744.0"/><line x1="720.00" y1="64" x2="720.00" y2="744.0"/><line x1="736.00" y1="64" x2="736.00" y2="744.0"/><line x1="752.00" y1="64" x2="752.00" y2="744.0"/><line x1="768.00" y1="64" x2="768.00" y2="744.0"/><line x1="784.00" y1="64" x2="784.00" y2="744.0"/><line x1="800.00" y1="64" x2="800.00" y2="744.0"/><line x1="816.00" y1="64" x2="816.00" y2="744.0"/><line x1="832.00" y1="64" x2="832.00" y2="744.0"/><line x1="848.00" y1="64" x2="848.00" y2="744.0"/><line x1="864.00" y1="64" x2="864.00" y2="744.0"/><line x1="880.00" y1="64" x2="880.00" y2="744.0"/><line x1="896.00" y1="64" x2="896.00" y2="744.0"/><line x1="912.00" y1="64" x2="912.00" y2="744.0"/><line x1="928.00" y1="64" x2="928.00" y2="744.0"/><line x1="944.00" y1="64" x2="944.00" y2="744.0"/><line x1="960.00" y1="64" x2="960.00" y2="744.0"/><line x1="976.00" y1="64" x2="976.00" y2="744.0"/><line x1="992.00" y1="64" x2="992.00" y2="744.0"/><line x1="1008.00" y1="64" x2="1008.00" y2="744.0"/><line x1="1024.00" y1="64" x2="1024.00" y2="744.0"/><line x1="1040.00" y1="64" x2="1040.00" y2="744.0"/><line x1="1056.00" y1="64" x2="1056.00" y2="744.0"/><line x1="1072.00" y1="64" x2="1072.00" y2="744.0"/><line x1="1088.00" y1="64" x2="1088.00" y2="744.0"/><line x1="1104.00" y1="64" x2="1104.00" y2="744.0"/><line x1="1120.00" y1="64" x2="1120.00" y2="744.0"/><line x1="1136.00" y1="64" x2="1136.00" y2="744.0"/><line x1="1152.00" y1="64" x2="1152.00" y2="744.0"/><line x1="1168.00" y1="64" x2="1168.00" y2="744.0"/><line x1="1184.00" y1="64" x2="1184.00" y2="744.0"/><line x1="1200.00" y1="64" x2="1200.00" y2="744.0"/><line x1="1216.00" y1="64" x2="1216.00" y2="744.0"/><line x1="1232.00" y1="64" x2="1232.00" y2="744.0"/><line x1="1248.00" y1="64" x2="1248.00" y2="744.0"/><line x1="1264.00" y1="64" x2="1264.00" y2="744.0"/><line x1="1280.00" y1="64" x2="1280.00" y2="744.0"/><line x1="1296.00" y1="64" x2="1296.00" y2="744.0"/><line x1="1312.00" y1="64" x2="1312.00" y2="744.0"/><line x1="64" y1="64.00" x2="1320.0" y2="64.00"/><line x1="64" y1="80.00" x2="1320.0" y2="80.00"/><line x1="64" y1="96.00" x2="1320.0" y2="96.00"/><line x1="64" y1="112.00" x2="1320.0" y2="112.00"/><line x1="64" y1="128.00" x2="1320.0" y2="128.00"/><line x1="64" y1="144.00" x2="1320.0" y2="144.00"/><line x1="64" y1="160.00" x2="1320.0" y2="160.00"/><line x1="64" y1="176.00" x2="1320.0" y2="176.00"/><line x1="64" y1="192.00" x2="1320.0" y2="192.00"/><line x1="64" y1="208.00" x2="1320.0" y2="208.00"/><line x1="64" y1="224.00" x2="1320.0" y2="224.00"/><line x1="64" y1="240.00" x2="1320.0" y2="240.00"/><line x1="64" y1="256.00" x2="1320.0" y2="256.00"/><line x1="64" y1="272.00" x2="1320.0" y2="272.00"/><line x1="64" y1="288.00" x2="1320.0" y2="288.00"/><line x1="64" y1="304.00" x2="1320.0" y2="304.00"/><line x1="64" y1="320.00" x2="1320.0" y2="320.00"/><line x1="64" y1="336.00" x2="1320.0" y2="336.00"/><line x1="64" y1="352.00" x2="1320.0" y2="352.00"/><line x1="64" y1="368.00" x2="1320.0" y2="368.00"/><line x1="64" y1="384.00" x2="1320.0" y2="384.00"/><line x1="64" y1="400.00" x2="1320.0" y2="400.00"/><line x1="64" y1="416.00" x2="1320.0" y2="416.00"/><line x1="64" y1="432.00" x2="1320.0" y2="432.00"/><line x1="64" y1="448.00" x2="1320.0" y2="448.00"/><line x1="64" y1="464.00" x2="1320.0" y2="464.00"/><line x1="64" y1="480.00" x2="1320.0" y2="480.00"/><line x1="64" y1="496.00" x2="1320.0" y2="496.00"/><line x1="64" y1="512.00" x2="1320.0" y2="512.00"/><line x1="64" y1="528.00" x2="1320.0" y2="528.00"/><line x1="64" y1="544.00" x2="1320.0" y2="544.00"/><line x1="64" y1="560.00" x2="1320.0" y2="560.00"/><line x1="64" y1="576.00" x2="1320.0" y2="576.00"/><line x1="64" y1="592.00" x2="1320.0" y2="592.00"/><line x1="64" y1="608.00" x2="1320.0" y2="608.00"/><line x1="64" y1="624.00" x2="1320.0" y2="624.00"/><line x1="64" y1="640.00" x2="1320.0" y2="640.00"/><line x1="64" y1="656.00" x2="1320.0" y2="656.00"/><line x1="64" y1="672.00" x2="1320.0" y2="672.00"/><line x1="64" y1="688.00" x2="1320.0" y2="688.00"/><line x1="64" y1="704.00" x2="1320.0" y2="704.00"/><line x1="64" y1="720.00" x2="1320.0" y2="720.00"/><line x1="64" y1="736.00" x2="1320.0" y2="736.00"/>
+</g>
+<g stroke="#1C2742" stroke-width="1.0">
+<line x1="64.00" y1="64" x2="64.00" y2="744.0"/><line x1="144.00" y1="64" x2="144.00" y2="744.0"/><line x1="224.00" y1="64" x2="224.00" y2="744.0"/><line x1="304.00" y1="64" x2="304.00" y2="744.0"/><line x1="384.00" y1="64" x2="384.00" y2="744.0"/><line x1="464.00" y1="64" x2="464.00" y2="744.0"/><line x1="544.00" y1="64" x2="544.00" y2="744.0"/><line x1="624.00" y1="64" x2="624.00" y2="744.0"/><line x1="704.00" y1="64" x2="704.00" y2="744.0"/><line x1="784.00" y1="64" x2="784.00" y2="744.0"/><line x1="864.00" y1="64" x2="864.00" y2="744.0"/><line x1="944.00" y1="64" x2="944.00" y2="744.0"/><line x1="1024.00" y1="64" x2="1024.00" y2="744.0"/><line x1="1104.00" y1="64" x2="1104.00" y2="744.0"/><line x1="1184.00" y1="64" x2="1184.00" y2="744.0"/><line x1="1264.00" y1="64" x2="1264.00" y2="744.0"/><line x1="64" y1="64.00" x2="1320.0" y2="64.00"/><line x1="64" y1="144.00" x2="1320.0" y2="144.00"/><line x1="64" y1="224.00" x2="1320.0" y2="224.00"/><line x1="64" y1="304.00" x2="1320.0" y2="304.00"/><line x1="64" y1="384.00" x2="1320.0" y2="384.00"/><line x1="64" y1="464.00" x2="1320.0" y2="464.00"/><line x1="64" y1="544.00" x2="1320.0" y2="544.00"/><line x1="64" y1="624.00" x2="1320.0" y2="624.00"/><line x1="64" y1="704.00" x2="1320.0" y2="704.00"/>
+</g>
+<g>
+<line x1="64.00" y1="37" x2="64.00" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="64.00" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="64.00" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X1</text>
+<line x1="252.40" y1="37" x2="252.40" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="252.40" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="252.40" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X2</text>
+<line x1="405.40" y1="37" x2="405.40" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="405.40" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="405.40" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X3</text>
+<line x1="711.41" y1="37" x2="711.41" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="711.41" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="711.41" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X4</text>
+<line x1="772.61" y1="37" x2="772.61" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="772.61" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="772.61" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X5</text>
+<line x1="789.54" y1="37" x2="789.54" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="789.54" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="789.54" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X6</text>
+<line x1="932.78" y1="37" x2="932.78" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="932.78" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="932.78" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X7</text>
+<line x1="1002.12" y1="37" x2="1002.12" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="1002.12" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="1002.12" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X8</text>
+<line x1="1040.21" y1="37" x2="1040.21" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="1040.21" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="1040.21" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X9</text>
+<line x1="1093.92" y1="37" x2="1093.92" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="1093.92" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="1093.92" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X10</text>
+<line x1="1320.00" y1="37" x2="1320.00" y2="64" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="1320.00" cy="28" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="1320.00" y="31.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">X11</text>
+<line x1="66.00" y1="50" x2="250.40" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 64.00 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 252.40 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="158.20" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">11.78m</text>
+<line x1="254.40" y1="50" x2="403.40" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 252.40 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 405.40 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="328.90" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">9.56m</text>
+<line x1="407.40" y1="50" x2="709.41" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 405.40 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 711.41 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="558.41" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">19.13m</text>
+<line x1="713.41" y1="50" x2="770.61" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 711.41 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 772.61 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="742.01" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">3.83m</text>
+<line x1="774.61" y1="50" x2="787.54" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 772.61 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 789.54 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="781.08" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">1.06m</text>
+<line x1="791.54" y1="50" x2="930.78" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 789.54 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 932.78 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="861.16" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">8.95m</text>
+<line x1="934.78" y1="50" x2="1000.12" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 932.78 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 1002.12 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="967.45" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">4.33m</text>
+<line x1="1004.12" y1="50" x2="1038.21" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 1002.12 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 1040.21 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="1021.16" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">2.38m</text>
+<line x1="1042.21" y1="50" x2="1091.92" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 1040.21 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 1093.92 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="1067.06" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">3.36m</text>
+<line x1="1095.92" y1="50" x2="1318.00" y2="50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 1093.92 50 l 4 -2 l 0 4 z" fill="#5E7099"/>
+<path d="M 1320.00 50 l -4 -2 l 0 4 z" fill="#5E7099"/>
+<text x="1206.96" y="47.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">14.13m</text>
+<line x1="37" y1="64.00" x2="64" y2="64.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="64.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="67.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y1</text>
+<line x1="37" y1="98.00" x2="64" y2="98.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="98.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="101.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y2</text>
+<line x1="37" y1="276.50" x2="64" y2="276.50" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="276.50" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="280.00" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y3</text>
+<line x1="37" y1="356.40" x2="64" y2="356.40" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="356.40" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="359.90" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y4</text>
+<line x1="37" y1="438.00" x2="64" y2="438.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="438.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="441.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y5</text>
+<line x1="37" y1="489.00" x2="64" y2="489.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="489.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="492.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y6</text>
+<line x1="37" y1="532.97" x2="64" y2="532.97" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="532.97" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="536.47" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y7</text>
+<line x1="37" y1="595.25" x2="64" y2="595.25" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="595.25" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="598.75" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y8</text>
+<line x1="37" y1="626.76" x2="64" y2="626.76" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="626.76" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="630.26" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y9</text>
+<line x1="37" y1="659.00" x2="64" y2="659.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="659.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="662.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y10</text>
+<line x1="37" y1="701.50" x2="64" y2="701.50" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="701.50" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="705.00" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y11</text>
+<line x1="37" y1="710.00" x2="64" y2="710.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="710.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="713.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y12</text>
+<line x1="37" y1="744.00" x2="64" y2="744.00" stroke="#5E7099" stroke-width="0.5" stroke-dasharray="2 2"/>
+<circle cx="28" cy="744.00" r="9" fill="#0C1426" stroke="#9DB2D8" stroke-width="0.8"/>
+<text x="28" y="747.50" text-anchor="middle" font-size="9" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0">Y13</text>
+<line x1="50" y1="66.00" x2="50" y2="96.00" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 64.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 98.00 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="81.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 81.00)">2.12m</text>
+<line x1="50" y1="100.00" x2="50" y2="274.50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 98.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 276.50 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="187.25" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 187.25)">11.16m</text>
+<line x1="50" y1="278.50" x2="50" y2="354.40" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 276.50 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 356.40 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="316.45" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 316.45)">4.99m</text>
+<line x1="50" y1="358.40" x2="50" y2="436.00" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 356.40 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 438.00 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="397.20" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 397.20)">5.10m</text>
+<line x1="50" y1="440.00" x2="50" y2="487.00" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 438.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 489.00 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="463.50" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 463.50)">3.19m</text>
+<line x1="50" y1="491.00" x2="50" y2="530.97" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 489.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 532.97 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="510.98" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 510.98)">2.75m</text>
+<line x1="50" y1="534.97" x2="50" y2="593.25" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 532.97 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 595.25 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="564.11" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 564.11)">3.89m</text>
+<line x1="50" y1="597.25" x2="50" y2="624.76" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 595.25 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 626.76 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="611.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 611.00)">1.97m</text>
+<line x1="50" y1="628.76" x2="50" y2="657.00" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 626.76 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 659.00 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="642.88" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 642.88)">2.02m</text>
+<line x1="50" y1="661.00" x2="50" y2="699.50" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 659.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 701.50 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="680.25" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 680.25)">2.66m</text>
+<line x1="50" y1="712.00" x2="50" y2="742.00" stroke="#5E7099" stroke-width="0.5"/>
+<path d="M 50 710.00 l -2 4 l 4 0 z" fill="#5E7099"/>
+<path d="M 50 744.00 l -2 -4 l 4 0 z" fill="#5E7099"/>
+<text x="47.00" y="727.00" text-anchor="middle" font-size="8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" fill="#C7D6F0" transform="rotate(-90 47.00 727.00)">2.12m</text>
+</g>
+<rect x="64" y="64" width="1256.0" height="680.0" fill="none" stroke="#E8EEFB" stroke-width="5.0"/>
+<g>
+<rect x="252.40" y="64.00" width="841.52" height="34.00" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="252.40" y="356.40" width="841.52" height="81.60" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="252.40" y="98.00" width="153.00" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="405.40" y="98.00" width="306.01" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="711.41" y="98.00" width="61.20" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="772.61" y="98.00" width="229.51" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="1002.12" y="98.00" width="91.80" height="258.40" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="252.40" y="438.00" width="537.14" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="789.54" y="438.00" width="143.24" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="932.78" y="438.00" width="107.43" height="272.00" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="1040.21" y="438.00" width="53.71" height="272.00" fill="#FCD34D" fill-opacity="0.50"/>
+<rect x="64.00" y="64.00" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="64.00" y="276.50" width="188.40" height="212.50" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="64.00" y="489.00" width="188.40" height="106.25" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="64.00" y="595.25" width="188.40" height="63.75" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="64.00" y="659.00" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="64.00" y="701.50" width="188.40" height="42.50" fill="#93C5FD" fill-opacity="0.50"/>
+<rect x="1093.92" y="64.00" width="226.08" height="468.97" fill="#1C2742" fill-opacity="0.50"/>
+<rect x="1093.92" y="532.97" width="226.08" height="93.79" fill="#1C2742" fill-opacity="0.50"/>
+<rect x="1093.92" y="626.76" width="226.08" height="117.24" fill="#1C2742" fill-opacity="0.50"/>
+</g>
+<g fill="none" stroke="#000000">
+<rect x="252.40" y="64.00" width="841.52" height="34.00" stroke-width="3.5"/>
+<rect x="252.40" y="356.40" width="841.52" height="81.60" stroke-width="3.5"/>
+<rect x="252.40" y="98.00" width="153.00" height="258.40" stroke-width="3.5"/>
+<rect x="405.40" y="98.00" width="306.01" height="258.40" stroke-width="3.5"/>
+<rect x="711.41" y="98.00" width="61.20" height="258.40" stroke-width="3.5"/>
+<rect x="772.61" y="98.00" width="229.51" height="258.40" stroke-width="3.5"/>
+<rect x="1002.12" y="98.00" width="91.80" height="258.40" stroke-width="3.5"/>
+<rect x="252.40" y="438.00" width="537.14" height="272.00" stroke-width="3.5"/>
+<rect x="789.54" y="438.00" width="143.24" height="272.00" stroke-width="3.5"/>
+<rect x="932.78" y="438.00" width="107.43" height="272.00" stroke-width="3.5"/>
+<rect x="1040.21" y="438.00" width="53.71" height="272.00" stroke-width="3.5"/>
+<rect x="64.00" y="64.00" width="188.40" height="212.50" stroke-width="3.5"/>
+<rect x="64.00" y="276.50" width="188.40" height="212.50" stroke-width="3.5"/>
+<rect x="64.00" y="489.00" width="188.40" height="106.25" stroke-width="3.5"/>
+<rect x="64.00" y="595.25" width="188.40" height="63.75" stroke-width="3.5"/>
+<rect x="64.00" y="659.00" width="188.40" height="42.50" stroke-width="3.5"/>
+<rect x="64.00" y="701.50" width="188.40" height="42.50" stroke-width="3.5"/>
+<rect x="1093.92" y="64.00" width="226.08" height="468.97" stroke-width="3.5"/>
+<rect x="1093.92" y="532.97" width="226.08" height="93.79" stroke-width="3.5"/>
+<rect x="1093.92" y="626.76" width="226.08" height="117.24" stroke-width="3.5"/>
+</g>
+<g stroke="#E8EEFB" fill="none" stroke-linecap="round">
+<line x1="405.40" y1="219.20" x2="405.40" y2="235.20" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="405.40" y1="219.20" x2="389.40" y2="219.20" stroke-width="1.5"/>
+<path d="M 389.40 219.20 A 16.00 16.00 0 0 1 405.40 235.20" stroke-width="0.75"/>
+<line x1="711.41" y1="219.20" x2="711.41" y2="235.20" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="711.41" y1="219.20" x2="695.41" y2="219.20" stroke-width="1.5"/>
+<path d="M 695.41 219.20 A 16.00 16.00 0 0 1 711.41 235.20" stroke-width="0.75"/>
+<line x1="772.61" y1="219.20" x2="772.61" y2="235.20" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="772.61" y1="219.20" x2="756.61" y2="219.20" stroke-width="1.5"/>
+<path d="M 756.61 219.20 A 16.00 16.00 0 0 1 772.61 235.20" stroke-width="0.75"/>
+<line x1="1002.12" y1="219.20" x2="1002.12" y2="235.20" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1002.12" y1="219.20" x2="986.12" y2="219.20" stroke-width="1.5"/>
+<path d="M 986.12 219.20 A 16.00 16.00 0 0 1 1002.12 235.20" stroke-width="0.75"/>
+<line x1="730.08" y1="309.89" x2="753.95" y2="309.89" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="730.08" y1="309.89" x2="730.08" y2="286.02" stroke-width="1.5"/>
+<path d="M 730.08 286.02 A 23.87 23.87 0 0 0 753.95 309.89" stroke-width="0.75"/>
+<line x1="730.08" y1="356.40" x2="753.95" y2="356.40" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="730.08" y1="356.40" x2="730.08" y2="380.27" stroke-width="1.5"/>
+<path d="M 730.08 380.27 A 23.87 23.87 0 0 1 753.95 356.40" stroke-width="0.75"/>
+<line x1="730.08" y1="98.00" x2="753.95" y2="98.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="730.08" y1="98.00" x2="730.08" y2="74.13" stroke-width="1.5"/>
+<path d="M 730.08 74.13 A 23.87 23.87 0 0 0 753.95 98.00" stroke-width="0.75"/>
+<line x1="730.08" y1="144.51" x2="753.95" y2="144.51" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="730.08" y1="144.51" x2="730.08" y2="168.38" stroke-width="1.5"/>
+<path d="M 730.08 168.38 A 23.87 23.87 0 0 1 753.95 144.51" stroke-width="0.75"/>
+<line x1="812.39" y1="309.89" x2="847.59" y2="309.89" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="812.39" y1="309.89" x2="812.39" y2="274.69" stroke-width="1.5"/>
+<path d="M 812.39 274.69 A 35.20 35.20 0 0 0 847.59 309.89" stroke-width="0.75"/>
+<line x1="812.39" y1="356.40" x2="847.59" y2="356.40" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="812.39" y1="356.40" x2="812.39" y2="391.60" stroke-width="1.5"/>
+<path d="M 812.39 391.60 A 35.20 35.20 0 0 1 847.59 356.40" stroke-width="0.75"/>
+<line x1="927.14" y1="309.89" x2="962.34" y2="309.89" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="927.14" y1="309.89" x2="927.14" y2="274.69" stroke-width="1.5"/>
+<path d="M 927.14 274.69 A 35.20 35.20 0 0 0 962.34 309.89" stroke-width="0.75"/>
+<line x1="927.14" y1="356.40" x2="962.34" y2="356.40" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="927.14" y1="356.40" x2="927.14" y2="391.60" stroke-width="1.5"/>
+<path d="M 927.14 391.60 A 35.20 35.20 0 0 1 962.34 356.40" stroke-width="0.75"/>
+<line x1="812.39" y1="98.00" x2="847.59" y2="98.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="812.39" y1="98.00" x2="812.39" y2="62.80" stroke-width="1.5"/>
+<path d="M 812.39 62.80 A 35.20 35.20 0 0 0 847.59 98.00" stroke-width="0.75"/>
+<line x1="812.39" y1="144.51" x2="847.59" y2="144.51" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="812.39" y1="144.51" x2="812.39" y2="179.71" stroke-width="1.5"/>
+<path d="M 812.39 179.71 A 35.20 35.20 0 0 1 847.59 144.51" stroke-width="0.75"/>
+<line x1="927.14" y1="98.00" x2="962.34" y2="98.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="927.14" y1="98.00" x2="927.14" y2="62.80" stroke-width="1.5"/>
+<path d="M 927.14 62.80 A 35.20 35.20 0 0 0 962.34 98.00" stroke-width="0.75"/>
+<line x1="927.14" y1="144.51" x2="962.34" y2="144.51" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="927.14" y1="144.51" x2="927.14" y2="179.71" stroke-width="1.5"/>
+<path d="M 927.14 179.71 A 35.20 35.20 0 0 1 962.34 144.51" stroke-width="0.75"/>
+<line x1="1013.13" y1="309.89" x2="1037.00" y2="309.89" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1013.13" y1="309.89" x2="1013.13" y2="286.02" stroke-width="1.5"/>
+<path d="M 1013.13 286.02 A 23.87 23.87 0 0 0 1037.00 309.89" stroke-width="0.75"/>
+<line x1="1013.13" y1="356.40" x2="1037.00" y2="356.40" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1013.13" y1="356.40" x2="1013.13" y2="380.27" stroke-width="1.5"/>
+<path d="M 1013.13 380.27 A 23.87 23.87 0 0 1 1037.00 356.40" stroke-width="0.75"/>
+<line x1="1059.04" y1="309.89" x2="1082.90" y2="309.89" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1059.04" y1="309.89" x2="1059.04" y2="286.02" stroke-width="1.5"/>
+<path d="M 1059.04 286.02 A 23.87 23.87 0 0 0 1082.90 309.89" stroke-width="0.75"/>
+<line x1="1059.04" y1="356.40" x2="1082.90" y2="356.40" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1059.04" y1="356.40" x2="1059.04" y2="380.27" stroke-width="1.5"/>
+<path d="M 1059.04 380.27 A 23.87 23.87 0 0 1 1082.90 356.40" stroke-width="0.75"/>
+<line x1="1013.13" y1="98.00" x2="1037.00" y2="98.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1013.13" y1="98.00" x2="1013.13" y2="74.13" stroke-width="1.5"/>
+<path d="M 1013.13 74.13 A 23.87 23.87 0 0 0 1037.00 98.00" stroke-width="0.75"/>
+<line x1="1013.13" y1="144.51" x2="1037.00" y2="144.51" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1013.13" y1="144.51" x2="1013.13" y2="168.38" stroke-width="1.5"/>
+<path d="M 1013.13 168.38 A 23.87 23.87 0 0 1 1037.00 144.51" stroke-width="0.75"/>
+<line x1="1059.04" y1="98.00" x2="1082.90" y2="98.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1059.04" y1="98.00" x2="1059.04" y2="74.13" stroke-width="1.5"/>
+<path d="M 1059.04 74.13 A 23.87 23.87 0 0 0 1082.90 98.00" stroke-width="0.75"/>
+<line x1="1059.04" y1="144.51" x2="1082.90" y2="144.51" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="1059.04" y1="144.51" x2="1059.04" y2="168.38" stroke-width="1.5"/>
+<path d="M 1059.04 168.38 A 23.87 23.87 0 0 1 1082.90 144.51" stroke-width="0.75"/>
+<line x1="369.09" y1="438.00" x2="404.29" y2="438.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="369.09" y1="438.00" x2="369.09" y2="402.80" stroke-width="1.5"/>
+<path d="M 369.09 402.80 A 35.20 35.20 0 0 0 404.29 438.00" stroke-width="0.75"/>
+<line x1="369.09" y1="486.96" x2="404.29" y2="486.96" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="369.09" y1="486.96" x2="369.09" y2="522.16" stroke-width="1.5"/>
+<path d="M 369.09 522.16 A 35.20 35.20 0 0 1 404.29 486.96" stroke-width="0.75"/>
+<line x1="637.66" y1="438.00" x2="672.86" y2="438.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="637.66" y1="438.00" x2="637.66" y2="402.80" stroke-width="1.5"/>
+<path d="M 637.66 402.80 A 35.20 35.20 0 0 0 672.86 438.00" stroke-width="0.75"/>
+<line x1="637.66" y1="486.96" x2="672.86" y2="486.96" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="637.66" y1="486.96" x2="637.66" y2="522.16" stroke-width="1.5"/>
+<path d="M 637.66 522.16 A 35.20 35.20 0 0 1 672.86 486.96" stroke-width="0.75"/>
+<line x1="369.09" y1="661.04" x2="404.29" y2="661.04" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="369.09" y1="661.04" x2="369.09" y2="625.84" stroke-width="1.5"/>
+<path d="M 369.09 625.84 A 35.20 35.20 0 0 0 404.29 661.04" stroke-width="0.75"/>
+<line x1="369.09" y1="710.00" x2="404.29" y2="710.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="369.09" y1="710.00" x2="369.09" y2="745.20" stroke-width="1.5"/>
+<path d="M 369.09 745.20 A 35.20 35.20 0 0 1 404.29 710.00" stroke-width="0.75"/>
+<line x1="637.66" y1="661.04" x2="672.86" y2="661.04" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="637.66" y1="661.04" x2="637.66" y2="625.84" stroke-width="1.5"/>
+<path d="M 637.66 625.84 A 35.20 35.20 0 0 0 672.86 661.04" stroke-width="0.75"/>
+<line x1="637.66" y1="710.00" x2="672.86" y2="710.00" stroke="#0C1426" stroke-width="3.5"/>
+<line x1="637.66" y1="710.00" x2="637.66" y2="745.20" stroke-width="1.5"/>
+<path d="M 637.66 745.20 A 35.20 35.20 0 0 1 672.86 710.00" stroke-width="0.75"/>
+</g>
+<g>
+<rect x="723.65" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="742.01" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_in</text>
+<rect x="723.65" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="742.01" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">CAL_out</text>
+<rect x="784.09" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="829.99" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
+<rect x="898.84" y="309.89" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="944.74" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
+<rect x="784.09" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="829.99" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
+<rect x="898.84" y="98.00" width="91.80" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="944.74" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
+<rect x="1006.71" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="1025.07" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
+<rect x="1052.61" y="309.89" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="1070.97" y="333.14" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
+<rect x="1006.71" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="1025.07" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
+<rect x="1052.61" y="98.00" width="36.72" height="46.51" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="1070.97" y="121.26" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
+<rect x="279.26" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="386.69" y="462.48" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_in</text>
+<rect x="547.83" y="438.00" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="655.26" y="462.48" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_in</text>
+<rect x="279.26" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="386.69" y="685.52" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">PAL_out</text>
+<rect x="547.83" y="661.04" width="214.86" height="48.96" fill="#FCD34D" fill-opacity="0.50" stroke="#E8EEFB" stroke-width="3.5"/>
+<text x="655.26" y="685.52" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#E8EEFB" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">MAL_out</text>
+</g>
+<g clip-path="url(#clip_R_MEDIA_PREPARATION)">
+<rect x="287.60" y="194.00" width="36.29" height="31.10" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="305.74" y="209.55" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Weigh .</text>
+<rect x="336.69" y="194.00" width="20.74" height="20.74" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="347.06" y="204.37" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mi.</text>
+<rect x="287.60" y="237.90" width="25.92" height="20.74" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="300.56" y="248.27" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixi.</text>
+<rect x="326.32" y="237.90" width="31.10" height="25.92" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="341.87" y="250.86" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixin.</text>
+<rect x="287.60" y="276.62" width="41.47" height="31.10" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="308.34" y="292.18" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixing .</text>
+</g>
+<g clip-path="url(#clip_R_BUFFER_PREPARATION)">
+<rect x="440.60" y="194.00" width="44.80" height="38.40" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="463.00" y="213.20" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Weigh bo.</text>
+<rect x="498.20" y="194.00" width="32.00" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="514.20" y="206.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixin.</text>
+<rect x="543.00" y="194.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="562.20" y="210.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixing .</text>
+<rect x="594.20" y="194.00" width="44.80" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="616.60" y="210.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixing T.</text>
+<rect x="440.60" y="245.20" width="51.20" height="38.40" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="466.20" y="264.40" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Mixing Tan.</text>
+</g>
+<g clip-path="url(#clip_R_INOCULATION)">
+<rect x="746.61" y="194.00" width="4.00" height="2.40" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="746.61" y="209.20" width="16.00" height="8.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="746.61" y="230.00" width="8.00" height="3.20" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="746.61" y="246.00" width="4.80" height="3.20" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+</g>
+<g clip-path="url(#clip_R_CELL_CULTURE)">
+<rect x="807.81" y="194.00" width="15.36" height="7.68" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="835.97" y="194.00" width="25.60" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="848.77" y="206.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">BioR.</text>
+<rect x="874.37" y="194.00" width="32.00" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="890.37" y="206.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">BioRe.</text>
+<rect x="919.17" y="194.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="938.37" y="210.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">BioReac.</text>
+<rect x="807.81" y="238.80" width="51.20" height="38.40" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="833.41" y="258.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">BioReactor.</text>
+<rect x="871.81" y="238.80" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="891.01" y="254.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage.</text>
+</g>
+<g clip-path="url(#clip_R_HARVEST)">
+<rect x="1037.32" y="194.00" width="20.41" height="20.41" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="1047.52" y="204.20" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Co.</text>
+<rect x="1037.32" y="227.21" width="13.60" height="4.08" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="1037.32" y="244.09" width="20.41" height="20.41" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="1047.52" y="254.29" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">St.</text>
+</g>
+<g clip-path="url(#clip_R_PURIFICATION_1)">
+<rect x="287.60" y="534.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="306.80" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer .</text>
+<rect x="338.80" y="534.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="358.00" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer .</text>
+<rect x="390.00" y="534.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="409.20" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer .</text>
+<rect x="441.20" y="534.00" width="44.80" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="463.60" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer t.</text>
+<rect x="498.80" y="534.00" width="44.80" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="521.20" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer t.</text>
+<rect x="556.40" y="534.00" width="44.80" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="578.80" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Buffer t.</text>
+<rect x="614.00" y="534.00" width="25.60" height="15.36" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="626.80" y="541.68" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Chro.</text>
+<rect x="652.40" y="534.00" width="32.00" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="668.40" y="546.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Colum.</text>
+<rect x="697.20" y="534.00" width="44.80" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="719.60" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage .</text>
+<rect x="287.60" y="578.80" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="306.80" y="594.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage.</text>
+<rect x="338.80" y="578.80" width="25.60" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="351.60" y="591.60" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Acid.</text>
+<rect x="377.20" y="578.80" width="25.60" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="390.00" y="591.60" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Base.</text>
+<rect x="415.60" y="578.80" width="25.60" height="7.68" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="454.00" y="578.80" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="473.20" y="594.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Reactor.</text>
+<rect x="505.20" y="578.80" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="524.40" y="594.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage.</text>
+<rect x="556.40" y="578.80" width="25.60" height="15.36" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="569.20" y="586.48" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Chro.</text>
+<rect x="594.80" y="578.80" width="25.60" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="607.60" y="591.60" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Colu.</text>
+<rect x="633.20" y="578.80" width="44.80" height="38.40" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="655.60" y="598.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage .</text>
+<rect x="690.80" y="578.80" width="25.60" height="15.36" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="703.60" y="586.48" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Chro.</text>
+<rect x="287.60" y="630.00" width="25.60" height="25.60" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="300.40" y="642.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Colu.</text>
+<rect x="326.00" y="630.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="345.20" y="646.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Storage.</text>
+<rect x="377.20" y="630.00" width="25.60" height="10.24" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+</g>
+<g clip-path="url(#clip_R_PREPARATION)">
+<rect x="824.74" y="534.00" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="843.94" y="550.00" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Autocla.</text>
+<rect x="824.74" y="578.80" width="38.40" height="32.00" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="843.94" y="594.80" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">Cleanbo.</text>
+</g>
+<g clip-path="url(#clip_R_WASHING)">
+<rect x="967.98" y="534.00" width="34.56" height="28.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<text x="985.26" y="548.40" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#DC2626" stroke="none" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" font-weight="700">COP sy.</text>
+</g>
+<g clip-path="url(#clip_R_DS_STORAGE)">
+<rect x="99.20" y="585.00" width="15.36" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="127.36" y="585.00" width="15.36" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="155.52" y="585.00" width="15.36" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="183.68" y="585.00" width="15.36" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+</g>
+<g clip-path="url(#clip_R_IPC)">
+<rect x="99.20" y="691.25" width="11.52" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="123.52" y="691.25" width="11.52" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="147.84" y="691.25" width="11.52" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+</g>
+<g clip-path="url(#clip_R_CELL_BANK_STORAGE)">
+<rect x="99.20" y="755.00" width="12.80" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+<rect x="124.80" y="755.00" width="12.80" height="12.80" fill="#0C1426" stroke="#DC2626" stroke-width="0.65"/>
+</g>
+<g>
+<line x1="272.40" y1="397.20" x2="1073.92" y2="397.20" stroke="#4F46E5" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1073.92" y1="81.00" x2="272.40" y2="81.00" stroke="#E11D48" stroke-width="2.2" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-waste)"/>
+<line x1="742.01" y1="372.40" x2="742.01" y2="293.89" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-product)"/>
+<line x1="742.01" y1="82.00" x2="742.01" y2="160.51" stroke="#7C3AED" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-product)"/>
+<line x1="829.99" y1="372.40" x2="829.99" y2="293.89" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="944.74" y1="372.40" x2="944.74" y2="293.89" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="829.99" y1="82.00" x2="829.99" y2="160.51" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="944.74" y1="82.00" x2="944.74" y2="160.51" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="1025.07" y1="372.40" x2="1025.07" y2="293.89" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1070.97" y1="372.40" x2="1070.97" y2="293.89" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="1025.07" y1="82.00" x2="1025.07" y2="160.51" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="1070.97" y1="82.00" x2="1070.97" y2="160.51" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="386.69" y1="422.00" x2="386.69" y2="502.96" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="655.26" y1="422.00" x2="655.26" y2="502.96" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+<line x1="386.69" y1="726.00" x2="386.69" y2="645.04" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-personnel)"/>
+<line x1="655.26" y1="726.00" x2="655.26" y2="645.04" stroke="#0D9488" stroke-width="2.5" fill="none" stroke-dasharray="7 4" marker-end="url(#arrow-material)"/>
+</g>
+<g>
+<text x="673.16" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Return corridor</text>
+<text x="673.16" y="372.40" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Supply corridor</text>
+<text x="673.16" y="385.40" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">공급복도</text>
+<text x="673.16" y="398.40" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 82m²</text>
+<text x="328.90" y="114.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Media preparation</text>
+<text x="328.90" y="127.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">배지조제실</text>
+<text x="328.90" y="140.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 55m²</text>
+<text x="558.41" y="114.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Buffer preparation</text>
+<text x="558.41" y="127.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">버퍼조제실</text>
+<text x="558.41" y="140.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 110m²</text>
+<text x="742.01" y="114.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Inoculation</text>
+<text x="742.01" y="127.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Seed 접종실</text>
+<text x="742.01" y="140.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 22m²</text>
+<text x="887.37" y="114.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Cell Culture</text>
+<text x="887.37" y="127.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">배양실</text>
+<text x="887.37" y="140.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 82m²</text>
+<text x="1048.02" y="114.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Harvest</text>
+<text x="1048.02" y="127.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">회수실</text>
+<text x="1048.02" y="140.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 33m²</text>
+<text x="520.97" y="454.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Purification 1</text>
+<text x="520.97" y="467.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">정제실1</text>
+<text x="520.97" y="480.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 165m²</text>
+<text x="861.16" y="454.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Preparation</text>
+<text x="861.16" y="467.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">공정 준비실</text>
+<text x="861.16" y="480.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 44m²</text>
+<text x="986.49" y="454.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Washing</text>
+<text x="986.49" y="467.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">세척실</text>
+<text x="986.49" y="480.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 33m²</text>
+<text x="1067.06" y="454.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Gowning</text>
+<text x="1067.06" y="467.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">착의실</text>
+<text x="1067.06" y="480.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">C · +30Pa · 16m²</text>
+<text x="158.20" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Material storage</text>
+<text x="158.20" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">자재 보관실</text>
+<text x="158.20" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 100m²</text>
+<text x="158.20" y="292.50" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Equipment storage</text>
+<text x="158.20" y="305.50" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">장비 보관실</text>
+<text x="158.20" y="318.50" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 100m²</text>
+<text x="158.20" y="505.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">DS storage</text>
+<text x="158.20" y="518.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">DS 보관실</text>
+<text x="158.20" y="531.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 50m²</text>
+<text x="158.20" y="611.25" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">IPC</text>
+<text x="158.20" y="624.25" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">IPC 실</text>
+<text x="158.20" y="637.25" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 30m²</text>
+<text x="158.20" y="675.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Cell bank storage</text>
+<text x="158.20" y="688.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 20m²</text>
+<text x="158.20" y="717.50" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Corridor</text>
+<text x="158.20" y="730.50" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">D · +15Pa · 20m²</text>
+<text x="1206.96" y="80.00" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Office</text>
+<text x="1206.96" y="93.00" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">사무실</text>
+<text x="1206.96" y="106.00" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 100m²</text>
+<text x="1206.96" y="548.97" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Toilet (Female)</text>
+<text x="1206.96" y="561.97" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">화장실 (여)</text>
+<text x="1206.96" y="574.97" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 20m²</text>
+<text x="1206.96" y="642.76" text-anchor="middle" font-size="12" fill="#E8EEFB" font-weight="700" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">Toilet (Male)</text>
+<text x="1206.96" y="655.76" text-anchor="middle" font-size="9" fill="#9DB2D8" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">화장실 (남)</text>
+<text x="1206.96" y="668.76" text-anchor="middle" font-size="8" fill="#9DB2D8" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace" stroke="#0C1426" stroke-width="3" paint-order="stroke fill">NC · 0Pa · 25m²</text>
+</g>
+<g font-weight="700" font-size="11">
+<text x="14.00" y="404.00" text-anchor="middle" fill="#E8EEFB" transform="rotate(-90 14.00 404.00)">Personnel ↔</text>
+<text x="692.00" y="14.00" text-anchor="middle" fill="#E8EEFB">Material ↓</text>
+<text x="1376.00" y="336.00" text-anchor="middle" fill="#E8EEFB" transform="rotate(90 1376.00 336.00)">Visitors ↔</text>
+<text x="1376.00" y="540.00" text-anchor="middle" fill="#E8EEFB" transform="rotate(90 1376.00 540.00)">Visitors ↔</text>
+<text x="692.00" y="760.00" text-anchor="middle" fill="#E8EEFB">Waste ↑</text>
+</g>
+<rect x="1344.0" y="64" width="220" height="320" fill="#0C1426" stroke="#1C2742" stroke-width="1"/>
+<text x="1356.0" y="86" font-size="14" font-weight="700" fill="#E8EEFB">LEGEND</text>
+<rect x="1356.0" y="97" width="20" height="14" fill="url(#patA)" fill-opacity="1.00" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="108" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade A</text>
+<text x="1434.0" y="108" font-size="9" fill="#5E7099">Emerald-200 + diagonal Black (Sterile Barrier)</text>
+<rect x="1356.0" y="115" width="20" height="14" fill="#6EE7B7" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="126" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade B</text>
+<text x="1434.0" y="126" font-size="9" fill="#5E7099">Emerald-300 (Barrier Surround)</text>
+<rect x="1356.0" y="133" width="20" height="14" fill="#FCD34D" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="144" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade C</text>
+<text x="1434.0" y="144" font-size="9" fill="#5E7099">Amber-300 (Main Process — default)</text>
+<rect x="1356.0" y="151" width="20" height="14" fill="#93C5FD" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="162" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade D</text>
+<text x="1434.0" y="162" font-size="9" fill="#5E7099">Blue-300 (Support / Closed Process)</text>
+<rect x="1356.0" y="169" width="20" height="14" fill="url(#patCNC)" fill-opacity="1.00" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="180" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade CNC</text>
+<text x="1434.0" y="180" font-size="9" fill="#5E7099">Stone-300 + dotted (Controlled Non-Classified)</text>
+<rect x="1356.0" y="187" width="20" height="14" fill="#1C2742" fill-opacity="0.50" stroke="#000000" stroke-width="1"/>
+<text x="1384.0" y="198" font-size="10" fill="#C7D6F0" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">Grade NC</text>
+<text x="1434.0" y="198" font-size="9" fill="#5E7099">Stone-200 (Non-Classified)</text>
+<text x="1356.0" y="224" font-size="10" font-weight="700" fill="#E8EEFB">FLOW</text>
+<line x1="1358.0" y1="234" x2="1384.0" y2="234" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-personnel)"/>
+<text x="1394.0" y="238" font-size="10" fill="#C7D6F0">Personnel</text>
+<line x1="1358.0" y1="250" x2="1384.0" y2="250" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-material)"/>
+<text x="1394.0" y="254" font-size="10" fill="#C7D6F0">Material</text>
+<line x1="1358.0" y1="266" x2="1384.0" y2="266" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-waste)"/>
+<text x="1394.0" y="270" font-size="10" fill="#C7D6F0">Waste</text>
+<line x1="1358.0" y1="282" x2="1384.0" y2="282" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-product)"/>
+<text x="1394.0" y="286" font-size="10" fill="#C7D6F0">Product</text>
+<rect x="64" y="768.0" width="1516.0" height="64" fill="#0C1426" stroke="#1C2742" stroke-width="1"/>
+<text x="76.0" y="786.0" font-size="9" fill="#5E7099" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">PROJECT</text>
+<text x="76.0" y="806.0" font-size="12" fill="#E8EEFB" font-weight="600">Teammate RuleEngine Output</text>
+<text x="379.2" y="786.0" font-size="9" fill="#5E7099" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">MODALITY</text>
+<text x="379.2" y="806.0" font-size="12" fill="#E8EEFB" font-weight="600">MAB</text>
+<text x="682.4" y="786.0" font-size="9" fill="#5E7099" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">ROOMS</text>
+<text x="682.4" y="806.0" font-size="12" fill="#E8EEFB" font-weight="600">34</text>
+<text x="985.5999999999999" y="786.0" font-size="9" fill="#5E7099" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">AIRLOCKS</text>
+<text x="985.5999999999999" y="806.0" font-size="12" fill="#E8EEFB" font-weight="600">14</text>
+<text x="1288.8" y="786.0" font-size="9" fill="#5E7099" font-family="&quot;JetBrains Mono&quot;,&quot;SF Mono&quot;,Menlo,monospace">PREPARED BY</text>
+<text x="1288.8" y="806.0" font-size="12" fill="#E8EEFB" font-weight="600">Rule Engine v0.1</text>
+</svg>

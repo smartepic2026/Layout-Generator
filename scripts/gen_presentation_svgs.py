@@ -12,11 +12,18 @@ from __future__ import annotations
 import copy
 import json
 
+import os
+
+import cairosvg
+
+from src.drawing_agent.blueprint_theme import to_blueprint
 from src.drawing_agent.data import enrich_spec
 from src.drawing_agent.data.tier1_ruleengine import load_external_spec
 from src.drawing_agent.floorplan import generate_floorplan
 from src.drawing_agent.layout_solver import solve_perimeter_ring
 from src.drawing_agent.renderer import render
+
+OUT = "output/presentation"
 
 BASE_PATH = "/tmp/soyeon_output.json"
 base = json.load(open(BASE_PATH))
@@ -83,29 +90,36 @@ def build_large() -> dict:
     return s
 
 
-def gen_stripband(spec_dict, out_path, label):
+def _emit(svg, name, label, meta=""):
+    """라이트 + 블루프린트(다크) SVG·PNG 동시 저장."""
+    os.makedirs(OUT, exist_ok=True)
+    bp = to_blueprint(svg)
+    open(f"{OUT}/floorplan_{name}.svg", "w").write(svg)
+    open(f"{OUT}/floorplan_{name}_blueprint.svg", "w").write(bp)
+    for suf, s in [("", svg), ("_blueprint", bp)]:
+        cairosvg.svg2png(bytestring=s.encode(), output_width=2200,
+                         write_to=f"{OUT}/floorplan_{name}{suf}.png")
+    print(f"{label}: {meta} → {name}.svg (+_blueprint) +png")
+
+
+def gen_stripband(spec_dict, name, label):
     spec = load_external_spec(json.dumps(spec_dict))
     svg, layout = generate_floorplan(spec, dynamic_rooms=True, auto_canvas=True)
-    open(out_path, "w").write(svg)
-    print(f"{label}: rooms={len(spec.rooms)} placed={len(layout.rooms)} "
-          f"airlocks={len(layout.airlocks)} doors={len(layout.doors)} → {out_path}")
+    _emit(svg, name, label,
+          f"rooms={len(spec.rooms)} placed={len(layout.rooms)} doors={len(layout.doors)}")
 
 
-def gen_ring(spec_dict, out_path, label):
+def gen_ring(spec_dict, name, label):
     spec = load_external_spec(json.dumps(spec_dict))
     enrich_spec(spec)
     layout = solve_perimeter_ring(spec, auto_canvas=True)
     svg = render(spec, layout)
-    open(out_path, "w").write(svg)
-    print(f"{label}: placed={len(layout.rooms)} airlocks={len(layout.airlocks)} "
-          f"doors={len(layout.doors)} → {out_path}")
+    _emit(svg, name, label,
+          f"placed={len(layout.rooms)} doors={len(layout.doors)}")
 
-
-OUT = "output/presentation"
 
 if __name__ == "__main__":
-    import os
-    os.makedirs(OUT, exist_ok=True)
-    gen_stripband(build_small(), f"{OUT}/floorplan_small_pilot_2000L.svg", "SMALL")
-    gen_stripband(build_large(), f"{OUT}/floorplan_large_multiproduct.svg", "LARGE")
-    gen_ring(base, f"{OUT}/floorplan_perimeter_ring.svg", "RING")
+    gen_stripband(base, "v2_soyeon", "BASE")
+    gen_stripband(build_small(), "small_pilot_2000L", "SMALL")
+    gen_stripband(build_large(), "large_multiproduct", "LARGE")
+    gen_ring(base, "perimeter_ring", "RING")

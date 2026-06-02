@@ -9,6 +9,10 @@
 | `floorplan_large_multiproduct` | 대규모 멀티프로덕트 | strip-band | 방 60 / 배치 42 (병렬 suite B + QC/창고/유틸) |
 | `floorplan_perimeter_ring` | 중앙 공정블록형 | 중앙 공정 그리드 + 좌/우 지원 + 상/하 visitor gallery | 방 48 / 배치 30 |
 
+## 테마 (각 도면 2종)
+- `floorplan_*.svg/.png` — **라이트**(흰 배경, 도면 인쇄용)
+- `floorplan_*_blueprint.svg/.png` — **다크 블루프린트**(CAD 느낌, 발표 PPT 삽입용). 등급/동선 색은 동일, 배경 다크 네이비 + 글자/그리드만 다크 팔레트.
+
 ## 공통 표현
 - 에어록: 방 내측 + 복도↔AL↔방 2도어 (바깥쪽 swing)
 - 동선 4유형 점선: 인원(indigo)/자재(teal)/제품(violet)/폐기물(rose)
