@@ -154,3 +154,44 @@
 | **G5** is_elevator_constraint/flow_direction | ⬜ 대기 (Phase 3, 피드백 #3) | |
 | **G6** constraints{} 하드코딩 | ⬜ 대기 (Phase 3) | |
 | **G7** gowning/airlock flow_type 메타 | ⬜ 대기 | |
+
+---
+
+## 6. 전수 재조사 (2026-06-06, Phase 0~3 수정 후)
+
+> 사용자 요청 "룰엔진 내용 중 반영 안 된/정보 안 넘어온 것 조사". 모든 필드를
+> 코드 소비 + 렌더 증거로 재확인. ✅=반영 / ⚠️=DROP(미반영) / ◻︎=대체/불필요.
+
+### 아직 도면에 반영 안 되는(DROP) 룰엔진 정보
+
+**(A) 의미 있는 누락/왜곡 — 고칠 가치 있음**
+
+| 필드 | 현상 | 영향 |
+|---|---|---|
+| **zones{}** (process/aux/nc) | 엔진 zone 무시, category+grade 로 재분류 → **2개 방 불일치**: R_CIP_SUPPLY·R_MONITORING (엔진=aux / 우리=nc) | 구역 배치·색 왜곡 |
+| **rooms.width_mm/depth_mm** | 무시(area_m2 로 자체 산출) | 공정행 방 정확한 가로×세로 아님 |
+| **airlocks.flow_type** (cascade/sink/bubble) | 미표기 | 차압 방향(공기흐름) 시각화 부재 — GMP 핵심 |
+| **adjacency.door_count** | 값 무시(항상 1개 그림) | 2-도어 MAL 이 1개로 |
+| **adjacency.is_elevator_constraint** | 미사용 | 엘리베이터/반입출구 위치 제약 미반영(현재 휴리스틱 배치) |
+| **rooms.gowning_type/method** | 미표기 | 갱의 종류/방식 라벨 없음 |
+| **constraints** (corridor_width_mm·airlock_size_mm·equipment_clearance_mm) | 하드코딩 | 엔진 정량값 미반영 |
+| **rooms.air_changes_per_hour / ceiling_height_mm** | 라벨 미표기 | 방 라벨=Grade·DP·면적 만. ACPH·천정고 도면 관례상 표기 가치 |
+
+**(B) 대체/불필요 — 현 상태 OK**
+
+| 필드 | 사유 |
+|---|---|
+| background_color, transparency_pct | grade→KB색으로 동등 산출(◻︎) |
+| airlock_id | is_airlock flag 로 dedup 충분 |
+| airlock.connects_lower_room / purpose | connects_higher 로 배치 충분 |
+| adjacency.flow_direction | flow_paths 로 동선 도출 |
+| area_ratio_pct | area_m2 사용 |
+| well_type_ceiling, volume_m3, recovery_time_min | 3D/HVAC — 2D 평면도 비대상 |
+| meta.* (engine_version 등) | 타이틀블록 "Rule Engine v0.1" 하드코딩(추적성↑ 위해 반영 가치 소) |
+| rationale[] | 감사 로그 — 도면 오버레이는 옵션 |
+
+### 이미 반영 완료(✅) — Phase 0~3
+rooms: id·name·category·clean_grade·area_m2·**room_flow(one_way)**·equipment·
+DP·**is_airlock**(G3)·process_no(tier3). airlocks: al_id·kind·grade·area_m2·
+connects_higher·DP. adjacency: from/to·relationship·door_size_mm·**door_swing_target**.
+**flow_paths 4종 전부**(G1). constraints.supply_return_no_direct_connection(H5).
