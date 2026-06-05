@@ -1652,3 +1652,34 @@ STORAGE_BULK) 을 연장. 공정실 간은 벽 가로지르기 유지, 마지막
 **후속(Phase 1.7b — 사용자 확인 대기)**: 공정실별 다중 Waste(각 공정실
 AL-out→return→Waste-out)·Material(Supply→각 공정실 AL-in) 펼치기 + both-way
 방 구분. 밀집도 ↑ → 시인성 trade-off 로 사용자 결정 후 진행.
+
+---
+
+## D-028: 공정실별 다중 동선 comb 라우팅 + 동선 토글 (규정 4·2) — Phase 1.7b
+
+**날짜**: 2026-06-06
+
+**무엇**: GMP Flow 규정 4-1(Waste: 각 주요 공정실 AL-out→Return→Waste-out→외부)·
+2(Material: 외부→MAL-in→Supply→각 공정실)대로 **모든 one-way 공정실**을 대상으로
+Waste/Material 동선을 펼침(이전 대표 1경로 → 공정실별 다중). 사용자 결정:
+"comb 라우팅으로 전부 표현 + 토글로도 제공".
+
+- **`_derive_full_flows`**: spec 의 one_way 공정실마다 Waste/Material 경로 생성.
+  복도(Return top/bottom·aux 세로복도·Supply)를 웨이포인트로 두어 복도 인지
+  라우팅(D-026)이 복도 척추를 타게 → **빗(comb)** 형태(메인=복도, 가지=각 공정실).
+  Return 은 공정실 y 로 상/하 자동 선택. Waste-out 은 aux 세로복도 경유로 도달.
+- **flow_mode 토글**: `render(flow_mode=)` / `generate_floorplan(flow_mode=)` /
+  `cli draw --flows {full|main|off}`. full=공정실별 comb(기본), main=flow_paths
+  대표 1경로, off=동선 없음. Personnel/Product 는 항상 대표 경로.
+- **종류별 토글 그룹**: 각 동선을 `<g class="flow flow-{key}" id="flow-{key}">`
+  으로 묶어 SVG 뷰어/CSS/JS 에서 종류별 on/off 가능.
+
+**왜**: 규정 완전 반영(각 공정실 대상) + 시인성은 토글로 제어(규정 "시인성
+훼손하지 않게"). 밀집 vs 완전성의 trade-off 를 사용자가 모드로 선택.
+
+**검증**: full=waste 31·material 21 세그먼트(comb), main=5·4, off=0. 토글그룹 4.
+drawing 7건 통과. 산출 `output/bench_v8_full.svg`(comb)·`bench_v8_main.svg`(대표).
+
+**한계/후속**: comb 밀집도 높음(토글로 완화). Waste-out 도달 경로(aux 복도 경유)
+가 레이아웃에 따라 일부 교차구역 통과 가능 — 복도 스파인 정밀화는 후속.
+both-way 방(Media/Buffer/Prep/Wash) 은 Waste/Material 대상에서 제외(one_way 만).

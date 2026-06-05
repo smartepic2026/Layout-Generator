@@ -19,7 +19,7 @@ from src.drawing_agent.layout_solver import (
 from src.contract.schemas import RuleEngineOutput
 
 
-def render(spec: RuleEngineOutput, layout: Layout) -> str:
+def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> str:
     """Layout + spec → 단일 SVG 텍스트.
 
     구조 (DESIGN.md §5 Z-order):
@@ -65,7 +65,7 @@ def render(spec: RuleEngineOutput, layout: Layout) -> str:
     _emit_z6_doors(s, ox, oy, layout)
     _emit_z7_airlocks(s, ox, oy, layout)
     _emit_z8_equipment(s, ox, oy, layout)
-    _emit_z9_flow_arrows(s, ox, oy, layout, spec)
+    _emit_z9_flow_arrows(s, ox, oy, layout, spec, flow_mode)
 
     _emit_z10_labels(s, ox, oy, layout)
     _emit_z11_boundary_flow(s, ox, oy, layout, spec)
@@ -605,7 +605,7 @@ def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, s
 
 
 def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout,
-                         spec: RuleEngineOutput) -> None:
+                         spec: RuleEngineOutput, flow_mode: str = "full") -> None:
     """GMP 동선 화살표 — 룰엔진 `spec.flow_paths` 4종을 *그대로* 렌더 (D-023).
 
     [정렬 G1 해소] 기존엔 방 id 패턴("SUPPLY_CORRIDOR")으로 동선을 휴리스틱
@@ -621,14 +621,23 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout,
     - flow_paths 가 placeholder/미해소면 토폴로지 휴리스틱으로 폴백
       (발표용 내부 spec 회귀 방지).
     """
-    polylines = _resolve_flow_polylines(layout, ox, oy, spec)
+    if flow_mode == "off":
+        return
+    polylines = _resolve_flow_polylines(layout, ox, oy, spec, flow_mode)
     if not polylines:
         _emit_z9_flow_arrows_topology(s, ox, oy, layout)
         return
-    s.write('<g>\n')
+    # 종류별 그룹 — `<g class="flow flow-{key}">` 으로 묶어 뷰어/CSS/JS 토글 가능.
+    bykey: dict = {}
     for key, pts in polylines:
-        _draw_flow_polyline(s, pts, key)
-    s.write('</g>\n')
+        bykey.setdefault(key, []).append(pts)
+    for key in ("personnel", "material", "waste", "product"):
+        if key not in bykey:
+            continue
+        s.write(f'<g class="flow flow-{key}" id="flow-{key}">\n')
+        for pts in bykey[key]:
+            _draw_flow_polyline(s, pts, key)
+        s.write('</g>\n')
 
 
 # 종류별 수직 오프셋(px) — 공유 복도에서 평행 동선이 정확히 겹치지 않게 분리
@@ -685,11 +694,68 @@ def _corridor_axis_points(rect, prev_pt, next_pt, ox: float, oy: float):
         return (cx, yin), (cx, yout)
 
 
-def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
+def _derive_full_flows(layout: Layout, spec) -> list:
+    """[규정 완전 확장 — comb 라우팅] 공정실별 Waste/Material 경로를 spec 에서
+    도출. flow_paths 의 대표 1경로 대신, 규정 4-1(Waste: 각 공정실 AL-out→Return
+    →Waste-out→외부)·2(Material: 외부→MAL-in→Supply→각 공정실)대로 *모든* 주요
+    공정실을 대상으로 생성. 복도(Return/aux/Supply) 를 웨이포인트로 두어 복도
+    인지 라우팅(D-026)이 복도 척추를 타게 → 빗(comb) 형태.
+
+    반환 [(key, [room_id 시퀀스]), ...]. 좌표 해소는 _resolve 가 수행.
+    """
+    rooms = layout.rooms
+    cy_mid = layout.building_h_mm / 2
+
+    def find(*subs, exclude=()):
+        for rid in rooms:
+            if any(s in rid for s in subs) and not any(e in rid for e in exclude):
+                return rid
+        return None
+
+    ret_top = find("RETURN_CORRIDOR", exclude=("_S",))
+    ret_bot = next((rid for rid in rooms if rid.endswith("RETURN_CORRIDOR_S")), None)
+    aux = next((rid for rid in rooms
+                if rid == "R_CORRIDOR" or rid.endswith("_AUX_CORRIDOR")), None)
+    supply = find("SUPPLY_CORRIDOR")
+    waste_out = find("WASTE_OUT", "WASTE")
+    mat_in = find("MATERIAL_IN", "MATERIAL_INLET")
+
+    flows: list = []
+    for r in spec.rooms:
+        if r.category != "process" or not getattr(r, "one_way_flow", False):
+            continue
+        rid = r.id
+        if rid not in rooms:
+            continue
+        ret = ret_top if rooms[rid].rect.cy < cy_mid else ret_bot
+        # Waste: 공정실 → Return → (aux 세로복도) → Waste-out → 외부(좌)
+        wseq = [rid]
+        if ret:
+            wseq.append(ret)
+        if aux:
+            wseq.append(aux)
+        if waste_out:
+            wseq.append(waste_out)
+        wseq.append("ELEVATOR_WASTE_OUT")
+        flows.append(("waste", wseq))
+        # Material: 외부(상) → Material-in → Supply → 공정실
+        mseq = ["ELEVATOR_MATERIAL_IN"]
+        if mat_in:
+            mseq.append(mat_in)
+        if supply:
+            mseq.append(supply)
+        mseq.append(rid)
+        flows.append(("material", mseq))
+    return flows
+
+
+def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec,
+                            flow_mode: str = "full") -> list:
     """spec.flow_paths 5필드 → [(flow_key, [점,...]), ...].
 
-    해소 점 2개 미만 path 는 제외. 해소된 *내부* 노드가 4개 미만이면
-    (placeholder 발표 spec) 빈 리스트 반환 → 토폴로지 폴백.
+    flow_mode="full" 이면 Waste/Material 을 공정실별 comb(`_derive_full_flows`)로,
+    "main" 이면 flow_paths 대표 1경로로. Personnel/Product 는 항상 대표 경로.
+    해소 점 2개 미만 path 제외. 내부 노드 4개 미만이면(placeholder) 빈 리스트.
     """
     fp = getattr(spec, "flow_paths", None)
     if fp is None:
@@ -709,10 +775,16 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
     seqs = [
         ("personnel", list(fp.personnel_entry or [])),
         ("personnel", list(fp.personnel_exit or [])),
-        ("material",  list(fp.material_entry or [])),
-        ("waste",     list(fp.waste_exit or [])),
         ("product",   prod),
     ]
+    full = _derive_full_flows(layout, spec) if flow_mode == "full" else []
+    if full:
+        seqs += full                     # 공정실별 comb Waste/Material
+    else:                                # main 모드 / 도출 실패 → 대표 1경로
+        seqs += [
+            ("material", list(fp.material_entry or [])),
+            ("waste",    list(fp.waste_exit or [])),
+        ]
     out = []
     interior_resolved = 0
     for key, seq in seqs:

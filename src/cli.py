@@ -56,7 +56,7 @@ def cmd_draw(args: argparse.Namespace) -> int:
     # strip-band(공정순서 하드코딩)는 일부 방을 떨어뜨리므로 --strip 일 때만.
     svg, layout = generate_floorplan(
         spec, building_w_mm=args.width, building_h_mm=args.height,
-        dynamic_rooms=not args.strip,
+        dynamic_rooms=not args.strip, flow_mode=args.flows,
     )
     out = Path(args.svg)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -110,6 +110,8 @@ def main(argv: list[str] | None = None) -> int:
     p_draw.add_argument("--height", type=int, default=42500, help="building depth (mm)")
     p_draw.add_argument("--strip", action="store_true",
                         help="레거시 strip-band 토폴로지 강제 (기본=gradient, 방 누락 0)")
+    p_draw.add_argument("--flows", choices=["full", "main", "off"], default="full",
+                        help="동선 표현: full=공정실별 comb(기본), main=대표1경로, off=없음")
     p_draw.set_defaults(func=cmd_draw)
 
     args = parser.parse_args(argv)

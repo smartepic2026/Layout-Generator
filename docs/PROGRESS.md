@@ -1,5 +1,14 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1.7b: 공정실별 comb 동선 + 토글 (D-028) — 브랜치 `drawing/floorplan-v2`
+
+규정 4·2: one-way 공정실마다 Waste/Material 동선 펼침(`_derive_full_flows`),
+복도(Return/aux/Supply) 웨이포인트로 복도 인지 라우팅 → comb 형태. **토글**:
+`cli draw --flows {full|main|off}` + 종류별 `<g id="flow-{key}">` 그룹.
+full=comb(기본), main=대표1경로, off=없음. drawing 7건 통과.
+산출 `output/bench_v8_full.svg`(comb)/`bench_v8_main.svg`(대표). 다음: 사용자
+도면 검토 → Phase 3(피드백 잔여) 또는 Phase 4(논문).
+
 ## [2026-06-06] Phase 1.7a: Product 동선 DS 보관실 연장 (D-027) — 브랜치 `drawing/floorplan-v2`
 
 규정 3-1/3-2: Product 를 product_process_order 끝에 Supply→DS 보관실 연장
