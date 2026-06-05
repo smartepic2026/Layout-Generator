@@ -1738,3 +1738,33 @@ both-way 방(Media/Buffer/Prep/Wash) 은 Waste/Material 대상에서 제외(one_
 **한계/후속**: 잔여 관통(main 6)은 treemap 패킹상 복도에 안 닿는 깊은 방으로의
 stub — 복도 인접 단일열 배치 vs 면적비례 treemap 의 trade-off. 복도-인접 우선
 배치는 후속. Gowning↔NC복도 인접 보장(피드백 #1 세부)도 후속.
+
+---
+
+## D-031: 도면 피드백 #2·#3·#4 (Grade C 도어삭제 / Waste·Material 분리 / 접경 Gowning+MAL-in)
+
+**날짜**: 2026-06-06 (Phase 3 #2~4)
+
+**#2 — 주요 공정실끼리 도어 삭제** (`_place_doors`): 룰엔진이 연속 Grade C
+공정실 사이에 door 6개(Media↔Buffer↔…↔Purif1↔Purif2) 출력. 피드백대로 동일
+청정등급 process↔process 인접은 도어 미생성(공정물=벽/CIP 배관 이동, 규정
+Product §2). 결과 도어 43→37, 공정실↔공정실 도어 0.
+
+**#3 — Waste-out ↔ Material-in 분리** (`_solve_gmp_gradient`): 둘 다 좌하단
+근접 → 교차오염. URS 방위(자재 12시 상단/폐기물 9시 하단)대로 Grade D 컬럼
+상단=Material-in, 하단=Waste-out 으로 분리(수직 분리 94% of H). 나머지 D 방은
+가운데 treemap.
+
+**#4 — 접경 Gowning + MAL-in 인접** (`_solve_gmp_gradient`): D복도↔supply 접경
+supply 밴드를 `[Gowning 게이트][MAL-in 반입실][supply 복도]` 로 구성. 사람용
+Gowning 외 자재용 MAL-in(반입실)도 인접. 전용 MAL_in 방 있으면 사용, 없으면
+`_synth_gate_room` 합성(Grade C process, 16㎡). Gowning 우측=MAL-in 좌측 인접.
+
+**왜**: 도면 피드백 직접 반영. GMP 정합(공정물 배관 이동·교차오염 분리·자재
+반입 게이트). drawing agent 영역(배치/렌더)에서 처리(룰엔진 무수정).
+
+**검증**: 공정실 도어 0, Waste↔Material 94% 분리, Gowning+MAL-in 인접.
+drawing 7건 통과. 산출 `output/bench_v11_feedback.svg`.
+
+**한계**: #4 MAL-in 은 supply 게이트 1개(공정실별 MAL-in 은 airlocks[] 에 별도).
+both-way 방 도어는 유지(공정실↔공정실만 삭제).

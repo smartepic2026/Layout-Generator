@@ -491,6 +491,16 @@ def _synth_corridor_room(rid: str, name_ko: str, name_en: str) -> Room:
     )
 
 
+def _synth_gate_room(rid: str, name_ko: str, name_en: str, grade: str = "C",
+                     area_m2: float = 16.0) -> Room:
+    """접경 게이트(반입실 등) 합성 Room (Grade C process)."""
+    return Room(
+        id=rid, name_ko=name_ko, name_en=name_en,
+        category="process", clean_grade=grade, area_m2=area_m2,
+        background_color="#FCD34D",
+    )
+
+
 def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     """NC→D→C 청정도 구배 토폴로지 솔버 (dynamic_rooms 경로)."""
     layout = Layout(building_w_mm=W, building_h_mm=H)
@@ -525,7 +535,23 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
         layout.rooms[ncc_id] = PlacedRoom(
             room=by_id[ncc_id], rect=Rect(ncc_x0, 0.0, w_ncc, H))
     if has_d:
-        _place_treemap(layout, by_id, cls["d"], d_x0, 0.0, w_d, H)
+        # [피드백 #3] Material-in(반입·상단 12시) ↔ Waste-out(반출·하단 9시) 를
+        # 교차오염 방지 위해 Grade D 컬럼 상/하 극단으로 분리. 나머지는 가운데 treemap.
+        d_ids = list(cls["d"])
+        mat_in = next((r for r in d_ids if "MATERIAL_IN" in r or "MATERIAL_INLET" in r), None)
+        waste_out = next((r for r in d_ids if "WASTE_OUT" in r or "WASTE" in r), None)
+        d_y0, d_h = 0.0, H
+        if mat_in:
+            mh = max(min(H * 0.12, (by_id[mat_in].area_m2 or 0.0) * 1e6 / w_d), H * 0.06)
+            layout.rooms[mat_in] = PlacedRoom(room=by_id[mat_in], rect=Rect(d_x0, 0.0, w_d, mh))
+            d_y0, d_h = mh, d_h - mh
+            d_ids.remove(mat_in)
+        if waste_out:
+            wh = max(min(H * 0.12, (by_id[waste_out].area_m2 or 0.0) * 1e6 / w_d), H * 0.06)
+            layout.rooms[waste_out] = PlacedRoom(room=by_id[waste_out], rect=Rect(d_x0, H - wh, w_d, wh))
+            d_h -= wh
+            d_ids.remove(waste_out)
+        _place_treemap(layout, by_id, d_ids, d_x0, d_y0, w_d, d_h)
     if has_dc:
         layout.rooms[cls["d_corridor"]] = PlacedRoom(
             room=by_id[cls["d_corridor"]], rect=Rect(d_x0 + w_d, 0.0, w_dc, H))
@@ -551,14 +577,25 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
         layout.rooms[bc.id] = PlacedRoom(room=bc,
                                          rect=Rect(c_x0, ret_b[0], c_w, ret_b[1] - ret_b[0]))
 
-    # supply 밴드 = [가운 게이트][supply 복도]  (가운=D복도↔supply 접점)
+    # supply 밴드 = [가운 게이트][MAL-in 반입실][supply 복도]  (D복도↔supply 접점)
+    # [피드백 #4] 접경부에 사람용 Gowning 외 자재용 MAL-in 도 인접 배치.
     sx = c_x0
     gown = cls["process_gowning"]
     if gown and gown in by_id:
-        gw = min(c_w * 0.16, max(c_w * 0.08, 6000.0))
+        gw = min(c_w * 0.13, max(c_w * 0.07, 5000.0))
         layout.rooms[gown] = PlacedRoom(room=by_id[gown],
                                         rect=Rect(sx, sup[0], gw, sup[1] - sup[0]))
         sx += gw
+    # MAL-in(반입실): spec 에 전용 방 있으면 사용, 없으면 합성 게이트 룸
+    mal_id = next((r.id for r in spec.rooms
+                   if "MAL_IN" in r.id.upper() and not _is_al_fake_room(r) and r.id in by_id), None)
+    if mal_id is None:
+        mal_id = "R_SUPPLY_MAL_IN"
+        by_id[mal_id] = _synth_gate_room(mal_id, "자재 반입실 (MAL-in)", "Material Air Lock in")
+    mw = min(c_w * 0.07, max(c_w * 0.04, 3500.0))
+    layout.rooms[mal_id] = PlacedRoom(room=by_id[mal_id],
+                                      rect=Rect(sx, sup[0], mw, sup[1] - sup[0]))
+    sx += mw
     sc = cls["supply_corridor"]
     if sc:
         layout.rooms[sc] = PlacedRoom(room=by_id[sc],
@@ -949,6 +986,15 @@ def _place_doors(layout, adjacency: list[Adjacency]):
         # 벽 도어를 그리지 않는다 (AL box + flow 화살표가 통로를 표현). 안 그러면
         # 공유 변이 없어 방 한가운데 fallback 도어가 찍힘.
         if adj.from_id in layout.airlocks or adj.to_id in layout.airlocks:
+            continue
+
+        # [피드백 #2] 주요 공정실끼리 직접 인접 도어 삭제 — 공정물은 도어가 아니라
+        # 벽/CIP 배관으로 이동(규정 Product §2, 예: Purif1↔Purif2 도어 없음).
+        # 동일 청정등급 process↔process 인접은 도어를 그리지 않는다.
+        ra = layout.rooms.get(adj.from_id)
+        rb = layout.rooms.get(adj.to_id)
+        if (ra and rb and ra.room.category == "process" and rb.room.category == "process"
+                and ra.room.clean_grade == rb.room.clean_grade):
             continue
 
         a = _lookup_rect(layout, adj.from_id)
