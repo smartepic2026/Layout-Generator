@@ -694,12 +694,24 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
     fp = getattr(spec, "flow_paths", None)
     if fp is None:
         return []
+    # [규정 3-1·3-2] Product 를 마지막 공정(Purif2) → Supply corridor → DS 보관실
+    # 까지 연장. mAb 8000L 은 Purif2 에서 DS 용기 충진 → MAL-in/Supply 경유 storage.
+    prod = list(fp.product_process_order or [])
+    if prod:
+        rids = {r.id for r in spec.rooms}
+        supply = next((rid for rid in rids if "SUPPLY_CORRIDOR" in rid), None)
+        ds = next((rid for rid in rids
+                   if "DS_STORAGE" in rid or "STORAGE_BULK" in rid or "STORAGE_DS" in rid), None)
+        if supply and supply in layout.rooms and prod[-1] != supply:
+            prod.append(supply)
+        if ds and ds in layout.rooms:
+            prod.append(ds)
     seqs = [
         ("personnel", list(fp.personnel_entry or [])),
         ("personnel", list(fp.personnel_exit or [])),
         ("material",  list(fp.material_entry or [])),
         ("waste",     list(fp.waste_exit or [])),
-        ("product",   list(fp.product_process_order or [])),
+        ("product",   prod),
     ]
     out = []
     interior_resolved = 0

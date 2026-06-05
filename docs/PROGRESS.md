@@ -1,5 +1,12 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1.7a: Product 동선 DS 보관실 연장 (D-027) — 브랜치 `drawing/floorplan-v2`
+
+규정 3-1/3-2: Product 를 product_process_order 끝에 Supply→DS 보관실 연장
+(`_resolve_flow_polylines`). 공정실 간 벽 가로지르기 유지, Supply 구간 복도 라우팅.
+drawing 7건 통과. `output/bench_v7_product_ds.svg`. 다음(1.7b, 사용자 확인 대기):
+공정실별 다중 Waste/Material + both-way 구분(밀집도 trade-off).
+
 ## [2026-06-06] Phase 1.6: 동선 복도 인지 라우팅 (D-026) — 브랜치 `drawing/floorplan-v2`
 
 사용자 지적(동선이 NC 방·벽 관통). flow_paths 복도 웨이포인트를 중심점 대신

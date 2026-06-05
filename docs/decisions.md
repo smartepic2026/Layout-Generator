@@ -1631,3 +1631,24 @@ drawing 테스트 7건 통과. 산출 `output/bench_v5_ortho.svg/png`.
 **한계/후속(Phase 1.7)**: flow_paths 가 *건너뛴* 구간(복도 웨이포인트 없는
 교차구역 점프, 예: Gowning→Lobby)은 여전히 직선 → 규정 완전 확장에서 공정실별
 다중 경로 + 복도 스파인 라우팅으로 처리.
+
+---
+
+## D-027: Product 동선 DS 보관실까지 연장 (규정 3-1·3-2) — Phase 1.7a
+
+**날짜**: 2026-06-06
+
+**무엇**: GMP Flow 규정 3-1(Product: …→Supply→DS 보관실) / 3-2(Purif2 는 DS
+용기 충진 → MAL-in/Supply 역경로로 Storage) 반영. `_resolve_flow_polylines`
+에서 product_process_order 끝에 Supply corridor + DS 보관실(DS_STORAGE/
+STORAGE_BULK) 을 연장. 공정실 간은 벽 가로지르기 유지, 마지막 Supply 구간은
+복도 인지 라우팅(D-026)으로 복도 타고 흐름. Product 세그먼트 6→9(+범례).
+
+**왜**: 규정 완전 반영(사용자 "규정대로 완전 확장"). 제품 동선 종착이 Purif2
+가 아니라 DS 보관실이어야 함(원료의약품 DS 충진 종착).
+
+**검증**: drawing 7건 통과. 산출 `output/bench_v7_product_ds.svg`.
+
+**후속(Phase 1.7b — 사용자 확인 대기)**: 공정실별 다중 Waste(각 공정실
+AL-out→return→Waste-out)·Material(Supply→각 공정실 AL-in) 펼치기 + both-way
+방 구분. 밀집도 ↑ → 시인성 trade-off 로 사용자 결정 후 진행.
