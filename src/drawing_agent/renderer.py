@@ -735,15 +735,14 @@ def _flow_channels(layout: Layout, ox: float, oy: float):
     부등호), 동선이 복도가 없는 구역에서도 벽을 따라 흐를 수 있다.
     """
     hs, vs = set(), set()
-    bw, bh = T.mm(layout.building_w_mm), T.mm(layout.building_h_mm)
     for pr in layout.rooms.values():
         x, y, w, h = _r(pr.rect, ox, oy)
         if _is_corridor_room(pr.room):                       # 복도 중심선
             (hs if w >= h else vs).add(round(y + h / 2, 1) if w >= h else round(x + w / 2, 1))
-        hs.update({round(y, 1), round(y + h, 1)})            # 방 상/하 경계
-        vs.update({round(x, 1), round(x + w, 1)})            # 방 좌/우 경계
-    hs.update({round(oy + 10, 1), round(oy + bh - 10, 1)})   # 외곽 ring
-    vs.update({round(ox + 10, 1), round(ox + bw - 10, 1)})
+        hs.update({round(y, 1), round(y + h, 1)})            # 방 상/하 경계(내부 벽)
+        vs.update({round(x, 1), round(x + w, 1)})            # 방 좌/우 경계(내부 벽)
+    # [수정] 건물 외곽선(perimeter)은 채널로 쓰지 않음 — 외벽은 통로가 아니므로
+    # 동선이 외벽을 타고 흐르던 문제 제거. 외부 반출/반입구로는 포트 stub 만.
     return sorted(hs), sorted(vs)
 
 
