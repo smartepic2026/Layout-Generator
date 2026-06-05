@@ -664,6 +664,27 @@ def _flow_point(node: str, layout: Layout, ox: float, oy: float):
     return None
 
 
+def _is_corridor_room(room) -> bool:
+    """복도 방인지 (복도 인지 라우팅용). is_corridor 또는 id 에 CORRIDOR."""
+    return bool(getattr(room, "is_corridor", False)) or "CORRIDOR" in getattr(room, "id", "")
+
+
+def _corridor_axis_points(rect, prev_pt, next_pt, ox: float, oy: float):
+    """복도 rect 의 중심선상에서, 이전 점에 가까운 진입점·다음 점에 가까운 진출점.
+    수평 복도면 중심선 y=cy 위 x 이동, 수직 복도면 중심선 x=cx 위 y 이동."""
+    x, y, w, h = _r(rect, ox, oy)
+    if w >= h:                        # 수평 복도
+        cy = y + h / 2
+        xin = min(max(prev_pt[0], x), x + w)
+        xout = min(max(next_pt[0], x), x + w)
+        return (xin, cy), (xout, cy)
+    else:                             # 수직 복도
+        cx = x + w / 2
+        yin = min(max(prev_pt[1], y), y + h)
+        yout = min(max(next_pt[1], y), y + h)
+        return (cx, yin), (cx, yout)
+
+
 def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
     """spec.flow_paths 5필드 → [(flow_key, [점,...]), ...].
 
@@ -683,16 +704,31 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
     out = []
     interior_resolved = 0
     for key, seq in seqs:
-        pts: list = []
+        # 1) 노드 해소 → (점, 복도여부, rect)
+        nodes: list = []
         for node in seq:
             p = _flow_point(node, layout, ox, oy)
             if p is None:
                 continue
             if node in layout.rooms or node in layout.airlocks:
                 interior_resolved += 1
-            if pts and abs(pts[-1][0] - p[0]) < 0.5 and abs(pts[-1][1] - p[1]) < 0.5:
-                continue   # 연속 중복 제거
-            pts.append(p)
+            pr = layout.rooms.get(node)
+            is_corr = pr is not None and _is_corridor_room(pr.room)
+            rect = pr.rect if pr is not None else None
+            nodes.append((p, is_corr, rect))
+        # 2) [복도 인지] 내부 복도 웨이포인트는 중심점 대신 [진입, 진출](중심선상)로
+        #    펼쳐 동선이 복도를 *타고* 흐르게 — 벽/타 방 가로지르기 최소화.
+        pts: list = []
+        for i, (p, is_corr, rect) in enumerate(nodes):
+            if is_corr and rect is not None and 0 < i < len(nodes) - 1:
+                e_in, e_out = _corridor_axis_points(rect, nodes[i - 1][0], nodes[i + 1][0], ox, oy)
+                cand = [e_in, e_out]
+            else:
+                cand = [p]
+            for q in cand:
+                if pts and abs(pts[-1][0] - q[0]) < 0.5 and abs(pts[-1][1] - q[1]) < 0.5:
+                    continue   # 연속 중복 제거
+                pts.append(q)
         if len(pts) >= 2:
             out.append((key, pts))
     if interior_resolved < 4:

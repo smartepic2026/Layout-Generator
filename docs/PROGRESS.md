@@ -1,5 +1,12 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1.6: 동선 복도 인지 라우팅 (D-026) — 브랜치 `drawing/floorplan-v2`
+
+사용자 지적(동선이 NC 방·벽 관통). flow_paths 복도 웨이포인트를 중심점 대신
+복도 중심선상 [진입,진출]로 펼쳐 동선이 복도를 타고 흐르게(`_corridor_axis_points`).
+Product 는 벽 가로지르기 정상(규정 3-2) 유지. drawing 7건 통과. `output/bench_v6_corridor.svg`.
+한계: flow_paths 가 건너뛴 교차구역 점프(Gowning→Lobby)는 Phase 1.7(완전 확장)에서.
+
 ## [2026-06-06] Phase 1.5: 동선 직교(Manhattan) 라우팅 (D-025) — 브랜치 `drawing/floorplan-v2`
 
 D-023 동선이 방 중심 직선(대각선)이라 긴 대각선이 도면 가로질러 시인성 저하.
