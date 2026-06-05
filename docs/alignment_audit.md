@@ -139,3 +139,18 @@
   재현가능하게 추적된다.
 - **epistemic honesty 일관**: DROPPED 필드를 은폐하지 않고 명시 → P3·P5·P8
   보류 정책과 같은 줄기. 향후 채워지면 표가 ✅ 로 이행하는 추적성.
+
+---
+
+## 5. 진행 현황 (gap 해소 추적)
+
+| Gap | 상태 | 처리 |
+|---|---|---|
+| **G1** 동선 화살표 flow_paths 미사용 | ✅ **해소** (Phase 1, D-023) | `_emit_z9_flow_arrows` 가 spec.flow_paths 4종 렌더 |
+| **(신규) 실제 방 누락** (MEDIA/BUFFER 등 7개) | ✅ **해소** (Phase 1, D-023) | cli draw 기본 gradient(누락 0)+`--strip`+WARN |
+| **G2** 면적 비율 왜곡 (#5) | 🟡 **부분 해소** (Phase 2, D-024) | NC/D 컬럼 squarified treemap(✅) / 공정행은 단일행 토폴로지 trade-off(잔여) |
+| **G3** is_airlock dedup 취약 | ✅ **해소** (Phase 2, D-024) | 내부 스키마에 is_airlock/airlock_id 추가 + dedup 1차 신호 |
+| **G4** zones{} 무시 | ⬜ 대기 (Phase 3) | |
+| **G5** is_elevator_constraint/flow_direction | ⬜ 대기 (Phase 3, 피드백 #3) | |
+| **G6** constraints{} 하드코딩 | ⬜ 대기 (Phase 3) | |
+| **G7** gowning/airlock flow_type 메타 | ⬜ 대기 | |

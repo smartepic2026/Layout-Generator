@@ -1,5 +1,24 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 2: 면적 비례 treemap + is_airlock dedup (D-024) — 브랜치 `drawing/floorplan-v2`
+
+정렬 G2(면적 왜곡, 피드백 #5)·G3(is_airlock dedup 취약) 해소.
+
+- **G2 면적 비례 (squarified treemap)**: gradient 솔버 그려진/spec 면적 배율이
+  0.54~5.84(왜곡). 원인=고정폭 컬럼 + `_alloc_dim` 종횡비 floor 클램프가 작은
+  방 일괄 부풀림. **`_squarify`/`_place_treemap` 신규**(Bruls 2000) → NC·Grade D
+  컬럼 treemap 배치. 결과: **Cell bank 20㎡→23㎡, Material storage 100㎡→116㎡
+  (둘 다 1.16×, 5배 차이 올바르게 비례)** — 피드백 #5 정확히 해소. 공정행은
+  supply↔return 단일행 one-way 토폴로지 유지 위해 미적용(잔여 비례차=의도적
+  trade-off, corridor 비례 제외).
+- **G3 is_airlock 명시 dedup**: 내부 Room 스키마에 `is_airlock`/`airlock_id`
+  추가(이전 18→0 드롭, 이제 18/18 흡수). `_is_al_fake_room` 1차 신호로 사용
+  (패턴+area==0 폴백). 견고성: 엔진이 전실 방에 area 줘도 flag 로 dedup.
+- **검증**: 컬럼 배율 ≈1.16 균일, is_airlock 18/18, drawing+adapter 47 통과.
+  산출 `output/bench_v4_treemap.svg/png`. alignment_audit 진행현황 갱신.
+- **다음**: Phase 1.5(동선 직교 라우팅) → Phase 3(피드백 잔여: NC↔D 복도분리,
+  Grade C 도어삭제, Waste↔Material 분리, 접경 Gowning+MAL-in).
+
 ## [2026-06-06] Phase 1: 동선 화살표 flow_paths 기반 + 방 누락 해소 (D-023) — 브랜치 `drawing/floorplan-v2`
 
 정렬 감사 최대 gap G1 + 발견된 방 누락 버그 해소.

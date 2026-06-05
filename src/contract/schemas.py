@@ -229,6 +229,12 @@ class Room(StrictModel):
     boundaries: list[RoomBoundary] = Field(default_factory=list)
     iso_class: Optional[int] = None  # 5|7|8 (ISO 14644-1 매핑)
 
+    # ── 룰엔진 새 계약 (2026-05-31, Doc Agent #3) — AL 이중표현 dedup ──
+    # rooms[] 의 이 항목이 airlocks[] 에도 동일 실체로 존재하는 전실이면 True.
+    # 소비자(우리)는 is_airlock=True Room 을 걸러 중복 렌더를 막는다(G3).
+    is_airlock: bool = False
+    airlock_id: Optional[str] = None  # 대응 AirLock.al_id (is_airlock=True 일 때)
+
 
 # ---- Block 2: airlocks[] ----
 AirlockType = Literal[

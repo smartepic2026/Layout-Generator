@@ -151,7 +151,13 @@ _AL_FAKE_ROOM_PATTERN = _re_dyn.compile(r"^R_(?:P|M|C)AL_(?:IN|OUT)_")
 
 
 def _is_al_fake_room(room) -> bool:
-    """AL 이중 표현 fake room 인지. D-003 시점 보류했던 이슈 (2026-05-31)."""
+    """AL 이중 표현 fake room 인지. D-003 시점 보류했던 이슈 (2026-05-31).
+
+    [G3] 룰엔진 새 계약의 명시 플래그 `is_airlock` 를 1차 신호로 사용(견고).
+    플래그가 없던 구계약/내부 spec 호환을 위해 ID 패턴+area==0 휴리스틱을 폴백.
+    """
+    if getattr(room, "is_airlock", False):
+        return True
     if _AL_FAKE_ROOM_PATTERN.match(room.id) and room.area_m2 == 0:
         return True
     return False
@@ -360,6 +366,81 @@ def _alloc_dim(areas: list[float], total: float, cross: float, max_aspect: float
     return dims
 
 
+# ──────────────────────────────────────────────────────────────────────
+# Squarified treemap (Bruls·Huizing·van Wijk 2000) — 면적∝값, 종횡비→정사각.
+# [D-024] 고정폭 컬럼 + 종횡비 floor 클램프가 작은 방을 일괄 부풀려 면적 비례를
+# 깨뜨리던 문제(alignment_audit #5: Cell bank 20㎡ ≡ Material 100㎡) 해소.
+# ──────────────────────────────────────────────────────────────────────
+def _sq_worst(row: list, length: float) -> float:
+    """행(row) 을 length 변에 깔 때 최악 종횡비 (1 에 가까울수록 좋음)."""
+    s = sum(v for _, v in row)
+    if s <= 0 or length <= 0:
+        return float("inf")
+    mx = max(v for _, v in row)
+    mn = min(v for _, v in row)
+    return max((length * length * mx) / (s * s), (s * s) / (length * length * mn))
+
+
+def _sq_layout(row: list, x: float, y: float, dx: float, dy: float):
+    """row 를 짧은 변에 깔고 (배치들, 남은 사각형) 반환."""
+    s = sum(v for _, v in row)
+    rects = []
+    if dx >= dy:                      # 세로로 쌓는 한 열(폭 width)
+        width = s / dy if dy else 0.0
+        yy = y
+        for i, v in row:
+            ht = v / width if width else 0.0
+            rects.append((i, Rect(x, yy, width, ht)))
+            yy += ht
+        return rects, (x + width, y, dx - width, dy)
+    else:                             # 가로로 까는 한 행(높이 height)
+        height = s / dx if dx else 0.0
+        xx = x
+        for i, v in row:
+            wd = v / height if height else 0.0
+            rects.append((i, Rect(xx, y, wd, height)))
+            xx += wd
+        return rects, (x, y + height, dx, dy - height)
+
+
+def _squarify_rec(items: list, x: float, y: float, dx: float, dy: float, out: list) -> None:
+    if not items:
+        return
+    if len(items) == 1:
+        out.append((items[0][0], Rect(x, y, dx, dy)))
+        return
+    length = min(dx, dy)
+    i = 1
+    while i < len(items) and _sq_worst(items[:i], length) >= _sq_worst(items[:i + 1], length):
+        i += 1
+    rects, (nx, ny, ndx, ndy) = _sq_layout(items[:i], x, y, dx, dy)
+    out.extend(rects)
+    _squarify_rec(items[i:], nx, ny, ndx, ndy, out)
+
+
+def _squarify(items: list, x: float, y: float, dx: float, dy: float) -> list:
+    """items=[(id, area_value)] 를 (x,y,dx,dy) 안에 면적 비례로 분할.
+    반환 [(id, Rect)]. 합 면적 == dx*dy (흰공간 0)."""
+    total = sum(max(v, 1e-9) for _, v in items) or 1.0
+    scale = (dx * dy) / total
+    scaled = [(i, max(v, 1e-9) * scale) for i, v in items]
+    out: list = []
+    _squarify_rec(scaled, x, y, dx, dy, out)
+    return out
+
+
+def _place_treemap(layout, by_id, ids, x0, y0, w, h, order_desc: bool = True) -> None:
+    """ids 를 (x0,y0,w,h) 영역에 squarified treemap 으로 배치 (면적 비례)."""
+    present = [r for r in ids if r in by_id]
+    if not present:
+        return
+    items = [(r, max(by_id[r].area_m2 or 0.0, 1.0)) for r in present]
+    if order_desc:                    # 종횡비 품질 위해 큰 방부터 (순서 무관 영역)
+        items.sort(key=lambda t: -t[1])
+    for rid, rect in _squarify(items, x0, y0, w, h):
+        layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=rect)
+
+
 def _place_row_aspect(layout, by_id, ids, x0, y0, w, h, max_aspect=1.9):
     """가로 행 배치 — 면적 비례 폭 + 종횡비 클램프(작은 방 세로 슬리버 방지)."""
     present = [r for r in ids if r in by_id]
@@ -412,10 +493,11 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     c_w = W - c_x0
 
     # 1) NC 스택(최좌)  2) Grade D 스택  3) Grade D 세로 복도
+    # [D-024] 단일 스택(고정폭) → squarified treemap 으로 면적 비례 배치.
     if has_nc:
-        _place_stack_aspect(layout, by_id, cls["nc"], 0.0, 0.0, w_nc, H)
+        _place_treemap(layout, by_id, cls["nc"], 0.0, 0.0, w_nc, H)
     if has_d:
-        _place_stack_aspect(layout, by_id, cls["d"], w_nc, 0.0, w_d, H)
+        _place_treemap(layout, by_id, cls["d"], w_nc, 0.0, w_d, H)
     if has_dc:
         layout.rooms[cls["d_corridor"]] = PlacedRoom(
             room=by_id[cls["d_corridor"]], rect=Rect(w_nc + w_d, 0.0, w_dc, H))

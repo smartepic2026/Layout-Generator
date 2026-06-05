@@ -1530,3 +1530,53 @@ NC 구역 → Grade D 구역 → [Grade D 세로복도] → Grade C 공정구역
   구분이라 시인성 확보.
 - 발표용 내부 spec 의 flow_paths 를 concrete ID 로 채우면(변형 생성기) 폴백
   없이 faithful 렌더(별도 트랙).
+
+---
+
+## D-024: 면적 비례 렌더 (squarified treemap) + is_airlock 명시 dedup (G2·G3)
+
+**날짜**: 2026-06-06 (Phase 2)
+
+**무엇**: alignment_audit G2(면적 비율 왜곡, 도면 피드백 #5)·G3(is_airlock dedup
+취약) 해소.
+
+**(1) G2 — squarified treemap 으로 면적 비례 배치 (layout_solver.py)**:
+- 진단(정량): gradient 솔버에서 그려진/spec 면적 배율이 0.54~5.84 (평균 1.62,
+  표준편차 1.01) — 면적 비례라면 일정해야 함. **R_CELL_BANK_STORAGE 20㎡→59㎡(2.97×)
+  ≡ R_MATERIAL_STORAGE 100㎡→59㎡(0.59×)** = 5배 차이가 동일 크기(피드백 #5).
+- 원인: gradient 의 NC/Grade D 컬럼이 고정폭(13%/16%·W ≈ 10~12.5m)이라 넓고,
+  `_alloc_dim` 의 종횡비 floor 클램프(`cross/max_aspect`)가 작은 방을 일괄
+  바닥값까지 부풀려(모두 ≈동일 높이) 면적 비례 파괴.
+- 해결: **squarified treemap**(Bruls·Huizing·van Wijk 2000) 신규 구현
+  (`_squarify`/`_place_treemap`) — 영역을 면적 비례로 분할하되 종횡비를 1 에
+  가깝게. NC·Grade D 컬럼의 `_place_stack_aspect` → `_place_treemap` 교체.
+- **결과(컬럼)**: Cell bank 20㎡→23.2㎡(1.16×), Material storage 100㎡→115.8㎡
+  (1.16×) — **5배 차이가 올바르게 비례**. 컬럼 방들 배율 ≈1.16 균일.
+- **공정행은 단일 행 유지(미적용)**: supply↔return 사이 단일 행 + 양측 AL-in/out
+  one-way flow 토폴로지가 2D treemap 과 충돌(내측 방이 return 복도에 안 닿음).
+  따라서 공정행은 width∝area 단일행을 유지 → 작은 공정실(INOC 40㎡ 등)은 키 큰
+  밴드에서 잔여 부풀림. **단일행 flow 토폴로지 vs 완전 비례의 의도적 trade-off**
+  (corridor 는 본래 long-thin 이라 비례 대상 제외). 후속: 밴드 높이 적응 또는
+  CP-SAT zone 제약으로 양립.
+
+**(2) G3 — is_airlock 명시 dedup (schemas.py + layout_solver.py)**:
+- 내부 Room 스키마에 `is_airlock`/`airlock_id` 추가 → 룰엔진 새 계약 필드가
+  더 이상 드롭되지 않음(이전 18→0 드롭, 이제 18/18 흡수).
+- `_is_al_fake_room` 가 `is_airlock` 를 **1차 신호**로 사용(ID 패턴+area==0 은
+  구계약 폴백). **견고성**: 엔진이 전실 방에 area(9/12)를 줘도 flag 로 dedup —
+  패턴 단독(area==0 요구)이면 깨질 케이스를 방어.
+
+**왜** (CLAUDE.md 4대 원칙):
+1. **성능/정확** — 휴리스틱 클램프(임의 floor) → treemap(수학적으로 면적 보존
+   + 종횡비 최적). "수학적으로 방어 가능한 방법" 원칙.
+2. **실무 견고성** — 면적이 시각적으로 정확해야 실무 검토 가능(피드백 #5).
+   dedup 이 계약 변동(전실 면적 부여)에도 안 깨짐.
+3. **특허/논문** — treemap 기반 GMP 구역 면적 배분 + 명시 플래그 기반 계약
+   dedup = 정렬·렌더 method 근거.
+4. **재현성** — treemap 결정론(면적 입력 → 동일 분할). 회귀 테스트 유지.
+
+**검증**: 컬럼 배율 ≈1.16 균일(이전 0.59~2.97), is_airlock 18/18, dedup 18/18.
+drawing+adapter 47 통과. 산출 `output/bench_v4_treemap.svg/png`.
+
+**한계/후속**: 공정행 잔여 비례차(단일행 토폴로지). corridor 비례 제외.
+constraints{}(복도폭 등) 소비는 G6 후속(Phase 3 검토).
