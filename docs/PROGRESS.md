@@ -1,5 +1,12 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 3 #1: NC↔Grade D 순환 복도 신설 (D-030) — 브랜치 `drawing/floorplan-v2`
+
+도면 피드백 #1(NC↔D 사이 복도). 분류기에 `nc_corridor` 추가(NC 복도방 분리),
+솔버에 NC↔D 세로 복도 strip 카브(전용방 없으면 `_synth_corridor_room` 합성).
+사람 순환 + flow 채널 동시 확보 → 비-product 관통 main 8→6. drawing 7건 통과.
+`output/bench_v10_nccorr.svg`. 잔여=treemap 깊은 방 stub(복도 인접 배치 후속).
+
 ## [2026-06-06] Phase 1.8: 장애물 회피 채널 라우팅 (D-029) — 브랜치 `drawing/floorplan-v2`
 
 사용자 재지적(동선이 NC 방·벽 관통). 채널 라우팅(`_channel_route`): Product 외

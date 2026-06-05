@@ -1710,3 +1710,31 @@ both-way 방(Media/Buffer/Prep/Wash) 은 Waste/Material 대상에서 제외(one_
 **한계/후속(= 피드백 #1)**: 잔여 관통(main 8)은 복도가 *전혀 없는* 구역(NC
 깊은 방·DS storage) 으로의 마지막 stub. 근본 해소는 NC↔Grade D 구역에 실제
 복도 신설(피드백 #1, Phase 3) — 동선이 탈 복도가 생기면 0 에 수렴.
+
+---
+
+## D-030: NC↔Grade D 순환 복도 신설 (도면 피드백 #1)
+
+**날짜**: 2026-06-06 (Phase 3 #1)
+
+**무엇**: 도면 피드백 #1 — "NC 구역과 Grade D 보조구역 사이도 복도로 구분되어야
+함. 사람이 Office→Gowning→Grade D 복도로 이동할 동선." gradient 솔버에 NC↔D
+세로 순환 복도를 카브.
+
+- 분류기 `_classify_rooms_gradient`: NC 카테고리의 복도 방(R_CORRIDOR_VISITOR
+  등)을 `nc_corridor` 로 분리(기존엔 일반 NC 방으로 stack).
+- 솔버 `_solve_gmp_gradient`: NC·D 가 모두 있으면 둘 사이에 세로 복도 strip
+  (W*0.03) 카브. 전용 복도 방 있으면 배치, 없으면 `_synth_corridor_room` 합성.
+  레이아웃: NC | **NC↔D 복도** | Grade D | D복도 | C 공정.
+- 효과: ① 사람 순환 동선(NC→D) 확보 ② **flow 채널(D-029) 추가** → 동선이
+  복도 없는 NC/D 구역도 이 복도를 타고 흐름. 비-product 방 관통 main 8→6,
+  full 15→13.
+
+**왜**: 피드백 #1 직접 반영 + D-029 잔여 관통의 근본 원인(복도 부재) 해소.
+실제 GMP 순환 구조(보조구역 복도 분리).
+
+**검증**: NC↔D 복도 배치 확인, drawing 7건 통과. 산출 `output/bench_v10_nccorr.svg`.
+
+**한계/후속**: 잔여 관통(main 6)은 treemap 패킹상 복도에 안 닿는 깊은 방으로의
+stub — 복도 인접 단일열 배치 vs 면적비례 treemap 의 trade-off. 복도-인접 우선
+배치는 후속. Gowning↔NC복도 인접 보장(피드백 #1 세부)도 후속.

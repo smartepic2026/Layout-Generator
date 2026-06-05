@@ -287,7 +287,7 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
     """
     by_id = {r.id: r for r in spec.rooms}
     out = {
-        "nc": [], "d": [], "d_corridor": None,
+        "nc": [], "d": [], "d_corridor": None, "nc_corridor": None,
         "process_gowning": None, "supply_corridor": None, "return_corridor": None,
         "top_row": [], "bottom_row": [], "skipped": [],
     }
@@ -312,7 +312,11 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
             gowning_candidates.append(rid)
             continue
         if r.category == "NC" or r.clean_grade == "NC":
-            out["nc"].append(rid)
+            # NC 구역의 복도 방 → NC↔D 순환 복도(피드백 #1)로 분리 배치
+            if "CORRIDOR" in rid and out["nc_corridor"] is None:
+                out["nc_corridor"] = rid
+            else:
+                out["nc"].append(rid)
             continue
         if r.category == "auxiliary":
             out["d"].append(rid)
@@ -477,6 +481,16 @@ def _add_synth_door(layout, a: "Rect", b: "Rect", swing_into: "Rect"):
                                    rotation_deg=rot, swing_to_xy=(swing_into.cx, swing_into.cy)))
 
 
+def _synth_corridor_room(rid: str, name_ko: str, name_en: str) -> Room:
+    """전용 복도 방이 spec 에 없을 때 쓸 합성 복도 Room (NC, is_corridor)."""
+    return Room(
+        id=rid, name_ko=name_ko, name_en=name_en,
+        category="NC", clean_grade="NC", area_m2=0.0,
+        is_corridor=True, corridor_role="auxiliary",
+        background_color="#F5F5F5", transparency_pct=0,
+    )
+
+
 def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     """NC→D→C 청정도 구배 토폴로지 솔버 (dynamic_rooms 경로)."""
     layout = Layout(building_w_mm=W, building_h_mm=H)
@@ -486,21 +500,35 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     has_nc = bool(cls["nc"])
     has_d = bool(cls["d"])
     has_dc = bool(cls["d_corridor"])
-    w_nc = W * 0.13 if has_nc else 0.0
-    w_d = W * 0.16 if has_d else 0.0
+    # [D-030 / 피드백 #1] NC↔Grade D 사이 순환 복도. 사람이 NC(Office)→Gowning→
+    # Grade D 복도로 이동할 동선 + flow 라우팅이 탈 채널을 제공. NC 와 D 가 모두
+    # 있으면 둘 사이에 세로 복도 strip 을 카브.
+    has_ncc = has_nc and has_d
+    w_nc = W * (0.12 if has_ncc else 0.13) if has_nc else 0.0
+    w_ncc = W * 0.03 if has_ncc else 0.0
+    w_d = W * (0.15 if has_ncc else 0.16) if has_d else 0.0
     w_dc = W * 0.035 if has_dc else 0.0
-    c_x0 = w_nc + w_d + w_dc
+    ncc_x0 = w_nc
+    d_x0 = w_nc + w_ncc
+    c_x0 = w_nc + w_ncc + w_d + w_dc
     c_w = W - c_x0
 
-    # 1) NC 스택(최좌)  2) Grade D 스택  3) Grade D 세로 복도
+    # 1) NC 스택(최좌)  1.5) NC↔D 순환 복도  2) Grade D 스택  3) Grade D 세로 복도
     # [D-024] 단일 스택(고정폭) → squarified treemap 으로 면적 비례 배치.
     if has_nc:
         _place_treemap(layout, by_id, cls["nc"], 0.0, 0.0, w_nc, H)
+    if w_ncc > 0:
+        ncc_id = cls.get("nc_corridor")
+        if not (ncc_id and ncc_id in by_id):           # 전용 복도 방 없으면 합성
+            ncc_id = "R_NC_AUX_CORRIDOR"
+            by_id[ncc_id] = _synth_corridor_room(ncc_id, "NC 보조복도", "NC aux corridor")
+        layout.rooms[ncc_id] = PlacedRoom(
+            room=by_id[ncc_id], rect=Rect(ncc_x0, 0.0, w_ncc, H))
     if has_d:
-        _place_treemap(layout, by_id, cls["d"], w_nc, 0.0, w_d, H)
+        _place_treemap(layout, by_id, cls["d"], d_x0, 0.0, w_d, H)
     if has_dc:
         layout.rooms[cls["d_corridor"]] = PlacedRoom(
-            room=by_id[cls["d_corridor"]], rect=Rect(w_nc + w_d, 0.0, w_dc, H))
+            room=by_id[cls["d_corridor"]], rect=Rect(d_x0 + w_d, 0.0, w_dc, H))
 
     # 4) C 공정 구역 — 5밴드 (return상 / 공정상 / supply중앙 / 공정하 / return하)
     ratios = [0.06, 0.36, 0.14, 0.36, 0.08]
