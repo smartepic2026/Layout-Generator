@@ -1,5 +1,15 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1.5: 동선 직교(Manhattan) 라우팅 (D-025) — 브랜치 `drawing/floorplan-v2`
+
+D-023 동선이 방 중심 직선(대각선)이라 긴 대각선이 도면 가로질러 시인성 저하.
+**`_draw_flow_polyline` 를 L자 직교 라우팅**으로 변경(수평→수직 엘보, 종류별
+오프셋 유지). 화살표는 노드 도착 다리에만, 직선 구간은 단일 세그먼트(누락 버그
+수정). 결과: 대각선 클러터 제거, 복도 따라 흐르는 GMP 도면 가독성. 충실성
+(flow_paths 1:1)은 유지. drawing 7건 통과. 산출 `output/bench_v5_ortho.svg/png`.
+다음: Phase 3(도면 피드백 잔여 — NC↔D 복도분리/Grade C 도어삭제/Waste↔Material
+분리/접경 Gowning+MAL-in).
+
 ## [2026-06-06] Phase 2: 면적 비례 treemap + is_airlock dedup (D-024) — 브랜치 `drawing/floorplan-v2`
 
 정렬 G2(면적 왜곡, 피드백 #5)·G3(is_airlock dedup 취약) 해소.

@@ -700,27 +700,49 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
     return out
 
 
+def _draw_flow_seg(s: StringIO, ax: float, ay: float, bx: float, by: float,
+                   key: str, off: float, arrow: bool) -> None:
+    """한 직선 세그먼트 — 수직 오프셋 적용 + (arrow 면) 끝에 화살표 머리."""
+    dx, dy = bx - ax, by - ay
+    L = math.hypot(dx, dy)
+    if L < 1.0:
+        return
+    ux, uy = dx / L, dy / L
+    nx, ny = -uy, ux                       # 수직 단위벡터
+    # 끝(노드)쪽만 살짝 인셋 — 화살표가 라벨에 박히지 않게
+    inset_b = min(12.0, max(0.0, (L - 6.0) / 2.0)) if arrow else 0.0
+    Ax = ax + nx * off
+    Ay = ay + ny * off
+    Bx = bx - ux * inset_b + nx * off
+    By = by - uy * inset_b + ny * off
+    m = f' marker-end="url(#arrow-{key})"' if arrow else ''
+    s.write(
+        f'<line x1="{Ax:.2f}" y1="{Ay:.2f}" x2="{Bx:.2f}" y2="{By:.2f}" '
+        f'stroke="{T.FLOW[key]}" stroke-width="2" fill="none" '
+        f'stroke-dasharray="6 4"{m}/>\n'
+    )
+
+
 def _draw_flow_polyline(s: StringIO, pts: list, key: str) -> None:
-    """연결된 동선 — 구간마다 화살표 머리. 종류별 색 + 수직 오프셋(겹침 방지)."""
-    color = T.FLOW[key]
+    """연결된 동선 — **직교(Manhattan) L자** 라우팅 (D-025).
+
+    대각선 center-to-center 대신 각 구간을 수평→수직(또는 그 반대) L 로 꺾어
+    복도/벽을 따라 흐르는 GMP 도면 관습에 맞춤. 종류별 수직 오프셋으로 공유
+    복도에서 평행 동선이 겹치지 않게. 화살표 머리는 노드에 도착하는 다리에만.
+    """
     off = _FLOW_OFFSET.get(key, 0.0)
     for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
-        dx, dy = x2 - x1, y2 - y1
-        L = math.hypot(dx, dy)
-        if L < 1e-3:
-            continue
-        ux, uy = dx / L, dy / L
-        nx, ny = -uy, ux                       # 수직 단위벡터
-        inset = min(13.0, max(0.0, (L - 8.0) / 2.0))
-        ax1 = x1 + ux * inset + nx * off
-        ay1 = y1 + uy * inset + ny * off
-        ax2 = x2 - ux * inset + nx * off
-        ay2 = y2 - uy * inset + ny * off
-        s.write(
-            f'<line x1="{ax1:.2f}" y1="{ay1:.2f}" x2="{ax2:.2f}" y2="{ay2:.2f}" '
-            f'stroke="{color}" stroke-width="2" fill="none" '
-            f'stroke-dasharray="6 4" marker-end="url(#arrow-{key})"/>\n'
-        )
+        horiz_first = abs(x2 - x1) >= abs(y2 - y1)
+        ex, ey = (x2, y1) if horiz_first else (x1, y2)    # 엘보
+        # 직선 구간이면 엘보가 끝점과 겹침 → 단일 세그먼트에 화살표.
+        straight = (math.isclose(ex, x1, abs_tol=0.5) and math.isclose(ey, y1, abs_tol=0.5)) \
+            or (math.isclose(ex, x2, abs_tol=0.5) and math.isclose(ey, y2, abs_tol=0.5))
+        if straight:
+            _draw_flow_seg(s, x1, y1, x2, y2, key, off, arrow=True)
+        else:
+            # 1번 다리(시작→엘보): 화살표 X / 2번 다리(엘보→노드): 화살표 O
+            _draw_flow_seg(s, x1, y1, ex, ey, key, off, arrow=False)
+            _draw_flow_seg(s, ex, ey, x2, y2, key, off, arrow=True)
 
 
 def _emit_z9_flow_arrows_topology(s: StringIO, ox: float, oy: float, layout: Layout) -> None:

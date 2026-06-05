@@ -1580,3 +1580,28 @@ drawing+adapter 47 통과. 산출 `output/bench_v4_treemap.svg/png`.
 
 **한계/후속**: 공정행 잔여 비례차(단일행 토폴로지). corridor 비례 제외.
 constraints{}(복도폭 등) 소비는 G6 후속(Phase 3 검토).
+
+---
+
+## D-025: 동선 화살표 직교(Manhattan) 라우팅
+
+**날짜**: 2026-06-06 (Phase 1.5)
+
+**무엇**: D-023 의 동선 화살표가 방 중심 직선(대각선) 연결이라 긴 대각선이
+도면을 가로질러 시인성을 해치던 문제를, **L자 직교 라우팅**으로 개선.
+
+- `_draw_flow_polyline` 가 각 구간을 수평→수직(또는 그 반대) L 로 꺾음
+  (`horiz_first = |dx|>=|dy|` 로 엘보 선택). 복도/벽을 따라 흐르는 GMP 도면
+  관습에 맞춤. 종류별 수직 오프셋 유지(공유 복도 평행 동선 분리).
+- 화살표 머리는 노드에 도착하는 다리에만. 직선 구간(엘보=끝점)이면 단일
+  세그먼트에 화살표(누락 방지 — 초기 버그 수정).
+
+**왜**: 시인성(GMP Flow 규정 "시인성 훼손하지 않게"). 대각선 클러터 제거 →
+실제 도면 수준 가독성. 충실성(flow_paths 1:1)은 D-023 그대로 유지.
+
+**검증**: 4종 동선 직교 렌더(personnel/material/waste/product 화살표 존재),
+drawing 테스트 7건 통과. 산출 `output/bench_v5_ortho.svg/png`.
+
+**한계/후속**: L 엘보가 다른 방을 살짝 가로지를 수 있음(consecutive 노드가
+복도 경유라 대부분 짧음). 완전 corridor-centerline 라우팅(A* on free space)은
+후속 polish. 코너에서 종류별 오프셋 차로 미세 jog 가능(작음).
