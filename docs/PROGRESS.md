@@ -1,5 +1,29 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] 고도화 착수 — Phase 0: 통합 벤치테스트 + 정렬 감사 — 브랜치 `drawing/floorplan-v2`
+
+팀톡 "프로그래밍 마지막 단계 고도화" 3목표(①agent 통합 벤치 ②**룰엔진→drawing
+정렬(최우선)** ③도면 gap→규칙보완) 착수. 룰엔진 6/2 push 분석 → 계획 단계화.
+
+- **룰엔진 6/2 push 위치 확정**: `teammate/main`(별도 repo
+  smartepic2026/rule_engine_validation_agent) `228c0ff..e05b85c`. 모노레포(origin)
+  아님. 13→15룰(rule_14_acph, rule_15_gowning, rule_06 airlock dedup, rule_13 차압).
+  **계약 변경 additive·non-breaking**: Room에 `is_airlock`/`airlock_id` 추가
+  (AL 이중표현 해결), AirLock.area_m2 항상 채움(9/12), `flow_paths` 구조 불변.
+- **사용자 결정**: ⓐ Phase 0부터 ⓑ 새 엔진 기준 진행, 수정 필요분은 우리가
+  다(권한 보유). (prompts.md 2026-06-06 참조)
+- **통합 벤치테스트**: raw 엔진 출력 추출 → `output/teammate_engine_v2_output.json`
+  (48 rooms/18 AL). `cli draw` 직접 = 크래시(rationale 필드명), **어댑터
+  (`adapt_external_dict`) 거치면 정상**(SVG `output/bench_v2_new_engine.svg`,
+  rooms 23/AL 18/doors 39). → 통합 경로에 어댑터 단계 필수.
+- **정렬 감사 `docs/alignment_audit.md`** 작성(D-022). 필드별 consumed/DROPPED
+  표 + Top7 gap. **최대 gap G1**: 동선 화살표 `_emit_z9_flow_arrows`가 spec을
+  인자로 안 받아 flow_paths 미사용, `"SUPPLY_CORRIDOR"` 패턴 휴리스틱으로
+  재구성(renderer.py:606,634). G2: area_ratio/width_mm 무시(피드백#5).
+  G3: is_airlock dedup이 ID패턴+area==0 휴리스틱에만 의존(취약).
+- **다음**: Phase 1 — 동선 화살표를 flow_paths 4종(Person/Material/Product/Waste)
+  기반으로 재작성.
+
 ## [2026-06-02] 도면 v3 — GMP 청정도 구배 토폴로지 (전문가 피드백 반영) — 브랜치 `drawing/floorplan-v2`
 
 사용자(GMP 도면) 피드백 6건을 drawing_agent 에 반영. decisions.md **D-021**.

@@ -781,3 +781,30 @@ P1 과 충돌, tie-breaker 가 PPO 단조 방해 → timeout. P1-only 권장.
 2. **C3 에 P2 surrogate 추가** — group 응집 회복.
 3. **B-001 default 변경 (`use_actual_mm=True`)** — baselines.json 재생성.
 4. URS 3.6 (팀원 별도) 후 4 시나리오 재측정.
+
+---
+
+## 2026-06-06 — 고도화(마지막 단계) 착수: 통합·정렬·gap보완
+
+**팀톡 지시 (단톡방 + 룰엔진 개발자)**:
+- "프로그래밍 마지막 단계 '고도화'": ①agent 상호 통합 벤치테스트 ②**룰엔진/
+  validation agent 출력이 누락·왜곡 없이 drawing 에 표현(=정렬, 가장 중요)**
+  ③산출 도면 gap 분석 후 규칙 보완.
+- **GMP Flow(동선 화살표) 규정** 신규 텍스트 제공(Person/Material/Product/Waste
+  4종, 시작·경유·종착·색인). 룰엔진 개발자 판단: 출력 계약(output_schema.md/
+  output_example.json) 외부팀 전달·동결 + 새 규정 상당부분 이미 room_flow/
+  adjacency/flow_paths 에 존재 → **GMP flow=렌더링 로직 → drawing agent 에서
+  화살표 학습**(rule engine 아님). 면적 비율 고정 URS 도 제공.
+- **도면 피드백 5건**: ①NC↔Grade D 보조구역 사이 복도 분리(Office→Gowning→D복도)
+  ②Grade C 룸끼리 임의 도어 삭제(예: Purif1↔2) ③Waste-out↔Material-in 멀리 분리
+  (교차오염) ④D복도↔공급복도 접경에 Gowning+MAL-in 인접 ⑤Room 면적 비율대로
+  안 그려짐(Cell bank 20㎡ vs Material 100㎡ 동일크기).
+- **룰엔진 6/2 push**: 13→15룰(air lock·방 면적), "완전 대체 필요". 화면공유
+  주말 협의 제안. GPU training 필요시 룰엔진 개발자가 담당.
+
+**사용자 결정 (이 세션)**:
+1. **Phase 0(통합 벤치테스트 + 정렬 감사)부터** 시작.
+2. **새 15-룰 엔진 기준으로 진행. 수정 필요한 건 우리가 다 한다(권한 보유).**
+   → src/rule_engine 도 우리 영역(메모리 rule_engine_ownership 일관).
+
+→ D-022(Phase 0) 수행. 다음 Phase 1 = 동선 화살표 flow_paths 기반 재작성.

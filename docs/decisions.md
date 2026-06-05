@@ -1408,3 +1408,63 @@ NC 구역 → Grade D 구역 → [Grade D 세로복도] → Grade C 공정구역
 - HARVEST(상행 끝)→PURIFICATION_1(하행 시작) 행 전환이라 공유벽 없음(복도
   경유). ②-2 채택 시 해소.
 - perimeter_ring 은 구버전 분류 유지 — 의도적 토폴로지 다양성(ㅁ자 복도).
+
+---
+
+## D-022: 고도화 Phase 0 — 통합 벤치테스트 + 룰엔진→drawing 정렬 감사
+
+**날짜**: 2026-06-06
+
+**무엇**: 팀톡 "고도화" 3목표 중 ②(룰엔진→drawing 정렬, 사용자 최우선)를
+착수하기 위한 기준선. (a) 새 15-룰 엔진 출력으로 drawing end-to-end 벤치테스트,
+(b) 필드 단위 정렬 감사를 `docs/alignment_audit.md` 로 박제.
+
+**배경 — 룰엔진 6/2 push 분석**:
+- 위치: `teammate/main`(별도 repo, smartepic2026/rule_engine_validation_agent)
+  `228c0ff..e05b85c`. 모노레포(origin) 아님. 우리 `src/rule_engine` 는 6/1
+  구버전(13룰, is_airlock 없음).
+- 13→15룰: rule_14_acph, rule_15_gowning 신설 + rule_06_airlocks(dedup) /
+  rule_13_pressure(차압) 강화 + derive/flow_paths·adjacency·rooms_selector.
+- **계약 변경은 additive·non-breaking**: Room에 `is_airlock`(bool)/`airlock_id`
+  (str|null) 추가 → 그동안 미해결이던 AL 이중표현(rooms[]+airlocks[]) 을 룰엔진이
+  명시 플래그로 해결. AirLock.area_m2 가 float|null→float(MAL 12/PAL·CAL 9).
+  `flow_paths` 5필드 구조 불변(외부 Drawing Agent 계약 동결 유지).
+
+**벤치테스트 결과**:
+- raw 엔진 출력 → `cli draw` 직접 = ❌ 크래시(내부 스키마는 rationale 의
+  `target`/`reason` 필수, raw 는 `target_id`/`decision`).
+- raw → `adapt_external_dict`(tier1) → 내부 spec → `draw` = ✅ 정상(SVG 80KB,
+  rooms 23/AL 18/doors 39). **계약 변경이 drawing 을 깨지 않음**을 실증.
+- **통합 경로에 어댑터 단계 필수** — `cli rule-engine`(cli.py:38) 은 어댑터를
+  거치지만 `cli draw`(cli.py:54) 는 이미 어댑터를 통과한 내부 spec 만 받는다.
+
+**정렬 감사 핵심 (전체는 alignment_audit.md)** — Top gap:
+- **G1 (🔴)**: 동선 화살표 `_emit_z9_flow_arrows(s, ox, oy, layout)`(renderer.py:606)
+  가 `spec` 을 안 받아 flow_paths 를 물리적으로 못 본다. `"SUPPLY_CORRIDOR"`/
+  `"RETURN_CORRIDOR"` 패턴매칭(renderer.py:634,637)으로 동선 휴리스틱 재구성 →
+  엔진 명시 4종 동선(personnel_entry/exit·material_entry·waste_exit) 미반영.
+  새 GMP Flow 규정을 drawing agent 에서 처리키로 한 팀 결정의 정확한 작업 지점.
+- **G2 (🔴)**: width_mm/depth_mm·area_ratio_pct 무시(`√area_m2` 자체 산출) →
+  면적 비율 왜곡(도면 피드백 #5).
+- **G3 (🟠)**: is_airlock/airlock_id 미소비. 내부 Room 스키마에 필드 없어
+  드롭(schemas.py:29 extra=ignore). 전실 dedup 이 `_is_al_fake_room`(ID패턴 +
+  area_m2==0, layout_solver.py:153-155) 휴리스틱에만 의존 — 현재는 18/18
+  정상이나(내부 None→0 강제변환), 엔진이 전실 방에 면적을 주면 깨지는 취약 구조.
+- G4 zones{} 무시(category+ID 재분류), G5 is_elevator_constraint/flow_direction
+  미사용, G6 constraints{} 하드코딩, G7 gowning/airlock flow_type 등 메타 미표기.
+
+**왜** (CLAUDE.md 4대 원칙):
+1. **성능/정렬** — 사용자 #2(누락·왜곡 없는 정렬)의 정량 기준선. 어느 출력이
+   도면에 반영되는지 표로 추적 → 개선분이 ✅ 이행으로 측정됨.
+2. **실무 견고성** — raw→draw 크래시·is_airlock 취약 dedup 같은 fragile 결합을
+   명시. 더러운/변동 계약 처리(D-003 anti-corruption layer 연장).
+3. **특허** — "계약 경계 정렬 검증(contract-alignment verification)" = 출처추적
+   (D-001)+어댑터(D-003) 위의 필드별 소비 추적표. 신규 구성요소.
+4. **논문** — method 의 정렬 검증 절. epistemic honesty 일관(DROPPED 은폐 금지).
+
+**산출물**: `output/teammate_engine_v2_output.json`(기준 입력),
+`output/bench_v2_internal_spec.json`(어댑터 통과), `output/bench_v2_new_engine.svg`
+(벤치 도면), `docs/alignment_audit.md`(감사표).
+
+**다음 (Phase 1)**: G1 — `_emit_z9_flow_arrows` 가 spec.flow_paths 를 받아 4종
+동선을 실제 좌표로 연결. (decisions D-023 예정)
