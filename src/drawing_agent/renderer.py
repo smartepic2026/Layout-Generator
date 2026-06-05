@@ -697,8 +697,8 @@ def _flow_point(node: str, layout: Layout, ox: float, oy: float):
     if pa is not None:
         x, y, w, h = _r(pa.rect, ox, oy)
         return (x + w / 2, y + h / 2)
-    if "ELEVATOR" in node.upper() or node.startswith("<") or "EXT" in node.upper():
-        return _flow_edge_port(node, layout, ox, oy)
+    # 외부(건물 밖) 엘리베이터/반입출구 노드는 선으로 빼지 않음 — 동선이 건물
+    # 외벽까지 그어지던 문제. 동선은 in/out 방에서 종료(외부 방향은 z11 외곽 라벨).
     return None
 
 
@@ -735,14 +735,20 @@ def _flow_channels(layout: Layout, ox: float, oy: float):
     부등호), 동선이 복도가 없는 구역에서도 벽을 따라 흐를 수 있다.
     """
     hs, vs = set(), set()
+    bw, bh = T.mm(layout.building_w_mm), T.mm(layout.building_h_mm)
+    x_min, x_max = ox, ox + bw          # 건물 외벽 좌/우
+    y_min, y_max = oy, oy + bh          # 건물 외벽 상/하
+    tol = 12.0
     for pr in layout.rooms.values():
         x, y, w, h = _r(pr.rect, ox, oy)
         if _is_corridor_room(pr.room):                       # 복도 중심선
             (hs if w >= h else vs).add(round(y + h / 2, 1) if w >= h else round(x + w / 2, 1))
         hs.update({round(y, 1), round(y + h, 1)})            # 방 상/하 경계(내부 벽)
         vs.update({round(x, 1), round(x + w, 1)})            # 방 좌/우 경계(내부 벽)
-    # [수정] 건물 외곽선(perimeter)은 채널로 쓰지 않음 — 외벽은 통로가 아니므로
-    # 동선이 외벽을 타고 흐르던 문제 제거. 외부 반출/반입구로는 포트 stub 만.
+    # [수정] 건물 외벽과 겹치는 채널 제거 — 외벽은 통로가 아니므로 동선이 외벽을
+    # 타던 문제. 외곽 ring 뿐 아니라 맨바깥 방 경계(=외벽)도 함께 제외.
+    hs = {v for v in hs if abs(v - y_min) > tol and abs(v - y_max) > tol}
+    vs = {v for v in vs if abs(v - x_min) > tol and abs(v - x_max) > tol}
     return sorted(hs), sorted(vs)
 
 
