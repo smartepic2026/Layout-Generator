@@ -52,12 +52,23 @@ def cmd_draw(args: argparse.Namespace) -> int:
     from src.drawing_agent.floorplan import generate_floorplan
 
     spec = RuleEngineOutput.model_validate_json(Path(args.spec).read_text())
-    svg, layout = generate_floorplan(spec, building_w_mm=args.width, building_h_mm=args.height)
+    # [D-023] 기본 = gradient 토폴로지(임의 방집합 배치, 방 누락 0). 레거시
+    # strip-band(공정순서 하드코딩)는 일부 방을 떨어뜨리므로 --strip 일 때만.
+    svg, layout = generate_floorplan(
+        spec, building_w_mm=args.width, building_h_mm=args.height,
+        dynamic_rooms=not args.strip,
+    )
     out = Path(args.svg)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(svg)
+    # 정렬 점검: 룰엔진이 준 실제 방 중 도면에서 누락된 것 보고
+    from src.drawing_agent.layout_solver import _is_al_fake_room
+    dropped = [r.id for r in spec.rooms
+               if r.id not in layout.rooms and not _is_al_fake_room(r)]
     print(f"[OK]  {args.spec} → {out}")
     print(f"      rooms placed: {len(layout.rooms)}, airlocks: {len(layout.airlocks)}, doors: {len(layout.doors)}")
+    if dropped:
+        print(f"      [WARN] 배치 누락된 실제 방 {len(dropped)}: {dropped}")
     return 0
 
 
@@ -97,6 +108,8 @@ def main(argv: list[str] | None = None) -> int:
     p_draw.add_argument("svg", help="output svg path")
     p_draw.add_argument("--width", type=int, default=78500, help="building width (mm)")
     p_draw.add_argument("--height", type=int, default=42500, help="building depth (mm)")
+    p_draw.add_argument("--strip", action="store_true",
+                        help="레거시 strip-band 토폴로지 강제 (기본=gradient, 방 누락 0)")
     p_draw.set_defaults(func=cmd_draw)
 
     args = parser.parse_args(argv)

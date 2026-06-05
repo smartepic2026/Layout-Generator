@@ -1,5 +1,27 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1: 동선 화살표 flow_paths 기반 + 방 누락 해소 (D-023) — 브랜치 `drawing/floorplan-v2`
+
+정렬 감사 최대 gap G1 + 발견된 방 누락 버그 해소.
+
+- **동선 화살표 재작성** (`renderer._emit_z9_flow_arrows`): 이제 `spec` 을 받아
+  `spec.flow_paths` 4종(personnel 입/퇴·material·waste·product)을 실제 좌표로
+  연결. 종류별 색+수직 오프셋+구간 화살표. 외부 노드→URS 방위 외곽 포트. product=
+  벽 가로지르기. placeholder spec 은 토폴로지 휴리스틱 폴백(기존 함수 `_topology`
+  로 리네임 보존). render() 가 z9 에 spec 전달.
+- **방 누락 버그 발견·해소**: `cli draw` 가 기본 strip-band(`dynamic_rooms=False`)
+  로 호출 → 하드코딩 공정순서 리스트에 없는 새 엔진 방을 드롭(**MEDIA/BUFFER
+  공정실 포함 7방 누락**, 23/48). gradient(`=True`)는 31방 전부 배치(누락 0).
+  cli draw 기본을 gradient 로 변경(+`--strip` 레거시, +누락 WARN). **strip-band
+  코드 무수정**(baselines/golden 경계) — 렌더=gradient(full)/측정=strip(subset) 분리.
+- **테스트**: `test_drawing_agent` 갱신(올바른 경로 gradient + 전실 dedup 반영) +
+  신규 `test_no_real_room_omitted`(누락 가드)·`test_flow_arrows_follow_flow_paths`(G1).
+  7건 전부 통과. 전체 **17 fail→13 fail / 100→106 pass**(회귀 0, 남은 실패=옛
+  fixture R_MEDIA_PREP·옛 engine_e2e·reward = 사전 존재 legacy).
+- **산출물**: `output/bench_v3_flowpaths.svg/png`(gradient+동선), `bench_v3_strip.svg`.
+- **다음**: Phase 2 — is_airlock dedup 명시 소비 + area 비례 렌더(#5) + constraints/
+  door_swing. (또는 Phase 1.5 동선 직교 라우팅 polish — 사용자 도면 검토 후 결정.)
+
 ## [2026-06-06] 고도화 착수 — Phase 0: 통합 벤치테스트 + 정렬 감사 — 브랜치 `drawing/floorplan-v2`
 
 팀톡 "프로그래밍 마지막 단계 고도화" 3목표(①agent 통합 벤치 ②**룰엔진→drawing

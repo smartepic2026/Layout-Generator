@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import html
+import math
 from io import StringIO
 
 from src.drawing_agent import design_tokens as T
@@ -31,7 +32,7 @@ def render(spec: RuleEngineOutput, layout: Layout) -> str:
         z6  도어 + swing arc
         z7  Airlock (pattern)
         z8  장비
-        z9  Flow 화살표 (Phase 2 — v1에서는 범례만)
+        z9  Flow 화살표 (D-023 — spec.flow_paths 4종 그대로 렌더)
         z10 텍스트 라벨
         z11 치수선 (v1 simplified)
         z12 범례 & 타이틀 블록
@@ -64,7 +65,7 @@ def render(spec: RuleEngineOutput, layout: Layout) -> str:
     _emit_z6_doors(s, ox, oy, layout)
     _emit_z7_airlocks(s, ox, oy, layout)
     _emit_z8_equipment(s, ox, oy, layout)
-    _emit_z9_flow_arrows(s, ox, oy, layout)
+    _emit_z9_flow_arrows(s, ox, oy, layout, spec)
 
     _emit_z10_labels(s, ox, oy, layout)
     _emit_z11_boundary_flow(s, ox, oy, layout, spec)
@@ -603,8 +604,127 @@ def _emit_z11_boundary_flow(s: StringIO, ox: float, oy: float, layout: Layout, s
     s.write('</g>\n')
 
 
-def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    """청정도 구배 토폴로지 one-way flow 화살표 (사용자 '별도 로직 필요' 요청).
+def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout,
+                         spec: RuleEngineOutput) -> None:
+    """GMP 동선 화살표 — 룰엔진 `spec.flow_paths` 4종을 *그대로* 렌더 (D-023).
+
+    [정렬 G1 해소] 기존엔 방 id 패턴("SUPPLY_CORRIDOR")으로 동선을 휴리스틱
+    재구성했으나(alignment_audit G1, renderer 가 spec 을 안 받았음), 이제
+    `spec.flow_paths`(personnel_entry/exit · material_entry · waste_exit ·
+    product_process_order)의 방 시퀀스를 실제 배치 좌표로 연결한다.
+    근거: GMP Flow 규정 1~4 (Person/Material/Product/Waste). 색인은 z12 범례.
+
+    - 각 동선 = 연결된 화살표(구간마다 머리), 종류별 색 + 종류별 수직
+      오프셋으로 공유 복도에서 평행선이 겹치지 않게.
+    - Product 는 공정실 중심을 직선 연결 → 벽 가로지르기(GMP Product §2).
+    - 외부 노드(ELEVATOR_*)는 URS 방위 외곽 포트로 매핑.
+    - flow_paths 가 placeholder/미해소면 토폴로지 휴리스틱으로 폴백
+      (발표용 내부 spec 회귀 방지).
+    """
+    polylines = _resolve_flow_polylines(layout, ox, oy, spec)
+    if not polylines:
+        _emit_z9_flow_arrows_topology(s, ox, oy, layout)
+        return
+    s.write('<g>\n')
+    for key, pts in polylines:
+        _draw_flow_polyline(s, pts, key)
+    s.write('</g>\n')
+
+
+# 종류별 수직 오프셋(px) — 공유 복도에서 평행 동선이 정확히 겹치지 않게 분리
+_FLOW_OFFSET = {"personnel": -6.0, "material": -2.0, "product": 2.0, "waste": 6.0}
+
+
+def _flow_edge_port(node: str, layout: Layout, ox: float, oy: float):
+    """외부 노드(ELEVATOR_*, 출입구)를 건물 외곽 포트로 매핑.
+    URS 방위: 인원 3시(우), 자재 12시(상), 폐기물 9시(좌)."""
+    bw, bh = T.mm(layout.building_w_mm), T.mm(layout.building_h_mm)
+    n = node.upper()
+    if "WASTE" in n:
+        return (ox - 6, oy + bh * 0.5)            # 9시(좌) 폐기물 반출
+    if "MATERIAL" in n:
+        return (ox + bw * 0.5, oy - 6)            # 12시(상) 자재 반입
+    if any(k in n for k in ("PERSON", "LOBBY", "ENTRANCE", "ELEVATOR")):
+        return (ox + bw + 6, oy + bh * 0.5)       # 3시(우) 인원 출입
+    return None
+
+
+def _flow_point(node: str, layout: Layout, ox: float, oy: float):
+    """flow_paths 노드 → svg 좌표. 방/전실 중심 또는 외곽 포트. 미해소 None."""
+    pr = layout.rooms.get(node)
+    if pr is not None:
+        x, y, w, h = _r(pr.rect, ox, oy)
+        return (x + w / 2, y + h / 2)
+    pa = layout.airlocks.get(node)
+    if pa is not None:
+        x, y, w, h = _r(pa.rect, ox, oy)
+        return (x + w / 2, y + h / 2)
+    if "ELEVATOR" in node.upper() or node.startswith("<") or "EXT" in node.upper():
+        return _flow_edge_port(node, layout, ox, oy)
+    return None
+
+
+def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec) -> list:
+    """spec.flow_paths 5필드 → [(flow_key, [점,...]), ...].
+
+    해소 점 2개 미만 path 는 제외. 해소된 *내부* 노드가 4개 미만이면
+    (placeholder 발표 spec) 빈 리스트 반환 → 토폴로지 폴백.
+    """
+    fp = getattr(spec, "flow_paths", None)
+    if fp is None:
+        return []
+    seqs = [
+        ("personnel", list(fp.personnel_entry or [])),
+        ("personnel", list(fp.personnel_exit or [])),
+        ("material",  list(fp.material_entry or [])),
+        ("waste",     list(fp.waste_exit or [])),
+        ("product",   list(fp.product_process_order or [])),
+    ]
+    out = []
+    interior_resolved = 0
+    for key, seq in seqs:
+        pts: list = []
+        for node in seq:
+            p = _flow_point(node, layout, ox, oy)
+            if p is None:
+                continue
+            if node in layout.rooms or node in layout.airlocks:
+                interior_resolved += 1
+            if pts and abs(pts[-1][0] - p[0]) < 0.5 and abs(pts[-1][1] - p[1]) < 0.5:
+                continue   # 연속 중복 제거
+            pts.append(p)
+        if len(pts) >= 2:
+            out.append((key, pts))
+    if interior_resolved < 4:
+        return []
+    return out
+
+
+def _draw_flow_polyline(s: StringIO, pts: list, key: str) -> None:
+    """연결된 동선 — 구간마다 화살표 머리. 종류별 색 + 수직 오프셋(겹침 방지)."""
+    color = T.FLOW[key]
+    off = _FLOW_OFFSET.get(key, 0.0)
+    for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+        dx, dy = x2 - x1, y2 - y1
+        L = math.hypot(dx, dy)
+        if L < 1e-3:
+            continue
+        ux, uy = dx / L, dy / L
+        nx, ny = -uy, ux                       # 수직 단위벡터
+        inset = min(13.0, max(0.0, (L - 8.0) / 2.0))
+        ax1 = x1 + ux * inset + nx * off
+        ay1 = y1 + uy * inset + ny * off
+        ax2 = x2 - ux * inset + nx * off
+        ay2 = y2 - uy * inset + ny * off
+        s.write(
+            f'<line x1="{ax1:.2f}" y1="{ay1:.2f}" x2="{ax2:.2f}" y2="{ay2:.2f}" '
+            f'stroke="{color}" stroke-width="2" fill="none" '
+            f'stroke-dasharray="6 4" marker-end="url(#arrow-{key})"/>\n'
+        )
+
+
+def _emit_z9_flow_arrows_topology(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
+    """[폴백] 청정도 구배 토폴로지 one-way flow 화살표 (flow_paths 미해소 시).
 
     로직:
       - Supply 복도(중앙): 가운 입구(좌) → 우 분배.        personnel 색

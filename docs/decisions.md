@@ -1468,3 +1468,65 @@ NC 구역 → Grade D 구역 → [Grade D 세로복도] → Grade C 공정구역
 
 **다음 (Phase 1)**: G1 — `_emit_z9_flow_arrows` 가 spec.flow_paths 를 받아 4종
 동선을 실제 좌표로 연결. (decisions D-023 예정)
+
+---
+
+## D-023: 동선 화살표 = flow_paths 그대로 렌더 (G1) + 방 누락 해소 (렌더=gradient)
+
+**날짜**: 2026-06-06 (Phase 1)
+
+**무엇**: alignment_audit 의 최대 gap G1(동선 화살표가 룰엔진 flow_paths 미사용)
+과 그 과정에서 발견한 **실제 방 누락 버그**를 해소.
+
+**(1) 동선 화살표 재작성 — renderer.py**:
+- 기존 `_emit_z9_flow_arrows(s, ox, oy, layout)` 는 `spec` 을 인자로 받지도
+  않아 flow_paths 를 못 봤고, 방 id 문자열("SUPPLY_CORRIDOR"/"RETURN_CORRIDOR")
+  패턴매칭으로 동선을 휴리스틱 재구성했다.
+- 신규 `_emit_z9_flow_arrows(s, ox, oy, layout, spec)`:
+  - `spec.flow_paths` 5필드(personnel_entry/exit · material_entry · waste_exit
+    · product_process_order)의 방 시퀀스를 실제 배치 좌표로 연결.
+  - 4종 색(personnel/material/waste/product) + 종류별 수직 오프셋(공유 복도
+    겹침 방지) + 구간마다 화살표 머리(연결 동선).
+  - 외부 노드(ELEVATOR_*)는 URS 방위 외곽 포트로 매핑(인원 3시/자재 12시/
+    폐기물 9시). product 는 공정실 중심 직선 연결 = 벽 가로지르기(GMP Product §2).
+  - flow_paths placeholder/미해소(내부 노드 <4) → 기존 토폴로지 휴리스틱
+    `_emit_z9_flow_arrows_topology` 로 폴백(발표용 내부 spec 회귀 방지).
+- 근거: 신규 GMP Flow 규정 1~4. 색인은 z12 범례(기존).
+
+**(2) 방 누락 해소 — cli.py / 솔버 경로 분리**:
+- 발견: `cli draw` 가 `generate_floorplan` 을 **기본 `dynamic_rooms=False`
+  (strip-band)** 로 호출 → strip-band 의 하드코딩 공정순서 리스트(TOP/BOTTOM_ROW,
+  옛 ID 기준)에 없는 방을 **조용히 드롭**. 새 엔진(48방)에서 **R_MEDIA_PREPARATION·
+  R_BUFFER_PREPARATION(주요 공정실) 포함 실제 방 7개 누락**(배치 23/48).
+- gradient 솔버(`dynamic_rooms=True`)는 임의 방집합을 배치 → **31방 전부, 누락 0**.
+- 조치: `cli draw` 기본을 **gradient** 로 변경(+`--strip` 으로 레거시 강제) +
+  누락 방 **WARN** 출력. **strip-band 코드는 무수정**(D-021/D-013 경계 — baselines/
+  golden/reward 는 default 경로로 측정하므로 `generate_floorplan` 기본값은 False
+  유지). 즉 **렌더링 경로=gradient(전 방), baseline 측정 경로=strip-band(subset)**
+  로 역할 분리.
+
+**왜** (CLAUDE.md 4대 원칙):
+1. **성능/정렬** — 휴리스틱 재구성(엔진 무시) → 엔진 출력 *그대로* 렌더(추적가능).
+   "수학적으로 방어 가능한 방법" 원칙: 동선이 룰엔진 flow_paths 와 1:1.
+2. **실무 견고성** — 주요 공정실이 도면에서 사라지던 치명 누락을 잡음. 누락
+   WARN 으로 silent omission 차단(epistemic honesty 일관).
+3. **특허/논문** — "룰엔진 동선 시퀀스 → 도면 렌더 1:1 정합" + 역할 분리(측정
+   subset vs 렌더 full) 가 정렬 검증 method 의 근거.
+4. **재현성** — flow 화살표가 spec 의 함수 → 같은 spec 같은 동선. 회귀 테스트
+   (`test_no_real_room_omitted`, `test_flow_arrows_follow_flow_paths`) 로 고정.
+
+**검증**:
+- 새 엔진 spec(gradient): 31방 전부 배치(누락 0), 동선 세그먼트 personnel 6 +
+  material 3 + waste 3 + product 6(+범례 각 1). 산출 `output/bench_v3_flowpaths.svg/png`.
+- strip 경로: 7방 누락 WARN 정상 출력.
+- 발표용 placeholder spec: 토폴로지 폴백 정상(화살표 21 마커).
+- 테스트: `test_drawing_agent` 7건 전부 통과(누락 가드 + flow 검증 신규 2건).
+  전체 **17 fail→13 fail / 100→106 pass**(회귀 0, 남은 실패는 옛 fixture
+  R_MEDIA_PREP / 옛 engine_e2e / reward = 사전 존재 legacy follow-up).
+
+**한계 / 후속**:
+- 동선이 방 중심 직선 연결이라 긴 대각선이 다소 분주. **직교(Manhattan) 라우팅
+  — 복도 중심선 경유** 로 polish 가능(Phase 1.5 백로그). 현재도 가늘게/점선/색
+  구분이라 시인성 확보.
+- 발표용 내부 spec 의 flow_paths 를 concrete ID 로 채우면(변형 생성기) 폴백
+  없이 faithful 렌더(별도 트랙).
