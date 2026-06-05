@@ -416,12 +416,24 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
         )
         # AL type label — 영역 중앙 (사용자 요청)
         cx, cy = x + w / 2, y + h / 2
+        ft = getattr(pa.airlock, "flow_type", None)
+        ty = cy - 5 if (ft and h >= 22) else cy        # flow_type 표기 시 위로
         s.write(
-            f'<text x="{cx:.2f}" y="{cy:.2f}" text-anchor="middle" '
+            f'<text x="{cx:.2f}" y="{ty:.2f}" text-anchor="middle" '
             f'dominant-baseline="middle" font-size="{T.TEXT["xs"]}" '
             f'fill="{T.NEUTRAL["900"]}" font-family={_q(T.FONT_MONO)} font-weight="700">'
             f'{_esc(pa.airlock.type)}</text>\n'
         )
+        # [정렬] flow_type 표기 — 차압 공기흐름 타입(cascade↓차압 / sink↘유입 /
+        # bubble↗유출). 기호 + 약어로 작은 글씨.
+        if ft and h >= 22:
+            sym = {"cascade": ">>", "sink": ">|<", "bubble": "<|>"}.get(ft, "")
+            s.write(
+                f'<text x="{cx:.2f}" y="{cy + 7:.2f}" text-anchor="middle" '
+                f'dominant-baseline="middle" font-size="7" '
+                f'fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)}>'
+                f'{sym} {_esc(ft)}</text>\n'
+            )
     s.write('</g>\n')
 
 
@@ -536,17 +548,34 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
                 f'>'
                 f'{_esc(room.name_ko)}</text>\n'
             )
-        # ─ 메타 (Grade · DP · Area) ─ 방 이름 바로 아래
+        # ─ 메타1 (Grade · DP · Area · ACPH) ─ 방 이름 바로 아래
         if h >= 35:
             dp = room.differential_pressure_Pa
             sign = "+" if dp > 0 else ""
-            meta_text = f"{room.clean_grade} · {sign}{dp:g}Pa · {room.area_m2:.0f}m²"
+            parts = [room.clean_grade, f"{sign}{dp:g}Pa", f"{room.area_m2:.0f}m²"]
+            if room.air_changes_per_hour:           # [정렬] ACPH 반영
+                parts.append(f"{room.air_changes_per_hour:g}ACH")
+            meta_text = " · ".join(parts)
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{meta_y:.2f}" text-anchor="middle" '
                 f'font-size="8" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)} '
                 f'>'
                 f'{_esc(meta_text)}</text>\n'
             )
+        # ─ 메타2 (천정고 · 갱의) ─ 큰 방만 (천정고·gowning_type 반영)
+        if h >= 64:
+            sub = []
+            if room.ceiling_height_mm:
+                sub.append(f"H{room.ceiling_height_mm:g}")
+            if room.gowning_type:
+                sub.append(room.gowning_type)
+            if sub:
+                s.write(
+                    f'<text x="{x + w/2:.2f}" y="{meta_y + 11:.2f}" text-anchor="middle" '
+                    f'font-size="8" fill="{T.NEUTRAL["400"]}" font-family={_q(T.FONT_MONO)} '
+                    f'>'
+                    f'{_esc(" · ".join(sub))}</text>\n'
+                )
     s.write('</g>\n')
 
 

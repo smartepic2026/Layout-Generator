@@ -293,6 +293,17 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
     }
     process_ids: list[str] = []
     gowning_candidates: list[str] = []
+    # [정렬] 엔진 zones 를 1차 신호로 — 재분류로 덮어쓰지 않음(예: CIP공급·모니터링은
+    # NC 등급이지만 엔진이 auxiliary_zone 으로 지정). zones 없으면 category 폴백.
+    z = getattr(spec, "zones", None)
+    zone_of: dict[str, str] = {}
+    if z is not None:
+        for rid in (z.auxiliary_zone or []):
+            zone_of[rid] = "aux"
+        for rid in (z.nc_zone or []):
+            zone_of[rid] = "nc"
+        for rid in (z.process_zone or []):
+            zone_of[rid] = "process"
     for r in spec.rooms:
         if _is_al_fake_room(r):
             out["skipped"].append(r.id)
@@ -311,14 +322,17 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
         if "GOWNING" in rid and r.clean_grade in ("A", "B", "C") and r.category == "process":
             gowning_candidates.append(rid)
             continue
-        if r.category == "NC" or r.clean_grade == "NC":
+        zone = zone_of.get(rid)            # 엔진 zone 우선
+        is_nc = zone == "nc" or (zone is None and (r.category == "NC" or r.clean_grade == "NC"))
+        is_aux = zone == "aux" or (zone is None and r.category == "auxiliary")
+        if is_nc:
             # NC 구역의 복도 방 → NC↔D 순환 복도(피드백 #1)로 분리 배치
             if "CORRIDOR" in rid and out["nc_corridor"] is None:
                 out["nc_corridor"] = rid
             else:
                 out["nc"].append(rid)
             continue
-        if r.category == "auxiliary":
+        if is_aux:
             out["d"].append(rid)
             continue
         process_ids.append(rid)  # 나머지 = 공정실
@@ -510,14 +524,26 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     has_nc = bool(cls["nc"])
     has_d = bool(cls["d"])
     has_dc = bool(cls["d_corridor"])
+    # [정렬] 세로 복도 폭 = spec.constraints.corridor_width_mm (preferred_min~max)
+    # 로 GMP 규정 폭 적용. 없으면 기본.
+    cw = getattr(spec, "constraints", None)
+    cwr = getattr(cw, "corridor_width_mm", None) if cw else None
+    corr_w = 2748.0
+    if cwr is not None:
+        pref = cwr.preferred_min or cwr.min or 2000
+        cmax = cwr.max or 3000
+        corr_w = float(max(cwr.min or 1500, min(pref, cmax)))
+    # 장비 이격(mm) — equipment_clearance_mm.between_equipment (GMP 최소 1000)
+    ec = getattr(cw, "equipment_clearance_mm", None) if cw else None
+    eq_gap_mm = float(ec.get("between_equipment", 800)) if isinstance(ec, dict) and ec else 800.0
     # [D-030 / 피드백 #1] NC↔Grade D 사이 순환 복도. 사람이 NC(Office)→Gowning→
-    # Grade D 복도로 이동할 동선 + flow 라우팅이 탈 채널을 제공. NC 와 D 가 모두
-    # 있으면 둘 사이에 세로 복도 strip 을 카브.
+    # Grade D 복도로 이동할 동선 + flow 라우팅이 탈 채널을 제공.
     has_ncc = has_nc and has_d
-    w_nc = W * (0.12 if has_ncc else 0.13) if has_nc else 0.0
-    w_ncc = W * 0.03 if has_ncc else 0.0
-    w_d = W * (0.15 if has_ncc else 0.16) if has_d else 0.0
-    w_dc = W * 0.035 if has_dc else 0.0
+    w_ncc = corr_w if has_ncc else 0.0
+    w_dc = corr_w if has_dc else 0.0
+    # NC/D 컬럼 폭 — 복도 폭 차감분 반영
+    w_nc = W * 0.13 - (w_ncc * 0.5 if has_ncc else 0.0) if has_nc else 0.0
+    w_d = W * 0.16 - (w_ncc * 0.5 if has_ncc else 0.0) if has_d else 0.0
     ncc_x0 = w_nc
     d_x0 = w_nc + w_ncc
     c_x0 = w_nc + w_ncc + w_d + w_dc
@@ -609,7 +635,7 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     _place_airlocks_in_rooms(layout, spec, cls["top_row"], is_top=True)
     _place_airlocks_in_rooms(layout, spec, cls["bottom_row"], is_top=False)
     _place_both_way_als(layout, spec, sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0])
-    _place_equipment_grid(layout)
+    _place_equipment_grid(layout, eq_gap=eq_gap_mm)
 
     # 도어: adjacency 기반 + 가운 게이트 합성 도어(D복도↔가운, 가운↔supply)
     _place_doors(layout, spec.adjacency)
@@ -890,18 +916,21 @@ def _pack_row_major(equips, inner_w, inner_h, scale, eq_gap):
     return placed
 
 
-def _place_equipment_grid(layout, use_actual_mm: bool = False):
+def _place_equipment_grid(layout, use_actual_mm: bool = False, eq_gap: float = 800.0):
     """Room 내부에 장비를 process_step 순서대로 grid 배치.
     장비가 모두 방 안에 들어가도록 scale 을 자동 조정 (사용자 요청).
 
     [B-001 / D-018] `use_actual_mm=True` 면 시각 축소 (EQUIPMENT_VISUAL_SCALE)
     적용 안 하고 실제 W_mm/D_mm 사용. CP-SAT 측정 비교용. 기본은 False 로
     기존 strip-band 동작 보존 (baselines.json / B3 NNE 비교 흔들지 않게).
+
+    [정렬] `eq_gap` = 장비간 이격(mm). gradient 경로는 spec.constraints 의
+    equipment_clearance_mm.between_equipment 를 넘겨 GMP 컴플라이언스 충족
+    (기본 800 은 strip-band 보존용 — baselines 불변).
     """
     wall_margin = 2200    # 좌/우
     top_label = 6000      # 위쪽 — 라벨 3줄 공간
     bottom_pad = 2500     # 아래쪽
-    eq_gap = 800
     base_scale = 1.0 if use_actual_mm else EQUIPMENT_VISUAL_SCALE
     min_scale = 1.0 if use_actual_mm else EQUIPMENT_MIN_SCALE
     for proom in layout.rooms.values():
@@ -1017,16 +1046,23 @@ def _place_doors(layout, adjacency: list[Adjacency]):
             if target:
                 swing_xy = (target.cx, target.cy)
 
-        layout.doors.append(
-            PlacedDoor(
-                adj=adj,
-                x=x,
-                y=y,
-                width_mm=adj.door_size_mm,
-                rotation_deg=rot,
-                swing_to_xy=swing_xy,
+        # [정렬] door_count 반영 — 공유 벽을 따라 N개 분산 배치(큰 MAL=2도어 등).
+        count = max(1, int(adj.door_count or 1))
+        spacing = (adj.door_size_mm or 1000) + 800.0
+        for k in range(count):
+            shift = (k - (count - 1) / 2.0) * spacing
+            dx = shift if rot == 0 else 0.0      # 가로 도어=가로 벽 → x 분산
+            dy = shift if rot != 0 else 0.0      # 세로 도어=세로 벽 → y 분산
+            layout.doors.append(
+                PlacedDoor(
+                    adj=adj,
+                    x=x + dx,
+                    y=y + dy,
+                    width_mm=adj.door_size_mm,
+                    rotation_deg=rot,
+                    swing_to_xy=swing_xy,
+                )
             )
-        )
 
 
 def _place_airlock_doors(layout):

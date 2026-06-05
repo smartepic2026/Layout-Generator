@@ -1768,3 +1768,41 @@ drawing 7건 통과. 산출 `output/bench_v11_feedback.svg`.
 
 **한계**: #4 MAL-in 은 supply 게이트 1개(공정실별 MAL-in 은 airlocks[] 에 별도).
 both-way 방 도어는 유지(공정실↔공정실만 삭제).
+
+---
+
+## D-032: 미반영 룰엔진 필드 전수 소비 (zones·ACPH·flow_type·door_count·constraints 등)
+
+**날짜**: 2026-06-06
+
+**무엇**: 전수 재조사(alignment_audit §6)에서 DROP 으로 확인된 의미 있는 필드를
+모두 도면에 반영. 4그룹.
+
+**A — 방 라벨 메타 확장** (`renderer` z10):
+- 메타1: `Grade · DP · Area · **ACPH**` (air_changes_per_hour 반영).
+- 메타2(큰 방): `H{ceiling} · {gowning_type}` (ceiling_height_mm·gowning_type 반영).
+
+**B — 엔진 zones 소비** (`_classify_rooms_gradient`):
+- spec.zones(process/auxiliary/nc) 를 1차 신호로 사용(재분류 폴백). 불일치 해소:
+  R_CIP_SUPPLY·R_MONITORING 가 엔진 지정대로 auxiliary 로 분류(기존 NC 오분류).
+
+**C — airlock flow_type + door_count**:
+- airlock 라벨에 flow_type(cascade/sink/bubble) 표기(차압 공기흐름 — GMP 핵심).
+- `_place_doors` 가 door_count 만큼 공유 벽 따라 분산 배치(2-도어 MAL 등. 현 spec
+  은 전부 1).
+
+**D — constraints 소비** (gradient 경로만, strip-band/baselines 불변):
+- corridor_width_mm(preferred_min~max) → 세로 복도 폭 2000mm 적용(기존 임의 W*0.035).
+- equipment_clearance_mm.between_equipment(1000) → 장비 이격(`_place_equipment_grid
+  (eq_gap=)`). **기존 800 은 GMP 최소 1000 위반 → 컴플라이언스 수정**. strip-band
+  caller 는 기본 800 유지(baselines 보존).
+
+**왜**: 사용자 "all" — 누락·왜곡 없는 정렬(②최우선) 완성. zones 왜곡 해소,
+ACPH/갱의/flow_type 표기로 도면 정보량을 룰엔진 출력과 1:1. eq_gap 위반 수정.
+
+**검증**: 복도폭 2000mm, ACPH·cascade·무진복 라벨 등장, CIP/Monitoring=aux,
+drawing 7건 통과. 산출 `output/bench_v12_allfields.svg`.
+
+**남은 DROP(불필요/3D)**: volume_m3·recovery_time(HVAC), meta·rationale(로그),
+airlock connects_lower/purpose, area_ratio_pct, well_type — 2D 평면도 비대상 또는
+대체 충족. alignment_audit §6(B) 참조.

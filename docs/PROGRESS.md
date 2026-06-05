@@ -1,5 +1,12 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] 정렬 마무리: 미반영 룰엔진 필드 전수 소비 (D-032) — 브랜치 `drawing/floorplan-v2`
+
+전수 재조사 DROP 필드 전부 반영. A:방 라벨에 ACPH·천정고·갱의. B:엔진 zones
+소비(CIP/Monitoring 불일치 해소). C:airlock flow_type(cascade) 표기 + door_count.
+D:constraints(복도폭 2000mm·장비이격 1000=eq_gap 800 위반 수정, gradient만).
+drawing 7건 통과. `output/bench_v12_allfields.svg`. 남은 DROP=3D/HVAC·로그(비대상).
+
 ## [2026-06-06] Phase 3 #2~4: 도면 피드백 (도어삭제·Waste/Material분리·접경게이트) (D-031) — 브랜치 `drawing/floorplan-v2`
 
 #2 공정실↔공정실 도어 삭제(`_place_doors`, 동일등급 process 인접 스킵 — 공정물
