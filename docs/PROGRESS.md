@@ -1,5 +1,13 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] Phase 1.8: 장애물 회피 채널 라우팅 (D-029) — 브랜치 `drawing/floorplan-v2`
+
+사용자 재지적(동선이 NC 방·벽 관통). 채널 라우팅(`_channel_route`): Product 외
+동선을 채널(복도 중심선+외곽 ring+방 경계선 그리드) 경유 직교 경로로, 방 관통
+최소가 되게 선택. 비-product 관통 main 10→8/full 25→15. drawing 7건 통과.
+`output/bench_v9_main.svg`. 잔여 관통=복도 없는 NC 깊은 방 stub → 피드백 #1(NC
+복도 신설, Phase 3)로 0 수렴 예정.
+
 ## [2026-06-06] Phase 1.7b: 공정실별 comb 동선 + 토글 (D-028) — 브랜치 `drawing/floorplan-v2`
 
 규정 4·2: one-way 공정실마다 Waste/Material 동선 펼침(`_derive_full_flows`),

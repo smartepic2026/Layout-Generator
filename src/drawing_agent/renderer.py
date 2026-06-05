@@ -694,6 +694,98 @@ def _corridor_axis_points(rect, prev_pt, next_pt, ox: float, oy: float):
         return (cx, yin), (cx, yout)
 
 
+# ──────────────────────────────────────────────────────────────────────
+# 장애물 회피 채널 라우팅 (D-029) — 동선이 방·벽을 가로지르지 않도록 복도
+# 중심선 + 건물 외곽 ring 채널로만 보내고, 방 관통이 최소인 경로를 선택.
+# ──────────────────────────────────────────────────────────────────────
+def _flow_channels(layout: Layout, ox: float, oy: float):
+    """수평 채널(Y들) / 수직 채널(X들).
+
+    = 복도 중심선 + 외곽 ring inset + **모든 방 경계선(벽 그리드)**.
+    경계선 위 직선은 양쪽 방 *내부*를 건드리지 않으므로(관통 판정은 strict
+    부등호), 동선이 복도가 없는 구역에서도 벽을 따라 흐를 수 있다.
+    """
+    hs, vs = set(), set()
+    bw, bh = T.mm(layout.building_w_mm), T.mm(layout.building_h_mm)
+    for pr in layout.rooms.values():
+        x, y, w, h = _r(pr.rect, ox, oy)
+        if _is_corridor_room(pr.room):                       # 복도 중심선
+            (hs if w >= h else vs).add(round(y + h / 2, 1) if w >= h else round(x + w / 2, 1))
+        hs.update({round(y, 1), round(y + h, 1)})            # 방 상/하 경계
+        vs.update({round(x, 1), round(x + w, 1)})            # 방 좌/우 경계
+    hs.update({round(oy + 10, 1), round(oy + bh - 10, 1)})   # 외곽 ring
+    vs.update({round(ox + 10, 1), round(ox + bw - 10, 1)})
+    return sorted(hs), sorted(vs)
+
+
+def _room_rects_svg(layout: Layout, ox: float, oy: float) -> dict:
+    """비복도 방 rect(svg) — 관통 판정 대상."""
+    return {rid: _r(pr.rect, ox, oy)
+            for rid, pr in layout.rooms.items() if not _is_corridor_room(pr.room)}
+
+
+def _pt_room(p, room_rects: dict):
+    for rid, (x, y, w, h) in room_rects.items():
+        if x <= p[0] <= x + w and y <= p[1] <= y + h:
+            return rid
+    return None
+
+
+def _hcross(ax, bx, y, room_rects, skip) -> int:
+    lo, hi = min(ax, bx), max(ax, bx)
+    n = 0
+    for rid, (x, yy, w, h) in room_rects.items():
+        if rid in skip:
+            continue
+        if yy < y < yy + h and not (hi <= x or lo >= x + w):
+            n += 1
+    return n
+
+
+def _vcross(ay, by, x, room_rects, skip) -> int:
+    lo, hi = min(ay, by), max(ay, by)
+    n = 0
+    for rid, (xx, y, w, h) in room_rects.items():
+        if rid in skip:
+            continue
+        if xx < x < xx + w and not (hi <= y or lo >= y + h):
+            n += 1
+    return n
+
+
+def _channel_route(A, B, ch_h, ch_v, room_rects) -> list:
+    """A→B 직교 경로를 채널(복도/외곽) 경유로 — 방 관통 최소(동률이면 최단)."""
+    skip = {r for r in (_pt_room(A, room_rects), _pt_room(B, room_rects)) if r}
+    best, bestcost = [A, B], None
+    for hy in ch_h:                       # 수평 채널 경유: A→(A.x,hy)→(B.x,hy)→B
+        c = (_vcross(A[1], hy, A[0], room_rects, skip)
+             + _hcross(A[0], B[0], hy, room_rects, skip)
+             + _vcross(hy, B[1], B[0], room_rects, skip))
+        cost = (c, abs(A[1] - hy) + abs(A[0] - B[0]) + abs(hy - B[1]))
+        if bestcost is None or cost < bestcost:
+            bestcost, best = cost, [A, (A[0], hy), (B[0], hy), B]
+    for vx in ch_v:                       # 수직 채널 경유
+        c = (_hcross(A[0], vx, A[1], room_rects, skip)
+             + _vcross(A[1], B[1], vx, room_rects, skip)
+             + _hcross(vx, B[0], B[1], room_rects, skip))
+        cost = (c, abs(A[0] - vx) + abs(A[1] - B[1]) + abs(vx - B[0]))
+        if bestcost is None or cost < bestcost:
+            bestcost, best = cost, [A, (vx, A[1]), (vx, B[1]), B]
+    return best
+
+
+def _route_polyline(pts: list, ch_h, ch_v, room_rects) -> list:
+    """waypoint 점들을 채널 라우팅으로 이어 붙임 (방 관통 최소)."""
+    routed = [pts[0]]
+    for a, b in zip(pts, pts[1:]):
+        seg = _channel_route(a, b, ch_h, ch_v, room_rects)
+        for q in seg[1:]:
+            if routed and abs(routed[-1][0] - q[0]) < 0.5 and abs(routed[-1][1] - q[1]) < 0.5:
+                continue
+            routed.append(q)
+    return routed
+
+
 def _derive_full_flows(layout: Layout, spec) -> list:
     """[규정 완전 확장 — comb 라우팅] 공정실별 Waste/Material 경로를 spec 에서
     도출. flow_paths 의 대표 1경로 대신, 규정 4-1(Waste: 각 공정실 AL-out→Return
@@ -785,6 +877,8 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec,
             ("material", list(fp.material_entry or [])),
             ("waste",    list(fp.waste_exit or [])),
         ]
+    ch_h, ch_v = _flow_channels(layout, ox, oy)
+    room_rects = _room_rects_svg(layout, ox, oy)
     out = []
     interior_resolved = 0
     for key, seq in seqs:
@@ -813,6 +907,10 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec,
                 if pts and abs(pts[-1][0] - q[0]) < 0.5 and abs(pts[-1][1] - q[1]) < 0.5:
                     continue   # 연속 중복 제거
                 pts.append(q)
+        # 3) [장애물 회피] Product 외 동선은 채널(복도/외곽) 경유로 라우팅 →
+        #    방·벽 관통 최소. Product 는 공정실 간 벽 가로지르기(규정 3-2) 유지.
+        if key != "product" and len(pts) >= 2:
+            pts = _route_polyline(pts, ch_h, ch_v, room_rects)
         if len(pts) >= 2:
             out.append((key, pts))
     if interior_resolved < 4:
