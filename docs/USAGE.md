@@ -11,7 +11,7 @@
 
 ```bash
 # 레포 폴더 안에서 실행
-python3 -m src.cli rule-engine  examples/내URS.xlsx  output/spec.json
+python3 -m src.cli rule-engine  input_urs/내URS.xlsx  output/spec.json
 python3 -m src.cli draw  output/spec.json  output/layout.svg  --flows main
 # → output/layout.svg 를 브라우저로 열기
 ```
@@ -40,24 +40,40 @@ pip install -r requirements.txt
 > 💡 이후 새 터미널을 열 때마다 `cd Layout-Generator` + `source .venv/bin/activate`
 > 두 줄만 해주면 바로 쓸 수 있습니다.
 
+### 1-3. 나중에 업데이트 받기 (중요)
+이 코드는 계속 갱신됩니다. **클론은 받은 그 순간의 스냅샷**이라, 이후 바뀐 내용은
+자동으로 들어오지 않습니다. 최신을 받으려면 **`git pull`** 을 직접 해야 합니다.
+
+```bash
+cd Layout-Generator
+git checkout drawing/floorplan-v2   # 같은 브랜치에 있어야 함
+git pull                            # 최신 코드·도면·문서 받기
+```
+
+> ⚠️ **본인이 직접 수정한 파일이 있으면** `git pull` 시 충돌(conflict)이 날 수 있습니다.
+> 받아서 **실행·확인만** 한다면 충돌 걱정이 없습니다. 직접 고칠 일이 생기면 먼저 알려주세요.
+>
+> 💡 `git pull` 했는데 패키지 에러가 나면, 의존성이 바뀐 것일 수 있으니
+> `pip install -r requirements.txt` 를 한 번 더 실행하세요.
+
 ---
 
 ## 2. 내 URS 엑셀 준비
 
 ### 2-1. 엑셀 파일은 어디에 둬요?
-**아무데나 둬도 됩니다.** 명령에 경로만 정확히 적으면 돼요. 단, **추천은 레포 안
-`examples/` 폴더**에 복사해두는 것 — 경로가 짧아 명령이 간단하고, 나중에 추적도 됩니다.
+레포 안에 **본인 URS 전용 입력 폴더 `input_urs/`** 를 만들어 뒀습니다. **여기에 넣으세요.**
+이 폴더에는 안내문(`README.md`)과 복사해서 쓸 **`예제_URS_템플릿.xlsx`** 가 들어 있습니다.
 
 | 어디에 뒀나 | 명령에 적는 경로 |
 |---|---|
-| 레포 안 `examples/` (추천) | `examples/내URS.xlsx` |
+| 레포 안 `input_urs/` (추천) | `input_urs/내URS.xlsx` |
 | 바탕화면 (맥) | `/Users/내계정/Desktop/내URS.xlsx` 또는 `~/Desktop/내URS.xlsx` |
 | 바탕화면 (윈도우) | `C:\Users\내계정\Desktop\내URS.xlsx` |
 
-> ⚠️ 파일명에 **공백·한글**이 있으면 따옴표로 감싸세요 → `"examples/내 URS.xlsx"`
+> ⚠️ 파일명에 **공백·한글**이 있으면 따옴표로 감싸세요 → `"input_urs/내 URS.xlsx"`
 
 ### 2-2. 엑셀 양식 (중요)
-가장 안전한 방법: **예제 `examples/teammate_urs_0516.xlsx` 를 복사해서 값만 바꾸기.**
+가장 안전한 방법: **`input_urs/예제_URS_템플릿.xlsx` 를 복사해서 값만 바꾸기.**
 시트 구조·시트명은 그대로 두세요. 필요한 시트는 **2개**:
 
 | 시트명 (그대로 유지) | 들어가는 내용 |
@@ -76,11 +92,11 @@ pip install -r requirements.txt
 
 ### ① URS 엑셀 → spec.json  (룰엔진)
 ```bash
-python3 -m src.cli rule-engine  examples/내URS.xlsx  output/spec.json
+python3 -m src.cli rule-engine  input_urs/내URS.xlsx  output/spec.json
 ```
 성공하면 이렇게 나옵니다 👇
 ```
-[OK]  examples/내URS.xlsx → output/spec.json
+[OK]  input_urs/내URS.xlsx → output/spec.json
       rooms=48, airlocks=18, adjacency=27, rationale=399
       zones: process=30, aux=12, NC=6
 ```
