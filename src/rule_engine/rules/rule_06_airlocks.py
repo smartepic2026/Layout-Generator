@@ -14,6 +14,15 @@ kind 추론 (정규식):
     "MAL-out Harvest"     → MAL_out (대상: Harvest)
     "CAL Inoculation"     → CAL
 
+area_m2 산출 (Doc Agent #1, 2026-06-02; kind별 차등 2026-06-02 결정):
+    전실 면적은 URS Room 시트에 입력되지 않아 None 이었다. KB 권장 전실
+    footprint 를 기본값으로 부여하되, 전실 종류에 따라 차등한다:
+      - PAL(인원)·CAL(공용): 3.0m × 3.0m = 9.0 m²
+        (constraints.airlock_size_mm.preferred = 3000×3000).
+      - MAL(자재): 3.0m × 4.0m = 12.0 m² — 자재 도어(1500mm)·카트/대형물 통과를
+        위해 더 큰 footprint 권장.
+    URS Room 에 면적이 별도 derive 되어 있으면(현재는 없음) 그 값을 우선한다.
+
 무엇을 안 하는가:
     flow_type 결정은 룰 7. 차압 계산은 룰 13. 인접 Room 매칭은 derive/adjacency.
 """
@@ -30,6 +39,12 @@ _AL_PATTERN = re.compile(
     r"\b(PAL|MAL|CAL)\b[-_ ]?(in|out)?\b",
     re.IGNORECASE,
 )
+
+# KB 권장 전실 footprint 기본 면적 (m²) — kind별 차등 (#1, 2026-06-02 결정).
+# PAL/CAL: preferred 3000×3000 = 9.0 m² (engine._bundle_constraints 와 동기화).
+# MAL(자재): 자재 도어·카트 통과 위해 3000×4000 = 12.0 m².
+_PREFERRED_AIRLOCK_AREA_M2 = 9.0          # PAL / CAL
+_MATERIAL_AIRLOCK_AREA_M2 = 12.0          # MAL
 
 
 def _detect_kind(name_en: str) -> tuple[ALKind | None, str]:
@@ -54,6 +69,14 @@ def _detect_kind(name_en: str) -> tuple[ALKind | None, str]:
 def _is_airlock(room: Room) -> bool:
     """Room이 AL인지 판정."""
     return _AL_PATTERN.search(room.name_en) is not None
+
+
+def _default_area_for_purpose(purpose: str) -> float:
+    """전실 purpose 에 따른 KB 권장 기본 면적 (m²)."""
+    return (
+        _MATERIAL_AIRLOCK_AREA_M2 if purpose == "material"
+        else _PREFERRED_AIRLOCK_AREA_M2
+    )
 
 
 def apply(
@@ -84,11 +107,18 @@ def apply(
         else:
             purpose = "common"
 
+        # 전실 면적: URS Room 에 derive 된 값이 있으면 우선, 없으면 kind별 KB
+        # 권장 footprint (MAL 12.0 / PAL·CAL 9.0) (Doc Agent #1).
+        area_m2 = (
+            room.area_m2 if room.area_m2 is not None
+            else _default_area_for_purpose(purpose)
+        )
+
         airlocks.append(AirLock(
             al_id=room.room_id.replace("R_", "AL_"),
             kind=kind,
             clean_grade=room.clean_grade,
-            area_m2=room.area_m2,
+            area_m2=area_m2,
             flow_type="cascade",  # 룰 7에서 재결정
             connects_higher_room=None,
             connects_lower_room=None,
@@ -99,12 +129,25 @@ def apply(
         rationale.append(Rationale(
             rule_id="rule_06_airlocks",
             target_id=room.room_id,
-            decision=f"kind={kind}, purpose={purpose}, target={target!r}",
+            decision=(
+                f"kind={kind}, purpose={purpose}, area={area_m2} m², "
+                f"target={target!r}"
+            ),
             input_facts={
                 "al_room_name_en": room.name_en,
                 "al_room_grade": room.clean_grade,
+                "area_source": (
+                    "urs_room_area" if room.area_m2 is not None
+                    else (
+                        "kb_material_footprint_12m2" if purpose == "material"
+                        else "kb_preferred_footprint_9m2"
+                    )
+                ),
             },
-            applied_logic="PAL|MAL|CAL + in/out 정규식 매칭으로 kind 추론.",
+            applied_logic=(
+                "PAL|MAL|CAL + in/out 정규식 매칭으로 kind 추론. 면적은 URS "
+                "derive 값 우선, 없으면 kind별 KB footprint (MAL 12.0 / 그 외 9.0)."
+            ),
             source_reference="Excel: Layout 설계 원리 §7 (전실 배열)",
             flags=flags,
         ))

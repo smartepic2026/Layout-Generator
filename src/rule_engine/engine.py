@@ -58,6 +58,8 @@ def run_rule_engine(input_spec: RuleEngineInput) -> RuleEngineOutput:
         backfill_airlock_connections,
         build_adjacency,
         derive_flow_paths,
+        exclude_airlock_rooms,
+        mark_airlock_rooms,
         select_required_rooms,
     )
     from .rules import (
@@ -98,6 +100,10 @@ def run_rule_engine(input_spec: RuleEngineInput) -> RuleEngineOutput:
     # 4) 차압 cascade.
     rooms, airlocks = rule_13_pressure.apply(rooms, airlocks, input_spec, rationale)
 
+    # 4b) 에어록 중복 표시 (Doc Agent #3) — airlocks[] 와 짝이 되는 Room 을
+    #     is_airlock/airlock_id 로 마킹. adjacency 는 마킹 영향 없음.
+    rooms = mark_airlock_rooms(rooms, airlocks)
+
     # 5) Adjacency.
     rule_01_layout_axis.apply(input_spec, rationale)
     adjacency: list[AdjacencyEdge] = build_adjacency(
@@ -121,14 +127,21 @@ def run_rule_engine(input_spec: RuleEngineInput) -> RuleEngineOutput:
     zones: Zones = rule_05_zones.apply(rooms, rationale)
     zones = rule_12_nc_rooms.apply(zones, rooms, input_spec, rationale)
 
+    # 7b) 에어록 중복 제거 (Doc Agent #3) — 옵션 활성 시 출력 rooms[] 와 zones
+    #     에서 is_airlock Room 을 떨군다. airlocks[] 가 에어록 단일 소스가 됨.
+    #     기본(False)은 기존 계약 유지: rooms[] 에 placeholder 로 남되 표시만 됨.
+    output_rooms = rooms
+    if input_spec.overrides.exclude_airlock_rooms:
+        output_rooms, zones = exclude_airlock_rooms(rooms, zones)
+
     # 8) Constraints.
     constraints: Constraints = _bundle_constraints()
 
     # 9) Meta.
-    meta = _build_meta(input_spec, rooms, airlocks, adjacency, rationale)
+    meta = _build_meta(input_spec, output_rooms, airlocks, adjacency, rationale)
 
     return RuleEngineOutput(
-        rooms=rooms,
+        rooms=output_rooms,
         airlocks=airlocks,
         adjacency=adjacency,
         flow_paths=flow_paths,

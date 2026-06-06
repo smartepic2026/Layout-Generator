@@ -96,6 +96,10 @@ class Overrides:
     force_include_rooms: list[str] = field(default_factory=list)
     force_exclude_rooms: list[str] = field(default_factory=list)
     area_overrides: dict[str, float] = field(default_factory=dict)
+    # Doc Agent #3 (2026-05-31): True 면 출력 rooms[] 에서 에어록 중복 Room 을
+    # 제거(zones 도 함께 정리). 기본 False (기존 출력 계약 유지 — rooms[] 에
+    # 에어록이 placeholder 로 남고 is_airlock=True 로만 표시됨).
+    exclude_airlock_rooms: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,6 +142,12 @@ class Room:
     # 회의 안건 #5 (2026-05-26): URS 면적 비율 (%).
     # 모든 Room의 area_ratio_pct 합은 100±0.5% 이내여야 함 (rule_03 검증).
     area_ratio_pct: float | None = None
+    # Doc Agent #3 (2026-05-31): 에어록 중복 dedup 표시.
+    # 이 Room 이 airlocks[] 에도 동일 실체로 존재하는 에어록이면 True.
+    # 소비자(Doc Agent)는 is_airlock=True Room 을 걸러 중복을 제거할 수 있다.
+    is_airlock: bool = False
+    # 대응하는 AirLock.al_id (is_airlock=True 일 때만 채워짐, 그 외 None).
+    airlock_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

@@ -199,3 +199,72 @@ def select_required_rooms(
         flags=flags,
     ))
     return rooms
+
+
+# ---------------------------------------------------------------------------
+# 에어록 중복 dedup (2026-05-31, Doc Agent #3)
+# ---------------------------------------------------------------------------
+# 배경:
+#     URS Room 시트에 에어록이 방으로 입력돼 있어, 동일 실체가 rooms[] 의 Room
+#     과 airlocks[] 의 AirLock 양쪽에 존재한다(이중 표현). 아래 두 헬퍼가 이를
+#     처리한다. 표시(mark)는 항상 수행해 소비자가 중복을 식별할 수 있게 하고,
+#     실제 제거(exclude)는 Overrides.exclude_airlock_rooms=True 일 때만 한다.
+
+
+def mark_airlock_rooms(rooms: list[Room], airlocks: list) -> list[Room]:
+    """airlocks[] 에 대응하는 Room 을 is_airlock / airlock_id 로 표시.
+
+    AirLock.al_id 는 rule_06 에서 Room.room_id 의 'R_' prefix 만 'AL_' 로 바꿔
+    만들어진다. 여기서는 역으로 'AL_' → 'R_' 치환해 대응 Room 을 찾는다.
+    (substring 치환이 아니라 prefix 절단 — adjacency._room_id_from_al_id 와 동일.)
+
+    Args:
+        rooms: 현재까지 derive 된 Room 리스트.
+        airlocks: rule_06/07/13 을 거친 AirLock 리스트.
+
+    Returns:
+        is_airlock / airlock_id 가 채워진 새 Room 리스트 (frozen → replace).
+    """
+    import dataclasses
+
+    al_id_by_room_id: dict[str, str] = {
+        ("R_" + al.al_id[len("AL_"):]): al.al_id
+        for al in airlocks
+        if al.al_id.startswith("AL_")
+    }
+    out: list[Room] = []
+    for r in rooms:
+        al_id = al_id_by_room_id.get(r.room_id)
+        if al_id is not None:
+            out.append(dataclasses.replace(
+                r, is_airlock=True, airlock_id=al_id,
+            ))
+        else:
+            out.append(r)
+    return out
+
+
+def exclude_airlock_rooms(rooms: list[Room], zones):
+    """is_airlock=True Room 을 출력 rooms[] 와 zones 에서 함께 제거.
+
+    airlocks[] 가 에어록의 단일 소스가 되며, 중복 Room 은 출력에서 빠진다.
+    zones 도 같은 room_id 를 떨궈 일관성을 유지한다.
+
+    Args:
+        rooms: mark_airlock_rooms 로 표시된 Room 리스트.
+        zones: rule_05/12 가 만든 Zones 객체.
+
+    Returns:
+        (filtered_rooms, filtered_zones) 튜플.
+    """
+    import dataclasses
+
+    excluded_ids = {r.room_id for r in rooms if r.is_airlock}
+    kept = [r for r in rooms if not r.is_airlock]
+    filtered_zones = dataclasses.replace(
+        zones,
+        process_zone=[i for i in zones.process_zone if i not in excluded_ids],
+        auxiliary_zone=[i for i in zones.auxiliary_zone if i not in excluded_ids],
+        nc_zone=[i for i in zones.nc_zone if i not in excluded_ids],
+    )
+    return kept, filtered_zones

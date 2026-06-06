@@ -1,5 +1,15 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-06] 새 15룰 엔진 모노레포 통합 (D-033) — 브랜치 `drawing/floorplan-v2`
+
+팀원 6/2 push(teammate/main e05b85c) 새 엔진을 src/rule_engine 에 반영. 진단:
+6/1 통합본은 rule_14/15 있으나 models.py is_airlock 없음. 6/2 차이(models·engine·
+rule_06·rule_13·derive·output) 9파일 교체(상대 import라 surgery 불필요).
+rag_validator 는 제외(rag_interface 절대 import 불일치, 파이프라인 불필요).
+검증: cli rule-engine → is_airlock=True 18(새 엔진 증거), draw 정상, 전체 13fail/
+106pass 회귀 0. FINAL 도면 정식 파이프라인(URS→새엔진→draw)으로 재생성.
+→ 이제 cli rule-engine 이 새 15룰(is_airlock dedup·차압·ACPH·gowning) 호출.
+
 ## [2026-06-06] 정렬 마무리: 미반영 룰엔진 필드 전수 소비 (D-032) — 브랜치 `drawing/floorplan-v2`
 
 전수 재조사 DROP 필드 전부 반영. A:방 라벨에 ACPH·천정고·갱의. B:엔진 zones

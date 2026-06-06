@@ -1806,3 +1806,38 @@ drawing 7건 통과. 산출 `output/bench_v12_allfields.svg`.
 **남은 DROP(불필요/3D)**: volume_m3·recovery_time(HVAC), meta·rationale(로그),
 airlock connects_lower/purpose, area_ratio_pct, well_type — 2D 평면도 비대상 또는
 대체 충족. alignment_audit §6(B) 참조.
+
+---
+
+## D-033: 새 15룰 엔진(6/2) 모노레포 통합 — src/rule_engine 교체
+
+**날짜**: 2026-06-06
+
+**무엇**: 팀원(소연)이 6/2 `teammate/main`(rule_engine_validation_agent)에 push 한
+새 엔진 변경분을 우리 모노레포 `src/rule_engine` 에 반영. 사용자 지시("새 엔진으로
+완전히 대체").
+
+**배경 진단**: 우리 모노레포는 6/1 통합본(rule_14/15 파일은 있으나 models.py 에
+is_airlock 없음, rule_06/13/engine 구버전). 6/2 변경분만 차이 (e05b85c vs 우리):
+models.py·engine.py·rule_06_airlocks·rule_13_pressure·derive/__init__·rooms_selector·
+output_example·output_schema. import 는 신·구 모두 **상대경로**(`from ..models`) →
+import surgery 불필요, 직접 교체.
+
+**조치**:
+- 코어 파일 9종을 e05b85c 버전으로 교체(상대 import 그대로 동작).
+- `validators/rag_validator.py` 는 **제외**(우리 버전 유지) — 새 버전이 `rag_interface`
+  절대 import 의존(모노레포 경로 src.rag_interface 와 불일치). RAG 검증은
+  rule-engine→draw 파이프라인에 불필요.
+- src/rule_engine/tests 는 미반영(pytest testpaths=["tests"] 라 root tests 만 수집,
+  엔진 tests 는 `rule_engine.` 절대 import 라 모노레포 비호환 — 별도 정리 대상).
+
+**검증**:
+- `cli rule-engine examples/teammate_urs_0516.xlsx` → rooms=48, **is_airlock=True 18**
+  (새 엔진 활성 증거). draw end-to-end 정상(rooms 32/AL 18/doors 37).
+- 전체 테스트 **13 fail/106 pass/6 err — 회귀 0**(남은 실패는 옛 fixture R_MEDIA_PREP·
+  옛 engine_e2e = 기존 legacy, 엔진 통합과 무관).
+- FINAL 도면 정식 파이프라인(URS→새엔진→draw)으로 재생성.
+
+**의미**: 이제 `cli rule-engine` 이 **새 15룰 엔진**(is_airlock dedup·rule_13 차압·
+rule_14 ACPH·rule_15 gowning)을 호출 → 팀장님 URS 테스트가 새 룰로 동작. 도면
+정렬(D-022~032)은 이미 새 엔진 출력 기준으로 맞춰져 있어 일관.
