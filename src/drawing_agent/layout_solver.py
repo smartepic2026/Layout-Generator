@@ -459,6 +459,84 @@ def _place_treemap(layout, by_id, ids, x0, y0, w, h, order_desc: bool = True) ->
         layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=rect)
 
 
+def _place_d_zone_rows(layout, by_id, ids, x0, y0, w, h) -> dict:
+    """[D-034 / 피드백 0607] Grade D 방을 팀장님 지정 배치로 명시 배치.
+    위→아래: Material storage / Equipment storage / Gowning F / Gowning M (각 전폭)
+             → Monitoring | DS storage (좌우) → CIP supply | IPC(위)/Cell bank(아래)
+             → 나머지(전폭). 우측 열(DS·IPC·Cell bank)=Grade D 복도 접촉, 좌측
+             열(Monitoring·CIP)=후방 지원실. 반환: {room_id: 'corridor'|'back'} 접촉 힌트.
+    """
+    pool = [i for i in ids if i in by_id]
+
+    def take(*keys):
+        for i in list(pool):
+            up = i.upper()
+            if any(k in up for k in keys):
+                pool.remove(i)
+                return i
+        return None
+
+    mat_store = take("MATERIAL_STORAGE", "MATERIAL_STORE")
+    equip = take("EQUIPMENT")
+    gown_f = take("GOWNING_FEMALE", "GOWNING_F")
+    gown_m = take("GOWNING_MALE", "GOWNING_M")
+    monitoring = take("MONITOR")
+    ds = take("DS_STORAGE", "DS_STORE", "DRUG_SUBSTANCE")
+    cip = take("CIP")
+    ipc = take("IPC")
+    cellbank = take("CELL_BANK", "CELLBANK")
+
+    rows = []                                   # ("full", rid) | ("pair", left, [rights])
+    for rid in (mat_store, equip, gown_f, gown_m):
+        if rid:
+            rows.append(("full", rid, None))
+    if monitoring or ds:
+        rows.append(("pair", monitoring, [r for r in (ds,) if r]))
+    if cip or ipc or cellbank:
+        rows.append(("pair", cip, [r for r in (ipc, cellbank) if r]))
+    for rid in pool:                            # 분류 안 된 나머지 D 방 = 전폭
+        rows.append(("full", rid, None))
+    if not rows:
+        return {}
+
+    def area(rid):
+        return max((by_id[rid].area_m2 or 0.0), 10.0) if rid else 0.0
+
+    def row_weight(row):
+        if row[0] == "full":
+            return area(row[1])
+        return max(area(row[1]), sum(area(r) for r in row[2]))
+
+    weights = [row_weight(r) for r in rows]
+    tot = sum(weights) or 1.0
+    touch = {}                                  # 복도 접촉 힌트
+    yy = y0
+    for row, wt in zip(rows, weights):
+        rh = h * wt / tot
+        if row[0] == "full":
+            rid = row[1]
+            layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(x0, yy, w, rh))
+            touch[rid] = "corridor"             # 전폭 → 우측 D복도 접촉
+        else:
+            left, rights = row[1], row[2]
+            lw = w * 0.5 if rights else w
+            if left:
+                layout.rooms[left] = PlacedRoom(room=by_id[left], rect=Rect(x0, yy, lw, rh))
+                touch[left] = "back" if rights else "corridor"
+            if rights:
+                rx, rw = x0 + lw, w - lw
+                ra = [area(r) for r in rights]
+                rt = sum(ra) or 1.0
+                ry = yy
+                for rr, a in zip(rights, ra):
+                    rhh = rh * a / rt
+                    layout.rooms[rr] = PlacedRoom(room=by_id[rr], rect=Rect(rx, ry, rw, rhh))
+                    touch[rr] = "corridor"       # 우측 열 → D복도 접촉
+                    ry += rhh
+        yy += rh
+    return touch
+
+
 def _place_row_aspect(layout, by_id, ids, x0, y0, w, h, max_aspect=1.9):
     """가로 행 배치 — 면적 비례 폭 + 종횡비 클램프(작은 방 세로 슬리버 방지)."""
     present = [r for r in ids if r in by_id]
@@ -493,6 +571,45 @@ def _add_synth_door(layout, a: "Rect", b: "Rect", swing_into: "Rect"):
     x, y, rot = pos
     layout.doors.append(PlacedDoor(adj=None, x=x, y=y, width_mm=1500,
                                    rotation_deg=rot, swing_to_xy=(swing_into.cx, swing_into.cy)))
+
+
+def _ensure_door(layout, room_rect: "Rect", corr_rect: "Rect") -> bool:
+    """room↔corridor 가 벽을 공유하면 도어 1개 합성(없을 때만). 공유 벽 없으면 False."""
+    pos = _door_pos(room_rect, corr_rect)
+    if pos is None:
+        return False
+    x, y, rot = pos
+    for d in layout.doors:                       # 근접 중복 도어 방지
+        if abs(d.x - x) < 600 and abs(d.y - y) < 600:
+            return True
+    layout.doors.append(PlacedDoor(adj=None, x=x, y=y, width_mm=1500,
+                                   rotation_deg=rot, swing_to_xy=(room_rect.cx, room_rect.cy)))
+    return True
+
+
+def _ensure_rooms_touch_corridor(layout, room_ids: list, corr_ids: list) -> None:
+    """[A6 + containment] room_ids 각 방이 corr_ids 중 인접 복도에 도어를 갖게 보장.
+    corr_ids 를 등급 경계에 맞게 제한하면(예: D방→D복도만) 부적절 등급 직결을 차단."""
+    corrs = [(cid, layout.rooms[cid].rect) for cid in corr_ids
+             if cid and cid in layout.rooms]
+    for rid in room_ids:
+        if rid not in layout.rooms:
+            continue
+        rr = layout.rooms[rid].rect
+        for _cid, cr in corrs:
+            if _ensure_door(layout, rr, cr):
+                break
+
+
+def _normalize_door_widths(layout) -> None:
+    """[피드백 2026-06-07] 도어 폭이 제각각(adj.door_size_mm 스펙값 vs 합성 1500 등)
+    → 가장 작은 문 기준으로 전체 도어 폭 통일."""
+    widths = [d.width_mm for d in layout.doors if d.width_mm and d.width_mm > 0]
+    if not widths:
+        return
+    m = min(widths)
+    for d in layout.doors:
+        d.width_mm = m
 
 
 def _synth_corridor_room(rid: str, name_ko: str, name_en: str) -> Room:
@@ -577,7 +694,9 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
             layout.rooms[waste_out] = PlacedRoom(room=by_id[waste_out], rect=Rect(d_x0, H - wh, w_d, wh))
             d_h -= wh
             d_ids.remove(waste_out)
-        _place_treemap(layout, by_id, d_ids, d_x0, d_y0, w_d, d_h)
+        # [D-034 / 피드백 0607] 팀장님 지정 2D 배치(전폭 + 좌우 묶음). treemap·단일열 아님.
+        d_touch = _place_d_zone_rows(layout, by_id, d_ids, d_x0, d_y0, w_d, d_h)
+        cls["_d_touch"] = d_touch
     if has_dc:
         layout.rooms[cls["d_corridor"]] = PlacedRoom(
             room=by_id[cls["d_corridor"]], rect=Rect(d_x0 + w_d, 0.0, w_dc, H))
@@ -603,29 +722,33 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
         layout.rooms[bc.id] = PlacedRoom(room=bc,
                                          rect=Rect(c_x0, ret_b[0], c_w, ret_b[1] - ret_b[0]))
 
-    # supply 밴드 = [가운 게이트][MAL-in 반입실][supply 복도]  (D복도↔supply 접점)
-    # [피드백 #4] 접경부에 사람용 Gowning 외 자재용 MAL-in 도 인접 배치.
-    sx = c_x0
+    # [피드백 0607] D↔C 진입 게이트 = Gowning(위) / MAL-in(아래) **세로 스택**, C 좌단.
+    #   (이전엔 가로 나란히였음 — 팀장님 지정 세로 스택으로 변경.) 우측에 supply 복도.
+    sup_y, sup_h = sup[0], sup[1] - sup[0]
+    gate_w = min(c_w * 0.15, max(c_w * 0.09, 6500.0))
     gown = cls["process_gowning"]
-    if gown and gown in by_id:
-        gw = min(c_w * 0.13, max(c_w * 0.07, 5000.0))
-        layout.rooms[gown] = PlacedRoom(room=by_id[gown],
-                                        rect=Rect(sx, sup[0], gw, sup[1] - sup[0]))
-        sx += gw
-    # MAL-in(반입실): spec 에 전용 방 있으면 사용, 없으면 합성 게이트 룸
     mal_id = next((r.id for r in spec.rooms
                    if "MAL_IN" in r.id.upper() and not _is_al_fake_room(r) and r.id in by_id), None)
     if mal_id is None:
         mal_id = "R_SUPPLY_MAL_IN"
         by_id[mal_id] = _synth_gate_room(mal_id, "자재 반입실 (MAL-in)", "Material Air Lock in")
-    mw = min(c_w * 0.07, max(c_w * 0.04, 3500.0))
-    layout.rooms[mal_id] = PlacedRoom(room=by_id[mal_id],
-                                      rect=Rect(sx, sup[0], mw, sup[1] - sup[0]))
-    sx += mw
+    if gown and gown in by_id:
+        # 면적 비례로 상/하 분할 (Gowning 위, MAL-in 아래)
+        ga = max(by_id[gown].area_m2 or 0.0, 10.0)
+        ma = max(by_id[mal_id].area_m2 or 0.0, 10.0)
+        gh = sup_h * ga / (ga + ma)
+        layout.rooms[gown] = PlacedRoom(room=by_id[gown],
+                                        rect=Rect(c_x0, sup_y, gate_w, gh))
+        layout.rooms[mal_id] = PlacedRoom(room=by_id[mal_id],
+                                          rect=Rect(c_x0, sup_y + gh, gate_w, sup_h - gh))
+    else:
+        layout.rooms[mal_id] = PlacedRoom(room=by_id[mal_id],
+                                          rect=Rect(c_x0, sup_y, gate_w, sup_h))
+    sx = c_x0 + gate_w
     sc = cls["supply_corridor"]
     if sc:
         layout.rooms[sc] = PlacedRoom(room=by_id[sc],
-                                      rect=Rect(sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0]))
+                                      rect=Rect(sx, sup_y, c_x0 + c_w - sx, sup_h))
 
     # 공정행 (상·하) — 종횡비 클램프 적용
     _place_row_aspect(layout, by_id, cls["top_row"], c_x0, proc_t[0], c_w, proc_t[1] - proc_t[0])
@@ -637,14 +760,47 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     _place_both_way_als(layout, spec, sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0])
     _place_equipment_grid(layout, eq_gap=eq_gap_mm)
 
-    # 도어: adjacency 기반 + 가운 게이트 합성 도어(D복도↔가운, 가운↔supply)
+    # 도어: adjacency 기반 + D→C 게이트(Gowning·MAL-in) 합성 도어 = D복도(좌)·supply(우) 양쪽
     _place_doors(layout, spec.adjacency)
-    if gown and gown in layout.rooms:
-        g = layout.rooms[gown].rect
-        if has_dc and cls["d_corridor"] in layout.rooms:
-            _add_synth_door(layout, layout.rooms[cls["d_corridor"]].rect, g, g)
-        if sc and sc in layout.rooms:
-            _add_synth_door(layout, g, layout.rooms[sc].rect, layout.rooms[sc].rect)
+    for gid in (gown, mal_id):
+        if gid and gid in layout.rooms:
+            g = layout.rooms[gid].rect
+            if has_dc and cls["d_corridor"] in layout.rooms:
+                _ensure_door(layout, g, layout.rooms[cls["d_corridor"]].rect)
+            if sc and sc in layout.rooms:
+                _ensure_door(layout, g, layout.rooms[sc].rect)
+    # [D-034 / 피드백 0607] A6 + containment 보장:
+    #   · NC 방 → NC 복도로만 출입
+    #   · D 방 → Grade D 복도로만 출입(NC 직결 금지 — CIP/Monitoring 오염차단)
+    #   · Gowning M/F 만 NC복도+D복도 양쪽 도어 = NC↔D 인원 게이트(갱의 강제)
+    nc_corr_id = cls.get("nc_corridor")
+    d_corr_id = cls.get("d_corridor")
+    d_touch = cls.get("_d_touch", {})
+    d_all = [r for r in cls["d"] if r in layout.rooms]
+    gownings = [r for r in d_all if "GOWNING" in r.upper()]
+    if d_corr_id and d_corr_id in layout.rooms:
+        dcr = layout.rooms[d_corr_id].rect
+        for rid in d_all:
+            if rid in gownings:
+                continue
+            rr = layout.rooms[rid].rect
+            if d_touch.get(rid) == "back":
+                # 후방 지원실(Monitoring·CIP) — 복도 직접 접촉 불가 → 앞(served) 방에 도어
+                front = next((layout.rooms[o].rect for o in d_all if o != rid
+                              and abs(layout.rooms[o].rect.x - rr.x2) < 60
+                              and not (layout.rooms[o].rect.y2 <= rr.y or layout.rooms[o].rect.y >= rr.y2)),
+                             None)
+                _ensure_door(layout, rr, front if front is not None else dcr)
+            else:
+                _ensure_door(layout, rr, dcr)        # 전폭·우측열 → D복도 도어
+        # Gowning M/F = NC↔D 게이트 → NC복도 + D복도 양쪽 도어
+        for g in gownings:
+            gr = layout.rooms[g].rect
+            _ensure_door(layout, gr, dcr)
+            if nc_corr_id and nc_corr_id in layout.rooms:
+                _ensure_door(layout, gr, layout.rooms[nc_corr_id].rect)
+    if nc_corr_id:
+        _ensure_rooms_touch_corridor(layout, cls["nc"], [nc_corr_id])
     _place_airlock_doors(layout)
     return layout
 
@@ -672,7 +828,9 @@ def solve(
     if dynamic_rooms:
         # [2026-06-02 v3] 외부(소연) spec → GMP 청정도 구배 토폴로지(NC→D→C).
         # 사용자 도면 피드백(②③⑤) 반영: D복도 + 가운 게이트 + 양측 return 복도.
-        return _solve_gmp_gradient(spec, building_w_mm, building_h_mm)
+        layout = _solve_gmp_gradient(spec, building_w_mm, building_h_mm)
+        _normalize_door_widths(layout)        # [피드백 0607] 도어 폭 통일
+        return layout
 
     # ── 하드코딩 strip-band (우리 default URS 전용; baselines/NNE/테스트 보존, 무수정) ──
     top_row_ids = TOP_ROW

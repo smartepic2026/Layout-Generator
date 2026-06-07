@@ -1841,3 +1841,69 @@ import surgery 불필요, 직접 교체.
 **의미**: 이제 `cli rule-engine` 이 **새 15룰 엔진**(is_airlock dedup·rule_13 차압·
 rule_14 ACPH·rule_15 gowning)을 호출 → 팀장님 URS 테스트가 새 룰로 동작. 도면
 정렬(D-022~032)은 이미 새 엔진 출력 기준으로 맞춰져 있어 일관.
+
+---
+
+## D-034: 팀장님 0607 피드백 — 중앙 스파인 통합밴드 토폴로지 + --seed 다양성 (진행중)
+
+**날짜**: 2026-06-07
+
+**무엇**: 팀장님 도면 피드백 16항목(prompts.md 2026-06-07)을 5영역(A 인접성 /
+B flow정확성 / C 면적 / D 장비 / E 다양성)으로 정리. 사용자 결정 4건 + Step1-A 착수.
+
+**사용자 결정 4건**:
+1. **--seed 도입** — CLAUDE.md "결정론적 솔버(재현성)" 확정 결정과 팀장님 "배열
+   다양성(랜덤)" 요구의 충돌 해소책. 시드 고정=100% 재현(논문/특허 방어 유지),
+   시드 변경=다양한 배치. 양립.
+2. **정확성(A+B+D) 먼저 → 다양성(C면적·E) 나중**, 단계별 커밋·검증.
+3. **flow 경로 정확성은 rule_engine/derive/flow_paths.py 에서** (spec=정답, drawing은
+   렌더만). 모노레포 우리 권한(memory rule_engine_ownership).
+4. **인접성=결과물 퀄리티 우선(빠를 필요 없음) → 빗살/중앙스파인 토폴로지 재설계.**
+   추가 질문에서 **"D복도 = 중앙 스파인(양면 방)"** 선택. "좌측끝/우측끝" =
+   D복도를 가로 중앙밴드로 두고 게이트가 양 끝에서 두 복도에 접촉하는 해석.
+
+**Step1-A 구현 (layout_solver._solve_gmp_gradient 재작성)**:
+- **중앙 스파인 통합밴드**: 전 구역(NC/D/C) 공유 5밴드(return상/공정상/중앙/공정하/
+  return하). 중앙밴드 가로 = `NC복도 | CNC게이트 | ═D복도═ | D→C게이트 | ═Supply복도═`.
+  → 게이트가 양 끝에서 두 복도에 접촉(A1~A4), 모든 방이 상/하 행으로 인접 복도에 접촉.
+- **A5/A6**: NC·D 구역 2D treemap → 행/스택 배치로 모든 방이 복도 접촉(이전엔
+  DS storage·IPC 가 Cell bank 뒤 매몰). D방 상/하 행이 중앙 D복도에 접촉.
+- **A6 도어 강제**: `_ensure_rooms_touch_corridor` 신규 — adjacency 도어 외에 모든
+  방↔인접 복도 합성 도어 보장(방은 복도로만 출입, 주공정실 MAL/PAL 예외).
+- **게이트 분류**: CNC(Gowning M/F + MAL-in CNC) 좌단 / C(Gowning + MAL-in C) 우단.
+  MAL-in 실물 없으면 합성(_synth_gate_room, clean_grade CNC/C).
+- **검증**: drawing 7/7 통과, 전체 13fail/106pass/6err = **baseline 회귀 0**.
+  렌더 `output/_v14_spine.svg` — 중앙밴드·게이트·도어 형성 확인.
+
+**남은 작업 (이 결정 후속)**:
+- Step1-A 시각 polish: 라벨 겹침, 게이트/복도 정렬 미세조정 (사용자 도면 확인 후).
+- Step1-B: flow 경로(B7~B10) rule_engine derive 수정 + parallel 겹침 레인(B11).
+- Step1-D: 장비-flow 선 겹침 회피(D13).
+- Step2: C12(공정행 진짜 면적비례) + E14/E15(--seed 다양성) + E16(URS 면적/비율).
+
+**근거**: EU GMP Annex 1(에어록 게이트=청정구역 경계), ISPE Vol.6 §7.9(one-way),
+팀장님 도면 피드백 0607.
+
+### D-034 정정 (2026-06-07 후속) — 중앙스파인 폐기, 지난번 구조 + 명시 배치 채택
+
+위 "중앙 스파인 통합밴드"는 **팀장님 피드백으로 폐기**. 사유: 중앙스파인은 D방이
+NC복도에 직접 붙어 **CIP supply·Monitoring 이 갱의 없이 NC와 직결되는 오염차단
+위반**을 낳았고, 팀장님이 "전체 구조는 지난번(NC|NC복도|D열|D복도|C 5밴드)이 훨씬
+바람직"하다고 명시. → **지난번 구조 복원** + 아래 수정:
+
+- **D구역 명시 2D 배치 (`_place_d_zone_rows`)**: 팀장님 지정 배치 — 위→아래
+  Material storage/Equipment storage/Gowning Female/Gowning Male(전폭) →
+  Monitoring|DS storage → CIP supply|IPC/Cell bank(좌우) → (Material-in 상단·
+  Waste-out 하단 핀). treemap(면적순 흩어짐)·단일열(이질적) 둘 다 폐기.
+- **containment 도어 규칙**: NC방→NC복도, D방→D복도(NC직결 금지), Gowning M/F만
+  NC복도+D복도 양쪽(=NC↔D 인원 게이트, 갱의 강제). 후방 지원실(Monitoring·CIP)은
+  **Grade D 아님** → 앞 방(DS storage·IPC) 경유 허용(팀장님 확인).
+- **D→C 진입 게이트**: Gowning(위)/MAL-in(아래) **세로 스택**(이전 가로나란히→변경),
+  D복도+Supply복도 양쪽 도어.
+- **도어 폭 통일**: `_normalize_door_widths` — 전 도어를 최소 폭 기준 통일.
+- **검증**: drawing 7/7, 전체 13fail/106pass = **회귀 0**. FINAL_layout 재생성.
+
+**한계 → 다음 결정(D-035 예정)**: `_place_d_zone_rows` 가 **방 ID 하드코딩**이라
+이 URS 에만 맞음. 다른 URS/시나리오는 방 구성이 달라 깨짐. **방 속성(clean_grade·
+category·function) 기반 일반 규칙으로 리팩터** 필요(팀장님 지시: "엔진·코드 자체를
+손봐 다른 도면도 규칙 만족"). 4 시나리오 전수 검증 예정.

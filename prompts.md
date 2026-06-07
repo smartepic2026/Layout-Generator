@@ -808,3 +808,32 @@ P1 과 충돌, tie-breaker 가 PPO 단조 방해 → timeout. P1-only 권장.
    → src/rule_engine 도 우리 영역(메모리 rule_engine_ownership 일관).
 
 → D-022(Phase 0) 수행. 다음 Phase 1 = 동선 화살표 flow_paths 기반 재작성.
+
+---
+
+## 2026-06-07 — 팀장님 도면 피드백 0607 (16항목) + 작업 결정
+
+**팀장님 피드백 md (0607 새벽)** — 최신 layout 보고 치명적 제약 거의 없음(quality 거의 완성). 잔여 16항목:
+
+- **[Room 인접성]** ①NC↔D Gowning=한쪽 NC복도/한쪽 D복도 접촉 ②D↔C Gowning=D복도/C복도
+  ③NC↔D MAL-in=NC복도/D복도 ④D↔C MAL-in=D복도/C복도 ⑤Grade D 모든 방이 D복도 직접
+  접촉(FINAL_full.png 오류: DS storage·IPC가 Cell bank storage 뒤 막힘) ⑥모든 방은
+  Room↔Room 직접 통행 불가, 반드시 인접 4종 복도 통해 이동(주공정실 사이 MAL/PAL만 예외).
+- **[Flow 정확성 — 도면 평가 핵심]** ⑦Material: NC복도→Material-in(CNC)→D복도→Material-in(C)
+  →Supply→공정실 CAL/MAL-in→공정 반입 ⑧Waste 최종도착=Waste-out ⑨Personnel: NC복도→
+  Gowning M/F(CNC)→D복도→Gowning(C)→Supply→CAL/PAL-in→공정→CAL/PAL-out→Return→D복도→
+  Gowning→NC복도→Lobby ⑩Product: Inoc→Cellculture→Harvest→Purif1→Purif2→Supply→
+  MAL-in(C)→D복도→DS storage ⑪화살표 cross는 OK, parallel 동일선상 겹침 금지(구분 불가).
+- **[면적]** ⑫방별 실면적이 도면에 서로 비례 안 됨.
+- **[장비]** ⑬Harvest·Purif1 장비가 룸 안 flow 선과 겹침.
+- **[다양성 try 요청]** ⑭좌→우(NC>D>C)/우→좌(C<D<NC) 랜덤 ⑮같은 청정구역 내 규칙 안깨는
+  선에서 방 배열 랜덤 ⑯URS 전체면적·가로×세로 비율 반영(현재 미적용).
+
+**사용자(헤민) 결정 4건**:
+1. **--seed 도입** — 시드 고정=재현(CLAUDE.md 결정론 유지), 시드 변경=다양성. 양립책 채택.
+2. **정확성 먼저(A인접+B flow+D장비) → 다양성 나중(C면적+E다양성/URS)**. 단계별 커밋·검증.
+3. **flow 경로 정확성은 rule_engine/derive/flow_paths.py 에서 수정**(spec=정답, drawing은 렌더만).
+   소연 엔진 영역이나 모노레포 우리 권한(memory rule_engine_ownership).
+4. **인접성은 결과물 퀄리티 우선(빠를 필요 없음) → 빗살(comb) 토폴로지 재설계** 채택.
+
+→ decisions.md D-034. 작업: Step1(A+B+D) 먼저.

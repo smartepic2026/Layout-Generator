@@ -1,5 +1,22 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-07] 팀장님 0607 피드백 — Step1-A 인접성/배치 확정 (D-034, 팀장님 승인) — 브랜치 `drawing/floorplan-v2`
+
+팀장님 도면 피드백(16항목/5영역 A인접·B flow·C면적·D장비·E다양성) + 사용자 결정 4건.
+prompts.md 2026-06-07 / decisions.md D-034(+정정). **시도→폐기→확정** 과정:
+- (폐기) 중앙 스파인 통합밴드 — D방이 NC복도 직결되어 CIP/Monitoring 오염차단 위반.
+  팀장님 "전체 구조는 지난번이 훨씬 바람직" → **지난번 구조(NC|NC복도|D열|D복도|C
+  5밴드) 복원**.
+- (확정, 팀장님 승인) **D구역 명시 2D 배치 `_place_d_zone_rows`**: Material/Equipment/
+  Gowning F/M(전폭) → Monitoring|DS storage → CIP|IPC/Cell bank(좌우) → Material-in 상단·
+  Waste-out 하단. **containment 도어**: D방→D복도만, Gowning M/F만 NC↔D 게이트.
+  후방 지원실(Monitoring·CIP=Grade D 아님)은 앞 방 경유 OK. **D→C 게이트 Gowning/MAL-in
+  세로 스택**. **도어 폭 통일**(`_normalize_door_widths`). 검증 drawing 7/7, 회귀 0.
+  FINAL_layout_main/full 재생성(team lead URS).
+**다음 (D-035, 팀장님 지시)**: `_place_d_zone_rows` ID 하드코딩 → **방 속성 기반 일반
+규칙으로 리팩터**(다른 URS/시나리오도 GMP 규칙 만족). 4 시나리오 전수 검증.
+이후 Step1-B flow정확성(B7~B11) → Step1-D 장비겹침 → Step2 C면적·E다양성.
+
 ## [2026-06-06] 새 15룰 엔진 모노레포 통합 (D-033) — 브랜치 `drawing/floorplan-v2`
 
 팀원 6/2 push(teammate/main e05b85c) 새 엔진을 src/rule_engine 에 반영. 진단:
