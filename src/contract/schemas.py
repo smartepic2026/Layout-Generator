@@ -324,6 +324,10 @@ class RuleEngineOutput(StrictModel):
     """7-블록 산출물. Drawing Agent의 단일 입력."""
     project_name: str
     modality: Modality
+    # [W1/E16 2026-06-07] 건물 footprint(전체면적·가로·세로)를 계약에 포함.
+    # URS 파서는 읽지만 소연 엔진 출력엔 없어 누락되던 것 → cmd_rule_engine 이 채움.
+    # 없으면 기본값(78500x42500)으로 하위호환. drawing 캔버스/면적 스케일의 입력.
+    building: BuildingSpec = Field(default_factory=BuildingSpec)
     rooms: list[Room]
     airlocks: list[Airlock]
     adjacency: list[Adjacency]

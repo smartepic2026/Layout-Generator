@@ -42,10 +42,12 @@ def resolve_building_dims(
     수 있으나, 그것은 "추정값" 이므로 P3·P5·P8 보류 원칙과 같은 줄기로 거부.
     명시적 입력 (URS) 이 없으면 manual default 로 fallback 한다.
     """
-    # tier1 — 룰엔진이 채웠을 경우 (스키마 확장 시 활성). 현재 RuleEngineOutput
-    # 에는 building dim 필드 없음 → 항상 skip.
-    if hasattr(spec, "building") and getattr(spec, "building", None) is not None:  # 방어
-        b = getattr(spec, "building")
+    # tier1 — 룰엔진/계약이 building 을 *명시적으로* 채운 경우(W1). 기본값(미설정)은
+    # tier1 로 보지 않고 tier2(URS)/tier4(default) 로 폴백 → 4-tier 의미 보존.
+    # model_fields_set 로 명시 여부 판별(cmd_rule_engine 가 채우거나 spec.json 에 키 존재).
+    if (getattr(spec, "building", None) is not None
+            and "building" in getattr(spec, "model_fields_set", set())):
+        b = spec.building
         w = getattr(b, "width_mm", None)
         h = getattr(b, "depth_mm", None)
         if w and h:

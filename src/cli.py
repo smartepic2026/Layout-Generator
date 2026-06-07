@@ -17,7 +17,7 @@ import json
 import sys
 from pathlib import Path
 
-from src.contract.schemas import RuleEngineOutput
+from src.contract.schemas import BuildingSpec, RuleEngineOutput
 
 
 def cmd_rule_engine(args: argparse.Namespace) -> int:
@@ -37,6 +37,17 @@ def cmd_rule_engine(args: argparse.Namespace) -> int:
     her_dict = json.loads(her_out.to_json())
     out = RuleEngineOutput.model_validate(adapt_external_dict(her_dict))
 
+    # 2.5) [W1/E16] URS 파서가 읽은 건물 footprint(전체면적·가로·세로)를 계약(spec.building)
+    #      에 실어 보냄. 소연 엔진 출력엔 building 이 없어 누락(파서는 읽는데 미전달) →
+    #      drawing 이 URS 캔버스/면적을 못 받아 항상 기본값(78500x42500)으로 그려지던 원인.
+    ib = getattr(inp, "building", None)
+    if ib is not None:
+        out = out.model_copy(update={"building": BuildingSpec(
+            total_floor_area_m2=float(getattr(ib, "total_floor_area_m2", None) or 3300),
+            width_mm=int(getattr(ib, "width_mm", None) or 78500),
+            depth_mm=int(getattr(ib, "depth_mm", None) or 42500),
+        )})
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(out.model_dump_json(indent=2))
 
@@ -45,6 +56,8 @@ def cmd_rule_engine(args: argparse.Namespace) -> int:
           f"adjacency={len(out.adjacency)}, rationale={len(out.rationale)}")
     print(f"      zones: process={len(out.zones.process_zone)}, "
           f"aux={len(out.zones.auxiliary_zone)}, NC={len(out.zones.nc_zone)}")
+    print(f"      building: {out.building.width_mm}x{out.building.depth_mm}mm "
+          f"(total {out.building.total_floor_area_m2:.0f}㎡)  ← URS 반영")
     return 0
 
 
@@ -66,6 +79,8 @@ def cmd_draw(args: argparse.Namespace) -> int:
     dropped = [r.id for r in spec.rooms
                if r.id not in layout.rooms and not _is_al_fake_room(r)]
     print(f"[OK]  {args.spec} → {out}")
+    print(f"      canvas: {layout.building_w_mm:.0f}x{layout.building_h_mm:.0f}mm "
+          f"({'URS spec.building' if args.width is None else 'CLI --width/--height'})")
     print(f"      rooms placed: {len(layout.rooms)}, airlocks: {len(layout.airlocks)}, doors: {len(layout.doors)}")
     if dropped:
         print(f"      [WARN] 배치 누락된 실제 방 {len(dropped)}: {dropped}")
@@ -106,8 +121,10 @@ def main(argv: list[str] | None = None) -> int:
     p_draw = sub.add_parser("draw", help="spec.json → SVG floorplan")
     p_draw.add_argument("spec", help="input spec.json")
     p_draw.add_argument("svg", help="output svg path")
-    p_draw.add_argument("--width", type=int, default=78500, help="building width (mm)")
-    p_draw.add_argument("--height", type=int, default=42500, help="building depth (mm)")
+    p_draw.add_argument("--width", type=int, default=None,
+                        help="building width (mm). 생략 시 spec.building(URS) 사용")
+    p_draw.add_argument("--height", type=int, default=None,
+                        help="building depth (mm). 생략 시 spec.building(URS) 사용")
     p_draw.add_argument("--strip", action="store_true",
                         help="레거시 strip-band 토폴로지 강제 (기본=gradient, 방 누락 0)")
     p_draw.add_argument("--flows", choices=["full", "main", "off"], default="full",

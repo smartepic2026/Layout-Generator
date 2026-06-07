@@ -1,5 +1,17 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-07] 0607 전수 감사(워크플로우) + W1 건물 footprint 계약 포함 (D-035) — 브랜치 `drawing/floorplan-v2`
+
+"모든 걸 해결" 지시 → ultracode 워크플로우(5 에이전트) 증거기반 전수 감사 →
+**18항목 마스터 작업목록 `docs/audit_0607_worklist.md`**. 의존순 W1부터.
+- **W1 완료**: 계약 `RuleEngineOutput.building` 필드 추가 + cmd_rule_engine 이 URS
+  building(면적·가로세로) 매핑 + cmd_draw 가 spec.building 캔버스 사용. "파서는 읽는데
+  계약에 안 넘기던" 근본 해결. 일반화 검증(60000x30000 주입→캔버스 변경). 회귀 자가
+  검출(4-tier 폴백 깨짐)→model_fields_set 보정. **회귀 0(13fail/106pass)**.
+- 추가 지시 기록(prompts.md): UI(동선 토글/선택다운로드), URS당 배치 3변형, 제약위반 수정.
+**다음**: W2(spec corridor_role/subzone 속성) + W3(도면 geometric validator) → 면적(W4~7)
+→ 일반화(W8/13/15) → 장비(W9~11) → flow(W12/14) → 다양성(W17/18).
+
 ## [2026-06-07] 팀장님 0607 피드백 — Step1-A 인접성/배치 확정 (D-034, 팀장님 승인) — 브랜치 `drawing/floorplan-v2`
 
 팀장님 도면 피드백(16항목/5영역 A인접·B flow·C면적·D장비·E다양성) + 사용자 결정 4건.
