@@ -1,0 +1,6 @@
+# BioForge CD Studio — 백엔드 추가 의존성
+# (rule_engine/rag_interface 자체 의존성은 레포 루트 requirements.txt 참조)
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9
+httpx>=0.27          # Doc Agent HTTP 어댑터(mode=http)·테스트 클라이언트용
