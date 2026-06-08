@@ -312,7 +312,19 @@ $('#runBtn').onclick=async()=>{
   try{
     if(LIVE && uploaded.file){ await runLive(); }
     else{ if(LIVE&&!uploaded.file) logLine('정보','예시 데이터는 내장 결과로 표시합니다 (파일 업로드 시 실서버 실행).',true); await runDemo(); }
-  }catch(e){ logLine('오류',String(e),true); await runDemo(); }
+  }catch(e){
+    logLine('오류',String(e),true);
+    if(LIVE && uploaded.file){
+      ran=false;
+      lastRunId=null;
+      lastDrawingSvg=null;
+      setDocState(false,'실행 실패');
+      renderPipe(null,false);
+      $('#runBtn').disabled=false;
+      return;
+    }
+    await runDemo();
+  }
   ran=true;renderResults();
   $('#runBtn').disabled=false;$('#runBtn').textContent='▶ 다시 실행';
   $('#result').scrollIntoView({behavior:'smooth'});
@@ -399,7 +411,7 @@ function resPanel(k){const el=$('#resPanel');const c='<div class="card">';const 
 function nm(id){return (DATA.room_name&&DATA.room_name[id])?DATA.room_name[id]:String(id).replace(/^R_/,'').replace(/_/g,' ')}
 
 /* ---------- DRAWING ---------- */
-function placeholderSVG(){return `<svg viewBox="0 0 640 360" width="100%" style="max-width:600px">
+function placeholderSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="100%" style="max-width:600px">
   <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#e3e6ea" stroke-width="1"/></pattern></defs>
   <rect width="640" height="360" fill="#fff"/><rect width="640" height="360" fill="url(#grid)"/>
   <rect x="60" y="60" width="160" height="110" fill="#eaf0fe" stroke="#1351d8" stroke-dasharray="5 4"/>
@@ -410,7 +422,8 @@ function placeholderSVG(){return `<svg viewBox="0 0 640 360" width="100%" style=
   <text x="320" y="30" fill="#0a0a0a" font-size="14" text-anchor="middle" font-weight="bold">GMP Layout — Placeholder Preview</text></svg>`;}
 async function getDrawingSvg(){
   if(lastDrawingSvg)return lastDrawingSvg;
-  if(!LIVE||!lastRunId)return placeholderSVG().trim();
+  if(!LIVE)throw new Error('백엔드가 연결되지 않아 실제 도면을 가져올 수 없습니다.');
+  if(!lastRunId)throw new Error('실제 URS 파일로 파이프라인을 먼저 실행해야 도면을 가져올 수 있습니다.');
   const r=await fetch(BASE+'/runs/'+lastRunId+'/drawing',{cache:'no-store'});
   if(!r.ok){
     const msg=await r.text().catch(()=>'');
@@ -432,7 +445,7 @@ $('#downloadDraw').onclick=async()=>{
   try{
     const svg=await getDrawingSvg();
     const blob=new Blob([svg.trim()],{type:'image/svg+xml'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=lastRunId?`GMP_layout_${lastRunId}.svg`:'GMP_layout_placeholder.svg';a.click();
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`GMP_layout_${lastRunId}.svg`;a.click();
   }catch(e){alert(String(e));}
 };
 $('#drawCanvas').innerHTML=`<div style="text-align:center;color:var(--mut);padding:38px"><div style="font-size:30px">📐</div>
