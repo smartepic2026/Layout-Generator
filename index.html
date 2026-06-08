@@ -86,7 +86,7 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
   <h1>URS 엑셀 한 장에서 <span style="color:var(--blue)">GMP 도면 사양</span>까지.</h1>
   <p class="lede">URS(사용자 요구규격서)를 업로드하면 Rule Engine이 7블록 도면 사양을 산출하고,
   RAG 기반 Validation Agent가 규제 문서(FDA·EU GMP·WHO·ISO)와 대조해 검증합니다.
-  도면 생성(Documentation Agent)은 외부 팀 산출물로 연결 예정입니다.</p>
+  도면 생성은 내부 Drawing Agent를 통해 SVG로 연결됩니다.</p>
   <div class="stats">
     <div class="stat"><b>15 룰</b><span>GMP Layout 설계 원리 자동 적용</span></div>
     <div class="stat"><b>7 블록</b><span>rooms·airlocks·adjacency·flow·zones·constraints·rationale</span></div>
@@ -151,14 +151,14 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 
 <section id="drawing"><div class="wrap">
   <div class="step-label"><i>4</i>DRAWING</div>
-  <h2>도면 (Documentation Agent)</h2>
-  <p class="sub">7블록 사양을 좌표로 배치해 도면을 생성하는 단계입니다. 외부 팀 산출물로 <b>연결 예정</b>이며, 현재는 미리보기·다운로드 자리를 준비해 둡니다.</p>
+  <h2>도면 (Drawing Agent)</h2>
+  <p class="sub">7블록 사양을 좌표로 배치해 실제 GMP layout SVG를 생성합니다. 미리보기와 다운로드는 백엔드 `/drawing` 엔드포인트에서 받아옵니다.</p>
   <div class="card">
     <div class="row" style="justify-content:space-between;align-items:flex-start">
       <div><div style="font-weight:700;font-size:15px;display:flex;align-items:center;gap:9px">
         <span id="docDot" style="width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block"></span>
-        Documentation Agent — <span id="docState" style="color:var(--red)">미연결 (Not connected)</span></div>
-        <p class="muted" style="margin-top:6px">입력 계약: output_schema.md / output_example.json (외부 팀 전달 완료) · 출력 포맷(협의): SVG / PDF / DXF</p></div>
+        Drawing Agent — <span id="docState" style="color:var(--red)">확인 중</span></div>
+        <p class="muted" style="margin-top:6px">입력 계약: 7블록 JSON · 출력 포맷: SVG · backend.app `/runs/{id}/drawing`</p></div>
       <div class="row"><button class="btn ghost sm" id="previewDraw">미리보기</button>
         <button class="btn sm" id="downloadDraw">⬇ 도면 다운로드</button></div></div>
     <div id="drawCanvas" style="margin-top:18px;border:1px dashed var(--line2);border-radius:12px;min-height:330px;display:grid;place-items:center;background:var(--soft);overflow:hidden"></div>
@@ -224,6 +224,7 @@ const DATA = {"rooms": [{"room_id": "R_MEDIA_PREPARATION", "name_ko": "배지조
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const BASE = (location.protocol==='file:')?'http://localhost:8100':'';
 let uploaded=null, ran=false, LIVE=false, lastOutput=null, lastVerdict=null;
+let lastRunId=null, lastDrawingSvg=null, docConnected=false, docMode='internal';
 
 /* ---------- backend detection ---------- */
 async function checkBackend(){
@@ -231,17 +232,29 @@ async function checkBackend(){
     const r=await fetch(BASE+'/health',{cache:'no-store'});
     if(!r.ok)throw 0; const h=await r.json();
     LIVE=true;
+    docConnected=!!h.doc_agent_connected;
+    docMode=h.doc_agent_mode||'internal';
     $('#conn').className='conn on';$('#connTxt').textContent='백엔드 연결됨 (LIVE)';
     setBanner('live','✓ 백엔드 연결됨 — 실제 Rule Engine·Validation 파이프라인을 실행합니다.'
       +(h.validation_available?'':' (RAG DB 미설치: 검증은 건너뜁니다.)'));
+    setDocState(docConnected, docConnected ? `연결됨 (${h.doc_agent_mode})` : '미연결 (Not connected)');
   }catch(e){
     LIVE=false;
+    docConnected=false;
+    docMode='demo';
     $('#conn').className='conn off';$('#connTxt').textContent='백엔드 미연결 (DEMO)';
     setBanner('demo','● 데모 모드 — 백엔드(localhost:8100)에 연결되지 않아 내장 예시 결과로 동작합니다. '
       +'실제 실행은 backend/README 대로 서버를 켜세요.');
+    setDocState(false, '미연결 (DEMO)');
   }
 }
 function setBanner(cls,txt){const b=$('#modeBanner');b.className='banner show '+cls;$('#modeTxt').textContent=txt;}
+function setDocState(on,txt){
+  const dot=$('#docDot'), st=$('#docState');
+  dot.style.background=on?'var(--blue)':'var(--red)';
+  st.style.color=on?'var(--blue)':'var(--red)';
+  st.textContent=txt;
+}
 
 /* ---------- upload ---------- */
 const drop=$('#drop'),fileEl=$('#file');
@@ -278,14 +291,14 @@ function drawSheet(s){const b=$('#sheetBody');if(!s.rows.length){b.innerHTML='<p
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 
 /* ---------- pipeline view ---------- */
-const STEPS=[{k:'parse',ic:'📥',nm:'URS 파싱'},{k:'rule',ic:'⚙',nm:'Rule Engine'},{k:'valid',ic:'🔍',nm:'Validation (RAG)'},{k:'doc',ic:'📐',nm:'Doc Agent',ext:true}];
+const STEPS=[{k:'parse',ic:'📥',nm:'URS 파싱'},{k:'rule',ic:'⚙',nm:'Rule Engine'},{k:'valid',ic:'🔍',nm:'Validation (RAG)'},{k:'doc',ic:'📐',nm:'Drawing Agent'}];
 const STATUS_IDX={queued:0,parsing:0,ruling:1,validating:2,done:3};
 function renderPipe(idx,finished){
   const p=$('#pipeline');p.innerHTML='';
-  STEPS.forEach((s,i)=>{let cls='pstep'+(s.ext?' ext':'');let st='대기';
+  STEPS.forEach((s,i)=>{let cls='pstep';let st='대기';
     if(idx!=null){ if(i<idx){cls+=' done';st='완료';} else if(i===idx&&!finished){cls+=' active';st='처리 중…';} }
-    if(finished){ if(!s.ext){cls=cls.replace('active','').trim();if(!cls.includes('done'))cls+=' done';st='완료';} else {cls+=' pending';st='미연결';} }
-    const spin=(idx===i&&!finished&&!s.ext)?'<span class="spin"></span>':'';
+    if(finished){ cls=cls.replace('active','').trim();if(!cls.includes('done'))cls+=' done';st='완료'; }
+    const spin=(idx===i&&!finished)?'<span class="spin"></span>':'';
     p.innerHTML+=`<div class="${cls}"><div class="dot">${spin}${s.ic}</div><div class="nm">${s.nm}</div><div class="st">${st}</div></div>`;});}
 renderPipe(null,false);
 function logLine(step,msg,warn){const log=$('#pipeLog');log.classList.add('show');
@@ -313,10 +326,14 @@ async function runLive(){
   const cr=await fetch(BASE+'/runs',{method:'POST',body:fd});
   if(!cr.ok)throw new Error('run 생성 실패 ('+cr.status+')');
   const {run_id}=await cr.json();
+  lastRunId=run_id; lastDrawingSvg=null;
   let seen=0,st;
   for(let i=0;i<600;i++){
     const r=await fetch(BASE+'/runs/'+run_id,{cache:'no-store'});st=await r.json();
-    for(;seen<st.log.length;seen++){const l=st.log[seen];logLine(l.step,l.msg,l.step==='error'||l.step==='doc');}
+    for(;seen<st.log.length;seen++){
+      const l=st.log[seen], warn=l.step==='error'||/미연결|실패|오류/.test(l.msg);
+      logLine(l.step,l.msg,warn);
+    }
     renderPipe(STATUS_IDX[st.status]??0, st.status==='done');
     if(st.status==='done'||st.status==='error')break;
     await wait(600);
@@ -324,8 +341,11 @@ async function runLive(){
   if(st.status==='error')throw new Error(st.error||'실행 오류');
   lastOutput=await (await fetch(BASE+'/runs/'+run_id+'/output')).json();
   lastVerdict=st.has_validation?await (await fetch(BASE+'/runs/'+run_id+'/validation')).json():null;
+  docConnected=!!st.drawing_available;
+  setDocState(docConnected, docConnected?`연결됨 (${docMode})`:'미연결 (Not connected)');
 }
 async function runDemo(){
+  lastRunId=null; lastDrawingSvg=null;
   lastOutput={rooms:DATA.rooms,airlocks:DATA.airlocks,adjacency:DATA.adjacency,flow_paths:DATA.flow_paths,zones:DATA.zones,constraints:DATA.constraints,meta:DATA.meta};
   lastVerdict=$('#optVal').checked?DATA.verdict:null;
   const msgs=[['파싱','URS 워크북 로드 · 방 48 / 장비 65 인식'],['Rule Engine','15 GMP 룰 적용 · 7블록 산출 (rationale 399)'],
@@ -333,7 +353,8 @@ async function runDemo(){
   for(let i=0;i<3;i++){renderPipe(i,false);
     if(i===2&&!$('#optVal').checked){logLine('Validation','검증 건너뜀 (옵션 off)',true);await wait(300);continue;}
     logLine(msgs[i][0],msgs[i][1]);await wait(650);}
-  renderPipe(3,true);logLine('Doc Agent','Documentation Agent 미연결 — 도면 stub',true);logLine('완료','7블록 + 검증 리포트 준비됨 ✔');
+  renderPipe(3,true);logLine('Drawing Agent','데모 모드 — placeholder 도면 표시',true);logLine('완료','7블록 + 검증 리포트 준비됨 ✔');
+  setDocState(false,'데모 placeholder');
 }
 
 /* ---------- RESULTS ---------- */
@@ -385,18 +406,38 @@ function placeholderSVG(){return `<svg viewBox="0 0 640 360" width="100%" style=
   <rect x="240" y="60" width="120" height="110" fill="#eaf0fe" stroke="#1351d8" stroke-dasharray="5 4"/>
   <rect x="380" y="60" width="200" height="240" fill="#fdeaea" stroke="#d62828" stroke-dasharray="5 4"/>
   <rect x="60" y="190" width="300" height="110" fill="#f7f8fa" stroke="#8b919c" stroke-dasharray="5 4"/>
-  <text x="320" y="335" fill="#8b919c" font-size="13" text-anchor="middle" font-family="monospace">Documentation Agent 연결 시 실제 도면이 여기 렌더링됩니다</text>
+  <text x="320" y="335" fill="#8b919c" font-size="13" text-anchor="middle" font-family="monospace">Drawing Agent 연결 시 실제 도면이 여기 렌더링됩니다</text>
   <text x="320" y="30" fill="#0a0a0a" font-size="14" text-anchor="middle" font-weight="bold">GMP Layout — Placeholder Preview</text></svg>`;}
+async function getDrawingSvg(){
+  if(lastDrawingSvg)return lastDrawingSvg;
+  if(!LIVE||!lastRunId)return placeholderSVG().trim();
+  const r=await fetch(BASE+'/runs/'+lastRunId+'/drawing',{cache:'no-store'});
+  if(!r.ok){
+    const msg=await r.text().catch(()=>'');
+    throw new Error('도면 생성 실패 ('+r.status+') '+msg);
+  }
+  lastDrawingSvg=await r.text();
+  return lastDrawingSvg;
+}
 $('#previewDraw').onclick=async()=>{
   if(!ran){alert('먼저 파이프라인을 실행하세요.');return;}
-  $('#drawCanvas').innerHTML=placeholderSVG();};
-$('#downloadDraw').onclick=()=>{
+  try{
+    const svg=await getDrawingSvg();
+    $('#drawCanvas').innerHTML=svg;
+    setDocState(LIVE&&lastRunId,'SVG 렌더링 완료');
+  }catch(e){alert(String(e));}
+};
+$('#downloadDraw').onclick=async()=>{
   if(!ran){alert('먼저 파이프라인을 실행하세요.');return;}
-  const blob=new Blob([placeholderSVG().trim()],{type:'image/svg+xml'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='GMP_layout_placeholder.svg';a.click();};
+  try{
+    const svg=await getDrawingSvg();
+    const blob=new Blob([svg.trim()],{type:'image/svg+xml'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=lastRunId?`GMP_layout_${lastRunId}.svg`:'GMP_layout_placeholder.svg';a.click();
+  }catch(e){alert(String(e));}
+};
 $('#drawCanvas').innerHTML=`<div style="text-align:center;color:var(--mut);padding:38px"><div style="font-size:30px">📐</div>
-  <p style="margin-top:8px">Documentation Agent 미연결 — 외부 팀 산출물 연결 시 활성화됩니다.</p>
-  <p class="muted" style="margin-top:4px">미리보기를 누르면 placeholder 도면을 확인할 수 있습니다.</p></div>`;
+  <p style="margin-top:8px">파이프라인 실행 후 실제 SVG 도면을 미리볼 수 있습니다.</p>
+  <p class="muted" style="margin-top:4px">미리보기를 누르면 `/runs/{id}/drawing`에서 도면을 불러옵니다.</p></div>`;
 
 /* ---------- LOGIC ---------- */
 let curLogic=null;

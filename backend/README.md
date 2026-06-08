@@ -27,16 +27,17 @@ python -m uvicorn backend.app:app --reload --port 8100
 | `GET` | `/runs/{id}` | 진행 상태(queued→parsing→ruling→validating→done) + 단계별 로그 + stats |
 | `GET` | `/runs/{id}/output` | 7블록 JSON (Rule Engine 출력) |
 | `GET` | `/runs/{id}/validation` | 검증 verdict (confirmed/review/false + RAG 인용) |
-| `GET` | `/runs/{id}/drawing` | **현재 503 (Doc Agent 미연결)** — 연결 후 활성화 |
+| `GET` | `/runs/{id}/drawing` | 내부 Drawing Agent가 생성한 SVG 도면 반환 |
 
 실행은 백그라운드 스레드에서 비동기로 진행되며, 프런트가 `/runs/{id}` 를 폴링해 진행 단계를 표시한다.
 
 ## Documentation Agent 연결 지점
 
-`backend/app.py` 의 `DocumentationAgentPort` 가 연결 계약(7블록 JSON → 도면 bytes)이다.
-현재는 stub 이라 `/runs/{id}/drawing` 이 503 을 반환한다.
-외부 팀 모듈 수령 시 이 인터페이스를 구현한 어댑터를 만들어 `_CONNECTED_DOC_AGENT` 에 주입하면
-**다른 코드 수정 없이** 도면 엔드포인트가 활성화되고, 프런트의 도면 미리보기/다운로드가 실제 도면을 받는다.
+`backend/doc_agent.py` 의 `DocumentationAgentPort` 가 연결 계약(7블록 JSON → 도면 bytes)이다.
+기본값은 `DOC_AGENT_MODE=internal` 이며 repo 내부 `src.drawing_agent` 를 직접 호출해
+`/runs/{id}/drawing` 에서 SVG를 반환한다.
+외부 팀 모듈 수령 시 `DOC_AGENT_MODE=python|http|cli` 로 바꾸면 같은 endpoint를 외부
+Doc Agent로 교체할 수 있다.
 
 ## 메모
 

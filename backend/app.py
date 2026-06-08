@@ -5,13 +5,14 @@
     → 7블록 JSON + 검증 verdict 를 프런트엔드에 제공.
 
 Documentation Agent(도면 생성) 연결은 backend/doc_agent.py 가 담당한다.
-환경변수 DOC_AGENT_MODE (none/python/http/cli) 로 전환하며, 기본 none(미연결)이면
-/runs/{id}/drawing 은 503 을 돌려준다. 자세한 연결법: backend/DOC_AGENT_CONNECT.md
+기본 DOC_AGENT_MODE=internal 로 repo 내 Drawing Agent 를 직접 호출한다.
+외부 팀 Doc Agent 로 바꾸려면 none/python/http/cli 모드로 전환한다.
+자세한 연결법: backend/DOC_AGENT_CONNECT.md
 
 실행:
     pip install -r backend/requirements.txt
-    uvicorn backend.app:app --reload --port 8000
-    → http://localhost:8000  (프런트엔드가 같은 서버에서 서빙됨)
+    uvicorn backend.app:app --reload --port 8100
+    → http://localhost:8100  (프런트엔드가 같은 서버에서 서빙됨)
 """
 from __future__ import annotations
 
@@ -131,8 +132,8 @@ def _execute(run_id: str, xlsx_path: Path, exclude_airlock: bool,
 
         run["drawing_available"] = _CONNECTED_DOC_AGENT is not None
         _log(run, "doc",
-             f"Documentation Agent 연결됨 (mode={current_mode()})"
-             if run["drawing_available"] else "Documentation Agent 미연결 — 도면 stub")
+             f"Drawing Agent 연결됨 (mode={current_mode()})"
+             if run["drawing_available"] else "Drawing Agent 미연결 — DOC_AGENT_MODE 설정 필요")
 
         run["status"] = "done"
         run["finished_at"] = _now()
@@ -245,12 +246,12 @@ def get_validation(run_id: str) -> Response:
 
 @app.get("/runs/{run_id}/drawing")
 def get_drawing(run_id: str) -> Response:
-    """도면 반환. Doc Agent 연결 시 실제 SVG, 미연결 시 503."""
+    """도면 반환. Drawing Agent 연결 시 실제 SVG, 미연결 시 503."""
     run = _get(run_id)
     if run["output"] is None:
         raise HTTPException(409, "먼저 파이프라인을 실행해 7블록 사양을 산출하세요.")
     if _CONNECTED_DOC_AGENT is None:
-        detail = "Documentation Agent 미연결 — 외부 팀 산출물 연결 후 활성화됩니다."
+        detail = "Drawing Agent 미연결 — DOC_AGENT_MODE=internal 또는 외부 adapter 설정이 필요합니다."
         if _DOC_AGENT_ERROR:
             detail += f" (초기화 오류: {_DOC_AGENT_ERROR})"
         raise HTTPException(503, detail)

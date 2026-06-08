@@ -1,12 +1,12 @@
 # Documentation Agent 연결 가이드
 
-외부 팀의 Doc Agent(7블록 JSON → **SVG 도면**)를 백엔드에 연결하는 방법.
+내부/외부 Doc Agent(7블록 JSON → **SVG 도면**)를 백엔드에 연결하는 방법.
 연결 지점은 `backend/doc_agent.py` 하나이며, **환경변수 `DOC_AGENT_MODE`** 로 전환한다.
-코드 수정 없이 스위치만 바꾸면 `/runs/{id}/drawing` 이 503(미연결)에서 실제 SVG 반환으로 바뀐다.
+기본값은 내부 Drawing Agent 연결이며, 코드 수정 없이 외부 python/http/cli 구현으로 교체할 수 있다.
 
 ```
 URS → RuleEngine → 7블록 JSON ──▶ DocumentationAgentPort.generate(json) ──▶ SVG bytes
-                                   (doc_agent.py · 어댑터가 외부 모듈 호출)
+                                   (doc_agent.py · internal/python/http/cli 어댑터)
 ```
 
 ## 입출력 계약 (외부 팀과 확정)
@@ -17,10 +17,18 @@ URS → RuleEngine → 7블록 JSON ──▶ DocumentationAgentPort.generate(js
 
 | DOC_AGENT_MODE | 의미 | 추가 환경변수 |
 |---|---|---|
-| `none` (기본) | 미연결 — 503, 프런트는 placeholder | — |
+| `internal` (기본) | repo 내부 `src.drawing_agent` 직접 호출 | `DOC_AGENT_FLOW_MODE`, `DOC_AGENT_VARIANT_SEED`, `DOC_AGENT_VARIANT_INDEX` |
+| `none` | 미연결 — 503, 프런트는 placeholder | — |
 | `python` | (a) 같은 파이썬 런타임에서 import | `DOC_AGENT_MODULE`, `DOC_AGENT_FUNC`(기본 render) |
 | `http` | (b) 별도 HTTP 서비스 호출 | `DOC_AGENT_URL`, `DOC_AGENT_TIMEOUT` |
 | `cli` | (c) 실행파일/CLI + 파일 교환 | `DOC_AGENT_CMD` |
+
+### 기본: 내부 Drawing Agent
+환경변수 설정 없이 실행하면 backend가 repo 내부 drawing agent를 바로 사용한다.
+
+```
+python -m uvicorn backend.app:app --port 8100
+```
 
 ### (a) 파이썬 모듈로 받은 경우
 외부 함수 시그니처(협의): `render(output_json: dict) -> bytes | str(SVG)`
@@ -30,7 +38,7 @@ Windows(cmd) 예:
 set DOC_AGENT_MODE=python
 set DOC_AGENT_MODULE=their_doc_agent
 set DOC_AGENT_FUNC=render
-python -m uvicorn backend.app:app --port 8000
+python -m uvicorn backend.app:app --port 8100
 ```
 모듈이 import 경로에 있어야 한다(레포 루트에 두거나 `pip install`).
 
@@ -39,7 +47,7 @@ python -m uvicorn backend.app:app --port 8000
 ```
 set DOC_AGENT_MODE=http
 set DOC_AGENT_URL=http://localhost:9000/render
-python -m uvicorn backend.app:app --port 8000
+python -m uvicorn backend.app:app --port 8100
 ```
 
 ### (c) 실행파일/CLI로 받은 경우
@@ -47,13 +55,13 @@ python -m uvicorn backend.app:app --port 8000
 ```
 set DOC_AGENT_MODE=cli
 set DOC_AGENT_CMD=C:\doc_agent\doc_agent.exe
-python -m uvicorn backend.app:app --port 8000
+python -m uvicorn backend.app:app --port 8100
 ```
 (파이썬 스크립트면 `set DOC_AGENT_CMD=python C:\doc_agent\main.py`)
 
 ## 확인
-1. 서버 기동 후 `http://localhost:8000/health` 에서
-   `"doc_agent_connected": true`, `"doc_agent_mode": "python|http|cli"` 확인.
+1. 서버 기동 후 `http://localhost:8100/health` 에서
+   `"doc_agent_connected": true`, `"doc_agent_mode": "internal|python|http|cli"` 확인.
    초기화 실패 시 `"doc_agent_error"` 에 원인이 찍힌다(미연결 유지).
 2. 프런트엔드 도면 카드의 상태 표시가 빨강 "미연결" → 파랑 "연결됨"으로 바뀐다.
 3. URS 실행 후 "미리보기/다운로드" 가 실제 SVG 를 가져온다.

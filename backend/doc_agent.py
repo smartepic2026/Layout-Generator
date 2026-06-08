@@ -1,12 +1,13 @@
 """Documentation Agent 연결 레이어 (Doc Agent Port + 어댑터 3종).
 
-외부 팀의 Documentation Agent(7블록 JSON → 도면) 를 백엔드에 꽂는 단일 지점.
-모듈을 받기 전에는 아무것도 연결되지 않은 상태(get_doc_agent() → None)이고,
-`/runs/{id}/drawing` 은 503(미연결) 을 돌려준다.
+Documentation Agent(7블록 JSON → 도면) 를 백엔드에 꽂는 단일 지점.
+기본값은 이 repo 의 `src.drawing_agent` 를 직접 호출하는 internal adapter 이다.
+외부 팀 모듈을 받으면 환경변수로 python/http/cli adapter 로 교체할 수 있다.
 
 연결 방법은 **환경변수 DOC_AGENT_MODE 한 줄**로 전환한다 (코드 수정 불필요):
 
-    DOC_AGENT_MODE=none    (기본) — 미연결, 503
+    DOC_AGENT_MODE=internal (기본) — repo 내 drawing_agent 직접 호출
+    DOC_AGENT_MODE=none     — 미연결, 503
     DOC_AGENT_MODE=python  — (a) 같은 파이썬 런타임에서 import
     DOC_AGENT_MODE=http    — (b) 별도 HTTP 서비스 호출
     DOC_AGENT_MODE=cli     — (c) 실행파일/CLI + 파일 교환
@@ -143,9 +144,46 @@ class CliDocAgent(DocumentationAgentPort):
 
 
 # ===========================================================================
+# (d) Internal adapter — 이 repo 의 drawing_agent 직접 호출
+# ===========================================================================
+class InternalDrawingAgent(DocumentationAgentPort):
+    """현재 repo 의 Drawing Agent 를 FastAPI backend 에 직접 연결한다.
+
+    입력은 팀원 Rule Engine 7블록 dict 이므로 anti-corruption adapter 를 거쳐
+    `src.contract.schemas.RuleEngineOutput` 으로 변환한 뒤 SVG 를 생성한다.
+
+    환경변수:
+        DOC_AGENT_FLOW_MODE      (기본 "full") — full/main/off
+        DOC_AGENT_VARIANT_SEED   (기본 "42")
+        DOC_AGENT_VARIANT_INDEX  (기본 "0")
+    """
+
+    def __init__(self) -> None:
+        self.flow_mode = os.environ.get("DOC_AGENT_FLOW_MODE", "full")
+        self.variant_seed = int(os.environ.get("DOC_AGENT_VARIANT_SEED", "42"))
+        self.variant_index = int(os.environ.get("DOC_AGENT_VARIANT_INDEX", "0"))
+
+    def generate(self, output_json: dict) -> bytes:
+        from src.contract.schemas import RuleEngineOutput
+        from src.drawing_agent.data.tier1_ruleengine import adapt_external_dict
+        from src.drawing_agent.floorplan import generate_floorplan
+
+        spec = RuleEngineOutput.model_validate(adapt_external_dict(output_json))
+        svg, _layout = generate_floorplan(
+            spec,
+            dynamic_rooms=True,
+            flow_mode=self.flow_mode,
+            variant_seed=self.variant_seed,
+            variant_index=self.variant_index,
+        )
+        return svg.encode("utf-8")
+
+
+# ===========================================================================
 # 팩토리 — DOC_AGENT_MODE 로 어댑터 선택
 # ===========================================================================
 _ADAPTERS = {
+    "internal": InternalDrawingAgent,
     "python": PythonImportDocAgent,
     "http": HttpDocAgent,
     "cli": CliDocAgent,
@@ -155,17 +193,20 @@ _ADAPTERS = {
 def get_doc_agent() -> Optional[DocumentationAgentPort]:
     """현재 환경에 맞는 어댑터 인스턴스(또는 미연결 시 None).
 
-    DOC_AGENT_MODE 가 none/빈값이면 None(미연결).
+    DOC_AGENT_MODE 가 internal/빈값이면 repo 내 drawing_agent 를 연결한다.
+    none/off/stub 이면 None(미연결).
     설정돼 있으나 초기화 실패(모듈 없음 등)면 예외를 그대로 올려 시작 시 알린다.
     """
-    mode = os.environ.get("DOC_AGENT_MODE", "none").strip().lower()
-    if mode in ("", "none", "off", "stub"):
+    mode = os.environ.get("DOC_AGENT_MODE", "internal").strip().lower()
+    if mode in ("none", "off", "stub"):
         return None
+    if mode == "":
+        mode = "internal"
     if mode not in _ADAPTERS:
         raise ValueError(
-            f"알 수 없는 DOC_AGENT_MODE={mode!r} — none/python/http/cli 중 하나여야 함")
+            f"알 수 없는 DOC_AGENT_MODE={mode!r} — internal/none/python/http/cli 중 하나여야 함")
     return _ADAPTERS[mode]()
 
 
 def current_mode() -> str:
-    return os.environ.get("DOC_AGENT_MODE", "none").strip().lower() or "none"
+    return os.environ.get("DOC_AGENT_MODE", "internal").strip().lower() or "internal"
