@@ -1,0 +1,26 @@
+[
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_GOWNING_FEMALE/R_GOWNING",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_GOWNING_MALE/R_GOWNING",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_MEDIA_PREPARATION/R_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_BUFFER_PREPARATION/R_PURIFICATION_2",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  }
+]

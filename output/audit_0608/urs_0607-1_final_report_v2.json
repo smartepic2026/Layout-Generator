@@ -1,0 +1,32 @@
+[
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_TOILET_MALE/R_MATERIAL_STORAGE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_LOBBY/R_MATERIAL_STORAGE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_TOILET_FEMALE/R_MATERIAL_STORAGE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_HARVEST/R_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_PURIFICATION_2/R_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  }
+]

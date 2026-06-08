@@ -1,0 +1,92 @@
+[
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_LOBBY/R_MEDIA_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_OFFICE/R_BUFFER_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_TOILET_FEMALE/R_MATERIAL_STORAGE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_TOILET_MALE/R_MATERIAL_STORAGE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_LOUNGE/R_MEDIA_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_MATERIAL_IN/R_GOWNING_FEMALE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_WASTE_OUT/R_GOWNING_FEMALE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_GOWNING_FEMALE/R_CIP_SUPPLY",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_GOWNING_MALE/R_CIP_SUPPLY",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_CIP_SUPPLY/R_GOWNING",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_MONITORING/R_GOWNING",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_BUFFER_PREPARATION/R_PREPARATION",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_INOCULATION/R_CELL_CULTURE",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_CELL_CULTURE/R_HARVEST",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  },
+  {
+    "rule_id": "AREA_RATIO_001",
+    "severity": "warning",
+    "target": "R_HARVEST/R_PURIFICATION_1",
+    "message": "Room visual areas are too similar despite materially different URS area ratios."
+  }
+]
