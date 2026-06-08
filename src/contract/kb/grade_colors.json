@@ -63,7 +63,7 @@
     "personnel": {"hex": "#4F46E5", "name": "Indigo-600"},
     "material":  {"hex": "#0D9488", "name": "Teal-600"},
     "waste":     {"hex": "#E11D48", "name": "Rose-600"},
-    "product":   {"hex": "#7C3AED", "name": "Violet-600"}
+    "product":   {"hex": "#F97316", "name": "Orange-500"}
   },
   "neutral_scale": {
     "0":   "#FFFFFF",

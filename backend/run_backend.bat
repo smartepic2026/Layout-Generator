@@ -17,11 +17,11 @@ echo [1/2] Installing dependencies (first run only, may take minutes)...
 %PY% -m pip install -r backend\requirements.txt
 echo.
 echo [2/2] Starting server.
-echo When you see:  Uvicorn running on http://127.0.0.1:8000
-echo open  http://localhost:8000  in your browser.
+echo When you see:  Uvicorn running on http://127.0.0.1:8100
+echo open  http://localhost:8100  in your browser.
 echo KEEP THIS WINDOW OPEN. Closing it stops the server.
 echo ============================================================
-%PY% -m uvicorn backend.app:app --port 8000
+%PY% -m uvicorn backend.app:app --port 8100
 :end
 echo.
 echo (Server stopped or an error occurred. Read the message above.)

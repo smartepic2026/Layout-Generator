@@ -38,7 +38,8 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
         z12 범례 & 타이틀 블록
     """
     # 캔버스 크기 (mm → unit + padding)
-    w_unit = T.mm(layout.building_w_mm) + 2 * T.CANVAS_PAD + 260  # 우측 legend 영역
+    side_panel_w = 390
+    w_unit = T.mm(layout.building_w_mm) + 2 * T.CANVAS_PAD + side_panel_w
     h_unit = T.mm(layout.building_h_mm) + 2 * T.CANVAS_PAD + 100   # 하단 title block
 
     s = StringIO()
@@ -72,7 +73,7 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
 
     # 우측 범례
     legend_x = ox + T.mm(layout.building_w_mm) + 24
-    _emit_z12_legend(s, legend_x, oy, spec)
+    _emit_z12_legend(s, legend_x, oy, spec, layout)
 
     # 하단 타이틀 블록
     tb_y = oy + T.mm(layout.building_h_mm) + 24
@@ -664,13 +665,24 @@ def _emit_z9_flow_arrows(s: StringIO, ox: float, oy: float, layout: Layout,
         if key not in bykey:
             continue
         s.write(f'<g class="flow flow-{key}" id="flow-{key}">\n')
+        seen: set[str] = set()
         for pts in bykey[key]:
+            sig = _flow_signature(pts)
+            if sig in seen:
+                continue
+            seen.add(sig)
             _draw_flow_polyline(s, pts, key)
         s.write('</g>\n')
 
 
-# 종류별 수직 오프셋(px) — 공유 복도에서 평행 동선이 정확히 겹치지 않게 분리
-_FLOW_OFFSET = {"personnel": -6.0, "material": -2.0, "product": 2.0, "waste": 6.0}
+# 종류별 전체 translation(px). 선분별 normal offset 이 아니라 path 전체를 옮겨
+# L자 꺾임이 끊겨 보이지 않게 한다.
+_FLOW_TRANSLATE = {
+    "personnel": (0.0, -5.0),
+    "material": (0.0, 0.0),
+    "product": (0.0, 5.0),
+    "waste": (0.0, 10.0),
+}
 
 
 def _flow_edge_port(node: str, layout: Layout, ox: float, oy: float):
@@ -820,58 +832,148 @@ def _route_polyline(pts: list, ch_h, ch_v, room_rects) -> list:
     return routed
 
 
-def _derive_full_flows(layout: Layout, spec) -> list:
-    """[규정 완전 확장 — comb 라우팅] 공정실별 Waste/Material 경로를 spec 에서
-    도출. flow_paths 의 대표 1경로 대신, 규정 4-1(Waste: 각 공정실 AL-out→Return
-    →Waste-out→외부)·2(Material: 외부→MAL-in→Supply→각 공정실)대로 *모든* 주요
-    공정실을 대상으로 생성. 복도(Return/aux/Supply) 를 웨이포인트로 두어 복도
-    인지 라우팅(D-026)이 복도 척추를 타게 → 빗(comb) 형태.
-
-    반환 [(key, [room_id 시퀀스]), ...]. 좌표 해소는 _resolve 가 수행.
-    """
+def _find_room(layout: Layout, *subs: str, exclude: tuple[str, ...] = ()) -> str | None:
     rooms = layout.rooms
-    cy_mid = layout.building_h_mm / 2
+    for rid in rooms:
+        up = rid.upper()
+        if any(s.upper() in up for s in subs) and not any(e.upper() in up for e in exclude):
+            return rid
+    return None
 
-    def find(*subs, exclude=()):
-        for rid in rooms:
-            if any(s in rid for s in subs) and not any(e in rid for e in exclude):
-                return rid
-        return None
 
-    ret_top = find("RETURN_CORRIDOR", exclude=("_S",))
-    ret_bot = next((rid for rid in rooms if rid.endswith("RETURN_CORRIDOR_S")), None)
-    aux = next((rid for rid in rooms
-                if rid == "R_CORRIDOR" or rid.endswith("_AUX_CORRIDOR")), None)
-    supply = find("SUPPLY_CORRIDOR")
-    waste_out = find("WASTE_OUT", "WASTE")
-    mat_in = find("MATERIAL_IN", "MATERIAL_INLET")
+def _main_corridors(layout: Layout) -> dict:
+    ret_top = _find_room(layout, "RETURN_CORRIDOR", exclude=("_S",))
+    ret_bot = next((rid for rid in layout.rooms if rid.endswith("RETURN_CORRIDOR_S")), None)
+    d_corr = next((rid for rid in layout.rooms
+                   if rid == "R_CORRIDOR" or rid.endswith("_AUX_CORRIDOR")), None)
+    nc_corr = _find_room(layout, "CORRIDOR_VISITOR") or _find_room(layout, "NC_AUX_CORRIDOR")
+    return {
+        "nc": nc_corr,
+        "d": d_corr,
+        "supply": _find_room(layout, "SUPPLY_CORRIDOR"),
+        "return_top": ret_top,
+        "return_bottom": ret_bot or ret_top,
+    }
 
+
+def _attached_airlock(layout: Layout, room_id: str, preferred_types: tuple[str, ...]) -> str | None:
+    for t in preferred_types:
+        for aid, pa in layout.airlocks.items():
+            if pa.attached_room_id == room_id and pa.airlock.type == t:
+                return aid
+    for aid, pa in layout.airlocks.items():
+        if pa.attached_room_id == room_id and any(pa.airlock.type.startswith(p[:3]) for p in preferred_types):
+            return aid
+    return None
+
+
+def _major_process_rooms(layout: Layout, spec) -> list[str]:
+    prod = [rid for rid in list(getattr(spec.flow_paths, "product_process_order", []) or [])
+            if rid in layout.rooms]
+    for i, rid in enumerate(prod):
+        if "INOCULATION" in rid.upper():
+            prod = prod[i:]
+            break
+    if prod:
+        return prod
+    return [
+        rid for rid, pr in layout.rooms.items()
+        if pr.room.category == "process" and getattr(pr.room, "one_way_flow", False)
+    ]
+
+
+def _return_corridor_for(layout: Layout, room_id: str, corr: dict) -> str | None:
+    pr = layout.rooms.get(room_id)
+    if pr is None:
+        return corr.get("return_top")
+    if pr.rect.cy < layout.building_h_mm / 2:
+        return corr.get("return_top")
+    return corr.get("return_bottom") or corr.get("return_top")
+
+
+def _compact(seq: list[str | None]) -> list[str]:
+    out = []
+    for item in seq:
+        if item and (not out or out[-1] != item):
+            out.append(item)
+    return out
+
+
+def _derive_full_flows(layout: Layout, spec, flow_mode: str = "full") -> list:
+    """GMP 경유지 기반 동선 recipe.
+
+    Material/Personnel 은 낮은 grade corridor 에서 gowning/MAL gate 를 거쳐 높은
+    grade 로 진입하고, Waste 는 Waste-out 으로 종료한다. Product 는 Inoculation
+    부터 시작해 공정 순서 뒤 DS storage 까지 이어진다.
+    """
+    corr = _main_corridors(layout)
+    supply = corr["supply"]
+    d_corr = corr["d"]
+    nc_corr = corr["nc"]
+    mat_in_nc_d = _find_room(layout, "MATERIAL_IN", exclude=("STORAGE",))
+    gown_nc_d = _find_room(layout, "GOWNING_FEMALE") or _find_room(layout, "GOWNING_MALE")
+    gown_d_c = _find_room(layout, "R_GOWNING") or _find_room(layout, "GOWNING_PROCESS")
+    mal_d_c = _find_room(layout, "SUPPLY_MAL_IN") or _find_room(layout, "MAL_IN", exclude=("PURIFICATION", "HARVEST", "CULTURE", "INOCULATION"))
+    waste_out = _find_room(layout, "WASTE_OUT", "WASTE")
+    lobby = _find_room(layout, "LOBBY")
+    ds_storage = _find_room(layout, "DS_STORAGE", "STORAGE_DS", "STORAGE_BULK")
+    major = _major_process_rooms(layout, spec)
     flows: list = []
-    for r in spec.rooms:
-        if r.category != "process" or not getattr(r, "one_way_flow", False):
-            continue
-        rid = r.id
-        if rid not in rooms:
-            continue
-        ret = ret_top if rooms[rid].rect.cy < cy_mid else ret_bot
-        # Waste: 공정실 → Return → (aux 세로복도) → Waste-out → 외부(좌)
-        wseq = [rid]
-        if ret:
-            wseq.append(ret)
-        if aux:
-            wseq.append(aux)
-        if waste_out:
-            wseq.append(waste_out)
-        wseq.append("ELEVATOR_WASTE_OUT")
-        flows.append(("waste", wseq))
-        # Material: 외부(상) → Material-in → Supply → 공정실
-        mseq = ["ELEVATOR_MATERIAL_IN"]
-        if mat_in:
-            mseq.append(mat_in)
-        if supply:
-            mseq.append(supply)
-        mseq.append(rid)
-        flows.append(("material", mseq))
+
+    if flow_mode != "full":
+        target_rooms = major[:1]
+        for rid in target_rooms:
+            mat_al = _attached_airlock(layout, rid, ("MAL_in", "CAL_in"))
+            flows.append(("material", _compact([
+                nc_corr, mat_in_nc_d, d_corr, mal_d_c, supply, mat_al, rid,
+            ])))
+
+            pal_in = _attached_airlock(layout, rid, ("PAL_in", "CAL_in"))
+            pal_out = _attached_airlock(layout, rid, ("PAL_out", "CAL_out", "MAL_out"))
+            ret = _return_corridor_for(layout, rid, corr)
+            flows.append(("personnel", _compact([
+                lobby, nc_corr, gown_nc_d, d_corr, gown_d_c, supply,
+                pal_in, rid, pal_out, ret, d_corr, gown_nc_d, nc_corr, lobby,
+            ])))
+
+            waste_al = _attached_airlock(layout, rid, ("MAL_out", "CAL_out", "PAL_out"))
+            flows.append(("waste", _compact([
+                rid, waste_al, ret, d_corr, waste_out,
+            ])))
+    else:
+        # Review-readable full mode: draw shared trunk once, then per-room branches.
+        # The old version repeated the entire NC→D→C trunk for every process room,
+        # which made dense same-color stripes over Gowning/D corridor.
+        flows.append(("material", _compact([
+            nc_corr, mat_in_nc_d, d_corr, mal_d_c, supply,
+        ])))
+        flows.append(("personnel", _compact([
+            lobby, nc_corr, gown_nc_d, d_corr, gown_d_c, supply,
+        ])))
+
+        return_corridors: set[str] = set()
+        for rid in major:
+            ret = _return_corridor_for(layout, rid, corr)
+            if ret:
+                return_corridors.add(ret)
+
+            mat_al = _attached_airlock(layout, rid, ("MAL_in", "CAL_in"))
+            flows.append(("material", _compact([supply, mat_al, rid])))
+
+            pal_in = _attached_airlock(layout, rid, ("PAL_in", "CAL_in"))
+            pal_out = _attached_airlock(layout, rid, ("PAL_out", "CAL_out", "MAL_out"))
+            flows.append(("personnel", _compact([supply, pal_in, rid, pal_out, ret])))
+
+            waste_al = _attached_airlock(layout, rid, ("MAL_out", "CAL_out", "PAL_out"))
+            flows.append(("waste", _compact([rid, waste_al, ret])))
+
+        for ret in sorted(return_corridors):
+            flows.append(("personnel", _compact([ret, d_corr, gown_nc_d, nc_corr, lobby])))
+            flows.append(("waste", _compact([ret, d_corr, waste_out])))
+
+    product = list(major)
+    if product:
+        flows.append(("product", _compact(product + [supply, mal_d_c, d_corr, ds_storage])))
     return flows
 
 
@@ -879,37 +981,21 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec,
                             flow_mode: str = "full") -> list:
     """spec.flow_paths 5필드 → [(flow_key, [점,...]), ...].
 
-    flow_mode="full" 이면 Waste/Material 을 공정실별 comb(`_derive_full_flows`)로,
-    "main" 이면 flow_paths 대표 1경로로. Personnel/Product 는 항상 대표 경로.
+    flow_mode="full" 이면 공통 corridor trunk 는 1회만 그리고 공정실별 branch 를
+    추가한다. "main" 은 대표 1경로만 그린다.
     해소 점 2개 미만 path 제외. 내부 노드 4개 미만이면(placeholder) 빈 리스트.
     """
     fp = getattr(spec, "flow_paths", None)
     if fp is None:
         return []
-    # [규정 3-1·3-2] Product 를 마지막 공정(Purif2) → Supply corridor → DS 보관실
-    # 까지 연장. mAb 8000L 은 Purif2 에서 DS 용기 충진 → MAL-in/Supply 경유 storage.
-    prod = list(fp.product_process_order or [])
-    if prod:
-        rids = {r.id for r in spec.rooms}
-        supply = next((rid for rid in rids if "SUPPLY_CORRIDOR" in rid), None)
-        ds = next((rid for rid in rids
-                   if "DS_STORAGE" in rid or "STORAGE_BULK" in rid or "STORAGE_DS" in rid), None)
-        if supply and supply in layout.rooms and prod[-1] != supply:
-            prod.append(supply)
-        if ds and ds in layout.rooms:
-            prod.append(ds)
-    seqs = [
-        ("personnel", list(fp.personnel_entry or [])),
-        ("personnel", list(fp.personnel_exit or [])),
-        ("product",   prod),
-    ]
-    full = _derive_full_flows(layout, spec) if flow_mode == "full" else []
-    if full:
-        seqs += full                     # 공정실별 comb Waste/Material
-    else:                                # main 모드 / 도출 실패 → 대표 1경로
-        seqs += [
+    seqs = _derive_full_flows(layout, spec, flow_mode=flow_mode)
+    if not seqs:
+        seqs = [
+            ("personnel", list(fp.personnel_entry or [])),
+            ("personnel", list(fp.personnel_exit or [])),
             ("material", list(fp.material_entry or [])),
-            ("waste",    list(fp.waste_exit or [])),
+            ("waste", list(fp.waste_exit or [])),
+            ("product", list(fp.product_process_order or [])),
         ]
     ch_h, ch_v = _flow_channels(layout, ox, oy)
     room_rects = _room_rects_svg(layout, ox, oy)
@@ -952,49 +1038,42 @@ def _resolve_flow_polylines(layout: Layout, ox: float, oy: float, spec,
     return out
 
 
-def _draw_flow_seg(s: StringIO, ax: float, ay: float, bx: float, by: float,
-                   key: str, off: float, arrow: bool) -> None:
-    """한 직선 세그먼트 — 수직 오프셋 적용 + (arrow 면) 끝에 화살표 머리."""
-    dx, dy = bx - ax, by - ay
-    L = math.hypot(dx, dy)
-    if L < 1.0:
-        return
-    ux, uy = dx / L, dy / L
-    nx, ny = -uy, ux                       # 수직 단위벡터
-    # 끝(노드)쪽만 살짝 인셋 — 화살표가 라벨에 박히지 않게
-    inset_b = min(12.0, max(0.0, (L - 6.0) / 2.0)) if arrow else 0.0
-    Ax = ax + nx * off
-    Ay = ay + ny * off
-    Bx = bx - ux * inset_b + nx * off
-    By = by - uy * inset_b + ny * off
-    m = f' marker-end="url(#arrow-{key})"' if arrow else ''
-    s.write(
-        f'<line x1="{Ax:.2f}" y1="{Ay:.2f}" x2="{Bx:.2f}" y2="{By:.2f}" '
-        f'stroke="{T.FLOW[key]}" stroke-width="2" fill="none" '
-        f'stroke-dasharray="6 4"{m}/>\n'
-    )
+def _flow_signature(pts: list) -> str:
+    return "|".join(f"{round(x, 1):.1f},{round(y, 1):.1f}" for x, y in pts)
 
 
 def _draw_flow_polyline(s: StringIO, pts: list, key: str) -> None:
     """연결된 동선 — **직교(Manhattan) L자** 라우팅 (D-025).
 
     대각선 center-to-center 대신 각 구간을 수평→수직(또는 그 반대) L 로 꺾어
-    복도/벽을 따라 흐르는 GMP 도면 관습에 맞춤. 종류별 수직 오프셋으로 공유
-    복도에서 평행 동선이 겹치지 않게. 화살표 머리는 노드에 도착하는 다리에만.
+    복도/벽을 따라 흐르는 GMP 도면 관습에 맞춤. 하나의 SVG path 로 그려
+    segment별 offset 때문에 모서리가 끊기는 현상을 막는다.
     """
-    off = _FLOW_OFFSET.get(key, 0.0)
+    dx, dy = _FLOW_TRANSLATE.get(key, (0.0, 0.0))
+    routed = []
     for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
         horiz_first = abs(x2 - x1) >= abs(y2 - y1)
         ex, ey = (x2, y1) if horiz_first else (x1, y2)    # 엘보
-        # 직선 구간이면 엘보가 끝점과 겹침 → 단일 세그먼트에 화살표.
-        straight = (math.isclose(ex, x1, abs_tol=0.5) and math.isclose(ey, y1, abs_tol=0.5)) \
+        cand = [(x1 + dx, y1 + dy)]
+        if not (
+            (math.isclose(ex, x1, abs_tol=0.5) and math.isclose(ey, y1, abs_tol=0.5))
             or (math.isclose(ex, x2, abs_tol=0.5) and math.isclose(ey, y2, abs_tol=0.5))
-        if straight:
-            _draw_flow_seg(s, x1, y1, x2, y2, key, off, arrow=True)
-        else:
-            # 1번 다리(시작→엘보): 화살표 X / 2번 다리(엘보→노드): 화살표 O
-            _draw_flow_seg(s, x1, y1, ex, ey, key, off, arrow=False)
-            _draw_flow_seg(s, ex, ey, x2, y2, key, off, arrow=True)
+        ):
+            cand.append((ex + dx, ey + dy))
+        cand.append((x2 + dx, y2 + dy))
+        for q in cand:
+            if routed and abs(routed[-1][0] - q[0]) < 0.5 and abs(routed[-1][1] - q[1]) < 0.5:
+                continue
+            routed.append(q)
+    if len(routed) < 2:
+        return
+    d = "M " + " L ".join(f"{x:.2f} {y:.2f}" for x, y in routed)
+    s.write(
+        f'<path d="{d}" stroke="{T.FLOW[key]}" stroke-width="1.8" '
+        f'stroke-opacity="0.82" fill="none" stroke-linecap="round" '
+        f'stroke-linejoin="round" stroke-dasharray="7 5" '
+        f'marker-end="url(#arrow-{key})"/>\n'
+    )
 
 
 def _emit_z9_flow_arrows_topology(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
@@ -1072,8 +1151,8 @@ def _emit_z9_flow_arrows_topology(s: StringIO, ox: float, oy: float, layout: Lay
 # ──────────────────────────────────────────────────────────────────────
 # z12 legend
 # ──────────────────────────────────────────────────────────────────────
-def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) -> None:
-    w, h = 220, 320
+def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput, layout: Layout) -> None:
+    w, h = 350, 430
     s.write(
         f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{T.NEUTRAL["0"]}" '
         f'stroke="{T.NEUTRAL["200"]}" stroke-width="1"/>\n'
@@ -1085,6 +1164,14 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) ->
     )
     # Grade swatches
     yy = y + 44
+    grade_desc = {
+        "A": "Sterile barrier",
+        "B": "Barrier surround",
+        "C": "Main process",
+        "D": "Support / closed process",
+        "CNC": "Controlled non-classified",
+        "NC": "Non-classified",
+    }
     for g in ["A", "B", "C", "D", "CNC", "NC"]:
         meta = T.GRADE[g]
         fill = _fill_for(g)
@@ -1100,8 +1187,8 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) ->
             f'Grade {g}</text>\n'
         )
         s.write(
-            f'<text x="{x + 90}" y="{yy:.0f}" font-size="9" fill="{T.NEUTRAL["400"]}">'
-            f'{_esc(meta["description"])}</text>\n'
+            f'<text x="{x + 116}" y="{yy:.0f}" font-size="9" fill="{T.NEUTRAL["600"]}">'
+            f'{_esc(grade_desc[g])}</text>\n'
         )
         yy += 18
     # Flow arrows
@@ -1114,11 +1201,40 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput) ->
     for k, label in [("personnel", "Personnel"), ("material", "Material"), ("waste", "Waste"), ("product", "Product")]:
         s.write(
             f'<line x1="{x + 14}" y1="{yy - 4}" x2="{x + 40}" y2="{yy - 4}" '
-            f'stroke="#000000" stroke-width="1.5" marker-end="url(#arrow-{k})"/>\n'
+            f'stroke="{T.FLOW[k]}" stroke-width="1.8" stroke-dasharray="7 5" '
+            f'marker-end="url(#arrow-{k})"/>\n'
         )
         s.write(
             f'<text x="{x + 50}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" '
             f'fill="{T.NEUTRAL["800"]}">{label}</text>\n'
+        )
+        yy += 16
+
+    yy += 14
+    s.write(
+        f'<text x="{x + 12}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" font-weight="700" '
+        f'fill="{T.NEUTRAL["900"]}">DRAWING INFO</text>\n'
+    )
+    yy += 18
+    area_m2 = layout.building_w_mm * layout.building_h_mm / 1_000_000
+    actual_rooms = [pr for pr in layout.rooms.values() if not _is_corridor_room(pr.room)]
+    info_rows = [
+        ("Canvas W x H", f"{layout.building_w_mm/1000:.1f}m x {layout.building_h_mm/1000:.1f}m"),
+        ("Canvas Area", f"{area_m2:.0f} m2"),
+        ("Placed Rooms", str(len(actual_rooms))),
+        ("Corridors", str(len(layout.rooms) - len(actual_rooms))),
+        ("Airlocks", str(len(layout.airlocks))),
+        ("Doors", str(len(layout.doors))),
+        ("Modality", spec.modality.upper()),
+    ]
+    for label, value in info_rows:
+        s.write(
+            f'<text x="{x + 12}" y="{yy:.0f}" font-size="9" fill="{T.NEUTRAL["600"]}" '
+            f'font-family={_q(T.FONT_MONO)}>{_esc(label)}</text>\n'
+        )
+        s.write(
+            f'<text x="{x + 138}" y="{yy:.0f}" font-size="10" fill="{T.NEUTRAL["900"]}" '
+            f'font-weight="600">{_esc(value)}</text>\n'
         )
         yy += 16
 

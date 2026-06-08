@@ -1,7 +1,39 @@
-저 md# Drawing Agent 진행 공유
+# Drawing Agent 진행 공유
 
 > Rule Engine이 출력한 **7-block spec** (rooms/airlocks/adjacency/flow_paths/zones/constraints/rationale)을 받아 **실측 mm 좌표 기반 2D 도면**으로 변환하는 에이전트.
 > *(README 본문에서 "Documentation Agent"라고 부른 부분과 동일 — 호칭 통일 필요)*
+
+---
+
+## 0) Current Status — 2026-06-09
+
+팀장님 URS 1~5 기준 최종 고도화가 Drawing Agent에 반영되었다.
+
+### 최신 동작
+- `src.cli draw`는 `--seed`, `--variant`, `--variants`, `--report`를 지원한다.
+- `output/audit_0608/urs_0607-{1..5}_final_v{1..3}.svg` 형태로 URS당 3개
+  layout variant를 생성한다.
+- `src.drawing_agent.validators.validate_layout`가 생성된 `Layout`을 geometric하게
+  검증하고, JSON report를 남긴다.
+- Product flow 색상은 Orange(`#F97316`)로 Personnel과 분리된다.
+- full flow renderer는 같은 색 lane fan-out을 제거하고, 연결된 SVG path로 그린다.
+- D-zone room은 corridor 인접을 유지하면서 미배치 흰 공간 없이 zone 폭을 채운다.
+- 장비는 PAL/MAL/CAL 전실과 겹치지 않는 안전 영역에 배치된다.
+- Legend는 우측 정보 패널로 확장되어 canvas 크기/면적, room/corridor/airlock/door
+  count, modality를 표시한다.
+
+### 최신 검증
+- 팀장님 URS 1~5 x 3 variants = 15개 도면 생성.
+- 15개 validation hard error 0.
+- 15개 SVG XML parse 정상.
+- `python3 -m pytest tests/test_layout_validation.py tests/test_drawing_agent.py`
+  → 10 passed.
+
+### 현재 남은 이슈
+- 일부 report warning은 room area ratio 편차다. hard constraint, 전실/장비 겹침,
+  flow 색/중복/끊김, 빈 공간, legend overflow는 우선 수정 완료.
+- 다음 고도화 후보는 area-ratio objective 강화(W4~W7)와 full-flow branch의 더 높은
+  수준의 시각 요약/토글이다.
 
 ---
 

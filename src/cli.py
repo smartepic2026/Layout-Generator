@@ -13,6 +13,7 @@ pydantic)으로 변환해 spec.json 을 쓴다. draw/validate 는 그 pydantic s
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import sys
 from pathlib import Path
@@ -63,27 +64,56 @@ def cmd_rule_engine(args: argparse.Namespace) -> int:
 
 def cmd_draw(args: argparse.Namespace) -> int:
     from src.drawing_agent.floorplan import generate_floorplan
+    from src.drawing_agent.validators import validate_layout
 
     spec = RuleEngineOutput.model_validate_json(Path(args.spec).read_text())
-    # [D-023] 기본 = gradient 토폴로지(임의 방집합 배치, 방 누락 0). 레거시
-    # strip-band(공정순서 하드코딩)는 일부 방을 떨어뜨리므로 --strip 일 때만.
-    svg, layout = generate_floorplan(
-        spec, building_w_mm=args.width, building_h_mm=args.height,
-        dynamic_rooms=not args.strip, flow_mode=args.flows,
-    )
     out = Path(args.svg)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(svg)
+    count = max(1, int(args.variants or 1))
+
     # 정렬 점검: 룰엔진이 준 실제 방 중 도면에서 누락된 것 보고
     from src.drawing_agent.layout_solver import _is_al_fake_room
-    dropped = [r.id for r in spec.rooms
-               if r.id not in layout.rooms and not _is_al_fake_room(r)]
-    print(f"[OK]  {args.spec} → {out}")
-    print(f"      canvas: {layout.building_w_mm:.0f}x{layout.building_h_mm:.0f}mm "
-          f"({'URS spec.building' if args.width is None else 'CLI --width/--height'})")
-    print(f"      rooms placed: {len(layout.rooms)}, airlocks: {len(layout.airlocks)}, doors: {len(layout.doors)}")
-    if dropped:
-        print(f"      [WARN] 배치 누락된 실제 방 {len(dropped)}: {dropped}")
+
+    for i in range(count):
+        target = out
+        if count > 1:
+            target = out.with_name(f"{out.stem}_v{i + 1}{out.suffix}")
+        # [D-023] 기본 = gradient 토폴로지(임의 방집합 배치, 방 누락 0). 레거시
+        # strip-band(공정순서 하드코딩)는 일부 방을 떨어뜨리므로 --strip 일 때만.
+        svg, layout = generate_floorplan(
+            spec,
+            building_w_mm=args.width,
+            building_h_mm=args.height,
+            dynamic_rooms=not args.strip,
+            auto_canvas=args.auto_canvas,
+            flow_mode=args.flows,
+            variant_seed=args.seed,
+            variant_index=args.variant + i,
+        )
+        target.write_text(svg)
+        violations = validate_layout(spec, layout)
+        if args.report:
+            report = Path(args.report)
+            if count > 1:
+                report = report.with_name(f"{report.stem}_v{i + 1}{report.suffix}")
+            report.parent.mkdir(parents=True, exist_ok=True)
+            report.write_text(json.dumps(
+                [dataclasses.asdict(v) for v in violations],
+                ensure_ascii=False,
+                indent=2,
+            ))
+        dropped = [r.id for r in spec.rooms
+                   if r.id not in layout.rooms and not _is_al_fake_room(r)]
+        errors = [v for v in violations if v.severity == "error"]
+        warnings = [v for v in violations if v.severity != "error"]
+        print(f"[OK]  {args.spec} → {target}")
+        print(f"      canvas: {layout.building_w_mm:.0f}x{layout.building_h_mm:.0f}mm "
+              f"({'URS spec.building' if args.width is None else 'CLI --width/--height'})")
+        print(f"      variant: seed={args.seed}, index={args.variant + i}")
+        print(f"      rooms placed: {len(layout.rooms)}, airlocks: {len(layout.airlocks)}, doors: {len(layout.doors)}")
+        print(f"      validation: errors={len(errors)}, warnings={len(warnings)}")
+        if dropped:
+            print(f"      [WARN] 배치 누락된 실제 방 {len(dropped)}: {dropped}")
     return 0
 
 
@@ -127,8 +157,18 @@ def main(argv: list[str] | None = None) -> int:
                         help="building depth (mm). 생략 시 spec.building(URS) 사용")
     p_draw.add_argument("--strip", action="store_true",
                         help="레거시 strip-band 토폴로지 강제 (기본=gradient, 방 누락 0)")
+    p_draw.add_argument("--auto-canvas", action="store_true",
+                        help="방 면적 합이 URS footprint에 물리적으로 안 들어가면 비율 유지 확대")
     p_draw.add_argument("--flows", choices=["full", "main", "off"], default="full",
                         help="동선 표현: full=공정실별 comb(기본), main=대표1경로, off=없음")
+    p_draw.add_argument("--seed", type=int, default=None,
+                        help="layout variant seed. 같은 seed는 같은 후보를 재현")
+    p_draw.add_argument("--variant", type=int, default=0,
+                        help="생성할 variant index (기본 0)")
+    p_draw.add_argument("--variants", type=int, default=1,
+                        help="N개 후보를 한 번에 생성. 파일명은 _v1, _v2... suffix")
+    p_draw.add_argument("--report", default=None,
+                        help="layout validation report JSON path")
     p_draw.set_defaults(func=cmd_draw)
 
     args = parser.parse_args(argv)

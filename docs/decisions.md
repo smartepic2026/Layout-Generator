@@ -5,6 +5,46 @@
 
 ---
 
+## D-036: 팀장님 URS 1~5 최종 도면 품질 기준 — validation-first + readable flow + filled footprint
+
+**날짜**: 2026-06-09
+
+**무엇**: 팀장님 피드백을 도면 생성 시스템의 hard/soft 기준으로 승격했다.
+단순 SVG polish가 아니라 solver, renderer, CLI, validation report까지 한 흐름으로
+묶는다.
+
+**결정**:
+1. **Validation-first**: Rule Engine/RAG가 맞아도 layout에서 깨질 수 있으므로,
+   최종 SVG 생성 후 geometric validator를 반드시 돌린다. hard error 항목은
+   Grade D corridor 인접, NC-D/D-C gowning·MAL gate 양측 corridor 접촉,
+   비-airlock room-room door 금지, 장비-airlock overlap이다.
+2. **Variants는 mirror/toggle이 아니라 실제 배치 후보**: `--seed`와 `--variant(s)`로
+   재현 가능한 다양성을 만든다. 같은 seed는 재현성, variant index는 같은 zone 내
+   room order/split/mirror 후보 차이를 만든다.
+3. **Flow 가독성 우선**: 같은 색 flow를 lane별로 여러 줄 벌리지 않는다. 공유 trunk는
+   한 번만 그리고, flow path는 하나의 SVG `<path>`로 렌더링해 중간 끊김을 줄인다.
+   Product는 Personnel과 구분되도록 Orange(`#F97316`)를 사용한다.
+4. **빈 흰 공간 금지**: 종횡비를 줄이기 위해 room을 한쪽으로 밀고 남기는 미배치
+   여백은 평가용 도면에서 허용하지 않는다. D-zone room은 corridor 인접을 유지하며
+   zone 폭을 채운다.
+5. **전실은 장비 배치 금지 영역**: 장비 자동 축소보다 PAL/MAL/CAL 전실 침범 방지가
+   우선이다. row-major 실패 시에도 안전 영역 내 grid fallback으로 배치한다.
+6. **Legend는 정보 패널로 확장**: grade/flow 범례뿐 아니라 canvas W/H, canvas area,
+   room/corridor/airlock/door count, modality를 우측 패널에 표시한다.
+
+**검증 기준**:
+- 팀장님 URS 1~5 x 3 variants = 15개 도면에서 validation hard error 0.
+- SVG XML parse 정상.
+- focused pytest: `tests/test_layout_validation.py`, `tests/test_drawing_agent.py` 통과.
+
+**남은 soft risk**:
+- 면적비율 warning은 일부 남을 수 있다. 현재는 hard error와 가독성 문제를 먼저
+  봉합했으며, 다음 단계에서 W4~W7(area fit/ratio objective)로 별도 최적화한다.
+- full flow mode는 방별 branch를 표시하므로 path 수 자체는 많다. 다만 같은 색
+  lane fan-out과 segment 끊김은 제거했다.
+
+---
+
 ## D-001: 4-tier 데이터 어댑터 (Phase A1)
 
 **날짜**: 2026-05-29

@@ -29,8 +29,10 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 
 # --- 프로젝트 루트(레포)를 import 경로에 추가 -------------------------------
 ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+SRC = ROOT / "src"
+for path in (ROOT, SRC):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 from rule_engine import run_rule_engine                       # noqa: E402
 from rule_engine.urs_parser import load_urs_as_input          # noqa: E402

@@ -64,16 +64,17 @@ def test_svg_contains_room_labels():
 def test_flow_arrows_follow_flow_paths():
     """[G1 해소] 동선 화살표가 spec.flow_paths 4종을 렌더 (방 id 패턴 휴리스틱 아님).
 
-    product_process_order 는 공정실들을 연결하므로 범례(1) 외에 다수 세그먼트가
-    있어야 한다. flow_paths 가 해소되면 4종 색 마커가 모두 등장.
+    product_process_order 는 공정실들을 연결한다. renderer 는 끊김 방지를 위해
+    구간별 line 이 아니라 연결된 path 로 그리므로, marker 개수 대신 flow group 과
+    product path 존재 여부를 확인한다.
     """
     spec = run_rule_engine(URSInput(), strict=True)
     svg, _ = generate_floorplan(spec, dynamic_rooms=True)
     for k in ("personnel", "material", "waste", "product"):
         assert f"arrow-{k}" in svg, f"missing flow marker: {k}"
-    # 범례 1개 + 공정실 연결 ≥2 세그먼트
-    n_product = svg.count('marker-end="url(#arrow-product)"')
-    assert n_product >= 3, f"product 동선 세그먼트 부족: {n_product}"
+    assert 'class="flow flow-product"' in svg
+    assert 'stroke="#F97316"' in svg
+    assert 'marker-end="url(#arrow-product)"' in svg
 
 
 def test_svg_contains_legend_and_titleblock():

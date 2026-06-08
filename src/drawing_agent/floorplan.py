@@ -36,6 +36,8 @@ def generate_floorplan(
     dynamic_rooms: bool = False,
     auto_canvas: bool = False,
     flow_mode: str = "full",
+    variant_seed: int | None = None,
+    variant_index: int = 0,
 ):
     """spec → (svg_text, layout[, tracker]).
 
@@ -62,6 +64,8 @@ def generate_floorplan(
         building_h_mm=building_h_mm,
         dynamic_rooms=dynamic_rooms,
         auto_canvas=auto_canvas,
+        variant_seed=variant_seed,
+        variant_index=variant_index,
     )
     svg = render(spec, layout, flow_mode=flow_mode)
     if return_tracker:

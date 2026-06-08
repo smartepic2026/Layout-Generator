@@ -34,6 +34,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import math
 from typing import Optional
 
 from src.contract.schemas import (
@@ -143,11 +144,12 @@ NC_RIGHT_STACK = [
 # 2026-05-31: 동적 방 분류 (팀원 새 룰엔진 흡수)
 # ══════════════════════════════════════════════════════════════════════
 import re as _re_dyn
+import random as _random
 
 # AL 이중 표현 패턴 — 팀원이 rooms[] 안에 별도 fake room 으로 모델링한 AL.
 # (e.g. R_PAL_IN_HARVEST, R_MAL_OUT_PURIFICATION_1, R_CAL_IN_INOCULATION).
 # area_m2=0 + 이 패턴이면 layout 에 그리지 않음 (이미 airlocks[] 에 metadata 있음).
-_AL_FAKE_ROOM_PATTERN = _re_dyn.compile(r"^R_(?:P|M|C)AL_(?:IN|OUT)_")
+_AL_FAKE_ROOM_PATTERN = _re_dyn.compile(r"^R_(?:(?:P|M|C)AL|AL)_(?:IN|OUT)_")
 
 
 def _is_al_fake_room(room) -> bool:
@@ -158,7 +160,7 @@ def _is_al_fake_room(room) -> bool:
     """
     if getattr(room, "is_airlock", False):
         return True
-    if _AL_FAKE_ROOM_PATTERN.match(room.id) and room.area_m2 == 0:
+    if _AL_FAKE_ROOM_PATTERN.match(room.id):
         return True
     return False
 
@@ -279,7 +281,11 @@ _RETURN_CORR = _re_dyn.compile(r"_RETURN_CORRIDOR", _re_dyn.IGNORECASE)
 _AUX_CORR = _re_dyn.compile(r"^R_CORRIDOR$|_AUX_CORRIDOR$", _re_dyn.IGNORECASE)
 
 
-def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
+def _classify_rooms_gradient(
+    spec: RuleEngineOutput,
+    rng: _random.Random | None = None,
+    variant_index: int = 0,
+) -> dict:
     """NC→D→C 구배 토폴로지용 방 분류.
 
     Returns dict: nc[], d[], d_corridor, process_gowning, supply_corridor,
@@ -335,7 +341,13 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
         if is_aux:
             out["d"].append(rid)
             continue
-        process_ids.append(rid)  # 나머지 = 공정실
+        # Grade D 공정지원실(예: Washing/Buffer prep)은 C 공정행이 아니라 D 구역에 둔다.
+        # Product flow 는 Inoculation 이후 주요 공정만 대상으로 하므로 여기서 제외해도
+        # 제조 순서 표현을 해치지 않는다.
+        if r.clean_grade == "D":
+            out["d"].append(rid)
+        else:
+            process_ids.append(rid)  # 나머지 = 공정실
 
     # 가운룸이 여러 개면 하나만 게이트(supply 접점), 나머지는 공정행에 배치(누락 방지)
     if gowning_candidates:
@@ -353,11 +365,17 @@ def _classify_rooms_gradient(spec: RuleEngineOutput) -> dict:
             seen.add(rid)
     extras = sorted([r for r in process_ids if r not in seen],
                     key=lambda r: -(by_id[r].area_m2 or 0.0))
+    if rng is not None and extras:
+        rng.shuffle(extras)
     sorted_proc.extend(extras)
     if len(sorted_proc) <= 5:
         out["top_row"] = sorted_proc
     else:
-        half = (len(sorted_proc) + 1) // 2
+        split_options = [
+            max(1, min(len(sorted_proc) - 1, (len(sorted_proc) + 1) // 2 + delta))
+            for delta in (0, -1, 1)
+        ]
+        half = split_options[variant_index % len(split_options)]
         out["top_row"] = sorted_proc[:half]
         out["bottom_row"] = sorted_proc[half:]
     return out
@@ -459,12 +477,16 @@ def _place_treemap(layout, by_id, ids, x0, y0, w, h, order_desc: bool = True) ->
         layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=rect)
 
 
-def _place_d_zone_rows(layout, by_id, ids, x0, y0, w, h) -> dict:
-    """[D-034 / 피드백 0607] Grade D 방을 팀장님 지정 배치로 명시 배치.
-    위→아래: Material storage / Equipment storage / Gowning F / Gowning M (각 전폭)
-             → Monitoring | DS storage (좌우) → CIP supply | IPC(위)/Cell bank(아래)
-             → 나머지(전폭). 우측 열(DS·IPC·Cell bank)=Grade D 복도 접촉, 좌측
-             열(Monitoring·CIP)=후방 지원실. 반환: {room_id: 'corridor'|'back'} 접촉 힌트.
+def _place_d_zone_rows(layout, by_id, ids, x0, y0, w, h,
+                       rng: _random.Random | None = None,
+                       max_aspect: float = 3.2) -> dict:
+    """Grade D 방을 single-loaded corridor 구조로 배치.
+
+    모든 Grade D Room 이 오른쪽 Grade D corridor 와 직접 벽을 공유해야 한다는
+    최종 피드백을 우선한다. DS/IP/Cell bank 같은 지원실도 다른 방 뒤에 숨기지
+    않고 전폭 row 로 배치한다. Material-in / Gowning F/M 은 NC↔D 게이트 역할을
+    하므로 전폭 배치되어 왼쪽 NC corridor 와 오른쪽 D corridor 를 동시에 접한다.
+    반환값은 door 합성용 접촉 힌트다.
     """
     pool = [i for i in ids if i in by_id]
 
@@ -486,15 +508,16 @@ def _place_d_zone_rows(layout, by_id, ids, x0, y0, w, h) -> dict:
     ipc = take("IPC")
     cellbank = take("CELL_BANK", "CELLBANK")
 
-    rows = []                                   # ("full", rid) | ("pair", left, [rights])
+    rows = []                                   # ("full", rid, None)
     for rid in (mat_store, equip, gown_f, gown_m):
         if rid:
             rows.append(("full", rid, None))
-    if monitoring or ds:
-        rows.append(("pair", monitoring, [r for r in (ds,) if r]))
-    if cip or ipc or cellbank:
-        rows.append(("pair", cip, [r for r in (ipc, cellbank) if r]))
-    for rid in pool:                            # 분류 안 된 나머지 D 방 = 전폭
+
+    middle = [r for r in (monitoring, ds, cip, ipc, cellbank) if r]
+    middle.extend(pool)
+    if rng is not None and middle:
+        rng.shuffle(middle)
+    for rid in middle:
         rows.append(("full", rid, None))
     if not rows:
         return {}
@@ -503,36 +526,44 @@ def _place_d_zone_rows(layout, by_id, ids, x0, y0, w, h) -> dict:
         return max((by_id[rid].area_m2 or 0.0), 10.0) if rid else 0.0
 
     def row_weight(row):
-        if row[0] == "full":
-            return area(row[1])
-        return max(area(row[1]), sum(area(r) for r in row[2]))
+        return area(row[1])
 
     weights = [row_weight(r) for r in rows]
     tot = sum(weights) or 1.0
+    gate_flags = []
+    for row in rows:
+        up = row[1].upper()
+        gate_flags.append(
+            "GOWNING_FEMALE" in up or "GOWNING_MALE" in up
+            or "MATERIAL_IN" in up or "MATERIAL_INLET" in up
+        )
+    raw_heights = [h * wt / tot for wt in weights]
+    min_heights = [min(2600.0, h * 0.10) if is_gate else 0.0 for is_gate in gate_flags]
+    if sum(min_heights) < h and any(gate_flags):
+        flex = [max(raw - mn, 0.0) for raw, mn in zip(raw_heights, min_heights)]
+        flex_total = sum(flex)
+        if flex_total <= 0:
+            flex = weights
+            flex_total = sum(flex) or 1.0
+        heights = [
+            mn + (h - sum(min_heights)) * f / flex_total
+            for mn, f in zip(min_heights, flex)
+        ]
+    else:
+        heights = raw_heights
     touch = {}                                  # 복도 접촉 힌트
     yy = y0
-    for row, wt in zip(rows, weights):
-        rh = h * wt / tot
-        if row[0] == "full":
-            rid = row[1]
-            layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(x0, yy, w, rh))
-            touch[rid] = "corridor"             # 전폭 → 우측 D복도 접촉
-        else:
-            left, rights = row[1], row[2]
-            lw = w * 0.5 if rights else w
-            if left:
-                layout.rooms[left] = PlacedRoom(room=by_id[left], rect=Rect(x0, yy, lw, rh))
-                touch[left] = "back" if rights else "corridor"
-            if rights:
-                rx, rw = x0 + lw, w - lw
-                ra = [area(r) for r in rights]
-                rt = sum(ra) or 1.0
-                ry = yy
-                for rr, a in zip(rights, ra):
-                    rhh = rh * a / rt
-                    layout.rooms[rr] = PlacedRoom(room=by_id[rr], rect=Rect(rx, ry, rw, rhh))
-                    touch[rr] = "corridor"       # 우측 열 → D복도 접촉
-                    ry += rhh
+    for row, rh in zip(rows, heights):
+        rid = row[1]
+        up = rid.upper()
+        is_gate = (
+            "GOWNING_FEMALE" in up or "GOWNING_MALE" in up
+            or "MATERIAL_IN" in up or "MATERIAL_INLET" in up
+        )
+        rw = w
+        rx = x0
+        layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(rx, yy, rw, rh))
+        touch[rid] = "corridor"
         yy += rh
     return touch
 
@@ -541,6 +572,12 @@ def _place_row_aspect(layout, by_id, ids, x0, y0, w, h, max_aspect=1.9):
     """가로 행 배치 — 면적 비례 폭 + 종횡비 클램프(작은 방 세로 슬리버 방지)."""
     present = [r for r in ids if r in by_id]
     if not present:
+        return
+    if len(present) == 1:
+        wd = min(w, max(h * max_aspect, 4500.0))
+        x = x0 + (w - wd) / 2
+        rid = present[0]
+        layout.rooms[rid] = PlacedRoom(room=by_id[rid], rect=Rect(x, y0, wd, h))
         return
     areas = [max(by_id[r].area_m2 or 0.0, 15.0) for r in present]
     widths = _alloc_dim(areas, w, h, max_aspect)
@@ -632,11 +669,40 @@ def _synth_gate_room(rid: str, name_ko: str, name_en: str, grade: str = "C",
     )
 
 
-def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
+def _make_variant_rng(seed: int | None, variant_index: int) -> _random.Random | None:
+    if seed is None and variant_index == 0:
+        return None
+    base = 0 if seed is None else int(seed)
+    return _random.Random(base + variant_index * 1009)
+
+
+def _mirror_layout_x(layout: "Layout") -> "Layout":
+    """좌우 mirror variant. 좌표만 뒤집어 인접성과 면적을 보존한다."""
+    W = layout.building_w_mm
+    for pr in layout.rooms.values():
+        pr.rect.x = W - pr.rect.x2
+    for pa in layout.airlocks.values():
+        pa.rect.x = W - pa.rect.x2
+    for d in layout.doors:
+        d.x = W - d.x
+        if d.swing_to_xy is not None:
+            d.swing_to_xy = (W - d.swing_to_xy[0], d.swing_to_xy[1])
+    layout.annotations.append({"type": "variant", "mode": "mirror_x"})
+    return layout
+
+
+def _solve_gmp_gradient(
+    spec: RuleEngineOutput,
+    W: float,
+    H: float,
+    variant_seed: int | None = None,
+    variant_index: int = 0,
+) -> "Layout":
     """NC→D→C 청정도 구배 토폴로지 솔버 (dynamic_rooms 경로)."""
     layout = Layout(building_w_mm=W, building_h_mm=H)
     by_id = {r.id: r for r in spec.rooms}
-    cls = _classify_rooms_gradient(spec)
+    rng = _make_variant_rng(variant_seed, variant_index)
+    cls = _classify_rooms_gradient(spec, rng=rng, variant_index=variant_index)
 
     has_nc = bool(cls["nc"])
     has_d = bool(cls["d"])
@@ -658,9 +724,34 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     has_ncc = has_nc and has_d
     w_ncc = corr_w if has_ncc else 0.0
     w_dc = corr_w if has_dc else 0.0
-    # NC/D 컬럼 폭 — 복도 폭 차감분 반영
-    w_nc = W * 0.13 - (w_ncc * 0.5 if has_ncc else 0.0) if has_nc else 0.0
-    w_d = W * 0.16 - (w_ncc * 0.5 if has_ncc else 0.0) if has_d else 0.0
+
+    def _area_sum(rids):
+        return sum(max(by_id[r].area_m2 or 0.0, 10.0) for r in rids if r in by_id)
+
+    # NC/D/C 컬럼 폭 — URS 면적비율로 계산된 area_m2 합을 1차 반영.
+    usable_w = max(W - w_ncc - w_dc, W * 0.5)
+    nc_area = _area_sum(cls["nc"]) if has_nc else 0.0
+    d_area = _area_sum(cls["d"]) if has_d else 0.0
+    c_area = _area_sum(cls["top_row"] + cls["bottom_row"])
+    if cls["process_gowning"] and cls["process_gowning"] in by_id:
+        c_area += max(by_id[cls["process_gowning"]].area_m2 or 0.0, 10.0)
+    total_zone_area = nc_area + d_area + c_area
+    if total_zone_area > 0:
+        w_nc = usable_w * nc_area / total_zone_area if has_nc else 0.0
+        w_d = usable_w * d_area / total_zone_area if has_d else 0.0
+        min_nc = W * 0.08 if has_nc else 0.0
+        min_d = W * 0.10 if has_d else 0.0
+        w_nc = max(w_nc, min_nc)
+        w_d = max(w_d, min_d)
+        if has_d:
+            w_d = min(w_d, W * 0.13)
+        if w_nc + w_d > usable_w * 0.55:
+            scale = (usable_w * 0.55) / (w_nc + w_d)
+            w_nc *= scale
+            w_d *= scale
+    else:
+        w_nc = W * 0.13 - (w_ncc * 0.5 if has_ncc else 0.0) if has_nc else 0.0
+        w_d = W * 0.16 - (w_ncc * 0.5 if has_ncc else 0.0) if has_d else 0.0
     ncc_x0 = w_nc
     d_x0 = w_nc + w_ncc
     c_x0 = w_nc + w_ncc + w_d + w_dc
@@ -669,7 +760,11 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     # 1) NC 스택(최좌)  1.5) NC↔D 순환 복도  2) Grade D 스택  3) Grade D 세로 복도
     # [D-024] 단일 스택(고정폭) → squarified treemap 으로 면적 비례 배치.
     if has_nc:
-        _place_treemap(layout, by_id, cls["nc"], 0.0, 0.0, w_nc, H)
+        nc_ids = list(cls["nc"])
+        if rng is not None:
+            rng.shuffle(nc_ids)
+        _place_treemap(layout, by_id, nc_ids, 0.0, 0.0, w_nc, H,
+                       order_desc=(rng is None))
     if w_ncc > 0:
         ncc_id = cls.get("nc_corridor")
         if not (ncc_id and ncc_id in by_id):           # 전용 복도 방 없으면 합성
@@ -685,33 +780,49 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
         waste_out = next((r for r in d_ids if "WASTE_OUT" in r or "WASTE" in r), None)
         d_y0, d_h = 0.0, H
         if mat_in:
-            mh = max(min(H * 0.12, (by_id[mat_in].area_m2 or 0.0) * 1e6 / w_d), H * 0.06)
+            area_h = (by_id[mat_in].area_m2 or 0.0) * 1e6 / max(w_d, 1.0)
+            mh = max(min(H * 0.12, area_h), min(corr_w, H * 0.05))
             layout.rooms[mat_in] = PlacedRoom(room=by_id[mat_in], rect=Rect(d_x0, 0.0, w_d, mh))
             d_y0, d_h = mh, d_h - mh
             d_ids.remove(mat_in)
         if waste_out:
-            wh = max(min(H * 0.12, (by_id[waste_out].area_m2 or 0.0) * 1e6 / w_d), H * 0.06)
+            area_h = (by_id[waste_out].area_m2 or 0.0) * 1e6 / max(w_d, 1.0)
+            wh = max(min(H * 0.12, area_h), min(corr_w, H * 0.05))
             layout.rooms[waste_out] = PlacedRoom(room=by_id[waste_out], rect=Rect(d_x0, H - wh, w_d, wh))
             d_h -= wh
             d_ids.remove(waste_out)
-        # [D-034 / 피드백 0607] 팀장님 지정 2D 배치(전폭 + 좌우 묶음). treemap·단일열 아님.
-        d_touch = _place_d_zone_rows(layout, by_id, d_ids, d_x0, d_y0, w_d, d_h)
+        # 전폭 single-loaded corridor: D 방 전부 D corridor 직접 접촉.
+        d_touch = _place_d_zone_rows(layout, by_id, d_ids, d_x0, d_y0, w_d, d_h, rng=rng)
         cls["_d_touch"] = d_touch
     if has_dc:
         layout.rooms[cls["d_corridor"]] = PlacedRoom(
             room=by_id[cls["d_corridor"]], rect=Rect(d_x0 + w_d, 0.0, w_dc, H))
 
-    # 4) C 공정 구역 — 5밴드 (return상 / 공정상 / supply중앙 / 공정하 / return하)
-    ratios = [0.06, 0.36, 0.14, 0.36, 0.08]
-    ssum = sum(ratios)
-    ratios = [r / ssum for r in ratios]
-    yacc = 0.0
-    bands = []
-    for rr in ratios:
-        hh = H * rr
-        bands.append((yacc, yacc + hh))
-        yacc += hh
-    (ret_t, proc_t, sup, proc_b, ret_b) = bands
+    # 4) C 공정 구역 — corridor 높이는 최소폭 보존, 공정행 높이는 면적 합 비례.
+    corr_band_h = min(corr_w, H * 0.08)
+    ret_top_h = max(H * 0.055, corr_band_h)
+    ret_bot_h = max(H * 0.065, corr_band_h)
+    sup_h = max(H * 0.13, min(corr_w * 1.8, H * 0.16))
+    remain_h = max(H - ret_top_h - ret_bot_h - sup_h, H * 0.45)
+    top_area = _area_sum(cls["top_row"])
+    bot_area = _area_sum(cls["bottom_row"])
+    if cls["bottom_row"] and (top_area + bot_area) > 0:
+        proc_t_h = remain_h * top_area / (top_area + bot_area)
+        proc_b_h = remain_h - proc_t_h
+    else:
+        proc_t_h = remain_h
+        proc_b_h = 0.0
+    if cls["top_row"]:
+        top_avg_w = c_w / max(len(cls["top_row"]), 1)
+        proc_t_h = min(proc_t_h, max(top_avg_w * 2.35, corr_w * 3.0))
+    if cls["bottom_row"]:
+        bot_avg_w = c_w / max(len(cls["bottom_row"]), 1)
+        proc_b_h = min(proc_b_h, max(bot_avg_w * 2.35, corr_w * 3.0))
+    ret_t = (0.0, ret_top_h)
+    proc_t = (ret_t[1], ret_t[1] + proc_t_h)
+    sup = (proc_t[1], proc_t[1] + sup_h)
+    proc_b = (sup[1], sup[1] + proc_b_h)
+    ret_b = (proc_b[1], H)
 
     # return 복도 (상·하 모두 실제 방 — 정제실 하행도 return 인접)
     rc = cls["return_corridor"]
@@ -725,18 +836,27 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     # [피드백 0607] D↔C 진입 게이트 = Gowning(위) / MAL-in(아래) **세로 스택**, C 좌단.
     #   (이전엔 가로 나란히였음 — 팀장님 지정 세로 스택으로 변경.) 우측에 supply 복도.
     sup_y, sup_h = sup[0], sup[1] - sup[0]
-    gate_w = min(c_w * 0.15, max(c_w * 0.09, 6500.0))
     gown = cls["process_gowning"]
     mal_id = next((r.id for r in spec.rooms
                    if "MAL_IN" in r.id.upper() and not _is_al_fake_room(r) and r.id in by_id), None)
     if mal_id is None:
         mal_id = "R_SUPPLY_MAL_IN"
         by_id[mal_id] = _synth_gate_room(mal_id, "자재 반입실 (MAL-in)", "Material Air Lock in")
+    gate_area = 0.0
+    if gown and gown in by_id:
+        gate_area += max(by_id[gown].area_m2 or 0.0, 10.0)
+    if mal_id in by_id:
+        gate_area += max(by_id[mal_id].area_m2 or 0.0, 10.0)
+    gate_w = min(c_w * 0.22, max(c_w * 0.09, 6500.0, gate_area * 1e6 / max(sup_h, 1.0)))
     if gown and gown in by_id:
         # 면적 비례로 상/하 분할 (Gowning 위, MAL-in 아래)
         ga = max(by_id[gown].area_m2 or 0.0, 10.0)
         ma = max(by_id[mal_id].area_m2 or 0.0, 10.0)
+        min_gate_h = min(2600.0, sup_h * 0.42)
+        gate_w = min(gate_w, max(6500.0, min_gate_h * 3.8))
         gh = sup_h * ga / (ga + ma)
+        if sup_h >= min_gate_h * 2:
+            gh = min(max(gh, min_gate_h), sup_h - min_gate_h)
         layout.rooms[gown] = PlacedRoom(room=by_id[gown],
                                         rect=Rect(c_x0, sup_y, gate_w, gh))
         layout.rooms[mal_id] = PlacedRoom(room=by_id[mal_id],
@@ -775,26 +895,22 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     #   · Gowning M/F 만 NC복도+D복도 양쪽 도어 = NC↔D 인원 게이트(갱의 강제)
     nc_corr_id = cls.get("nc_corridor")
     d_corr_id = cls.get("d_corridor")
-    d_touch = cls.get("_d_touch", {})
     d_all = [r for r in cls["d"] if r in layout.rooms]
     gownings = [r for r in d_all if "GOWNING" in r.upper()]
+    material_gates = [
+        r for r in d_all
+        if "MATERIAL_IN" in r.upper() or "MATERIAL_INLET" in r.upper()
+    ]
+    nc_d_gates = set(gownings + material_gates)
     if d_corr_id and d_corr_id in layout.rooms:
         dcr = layout.rooms[d_corr_id].rect
         for rid in d_all:
-            if rid in gownings:
+            if rid in nc_d_gates:
                 continue
             rr = layout.rooms[rid].rect
-            if d_touch.get(rid) == "back":
-                # 후방 지원실(Monitoring·CIP) — 복도 직접 접촉 불가 → 앞(served) 방에 도어
-                front = next((layout.rooms[o].rect for o in d_all if o != rid
-                              and abs(layout.rooms[o].rect.x - rr.x2) < 60
-                              and not (layout.rooms[o].rect.y2 <= rr.y or layout.rooms[o].rect.y >= rr.y2)),
-                             None)
-                _ensure_door(layout, rr, front if front is not None else dcr)
-            else:
-                _ensure_door(layout, rr, dcr)        # 전폭·우측열 → D복도 도어
-        # Gowning M/F = NC↔D 게이트 → NC복도 + D복도 양쪽 도어
-        for g in gownings:
+            _ensure_door(layout, rr, dcr)
+        # Gowning M/F + Material-in = NC↔D 게이트 → NC복도 + D복도 양쪽 도어
+        for g in nc_d_gates:
             gr = layout.rooms[g].rect
             _ensure_door(layout, gr, dcr)
             if nc_corr_id and nc_corr_id in layout.rooms:
@@ -802,6 +918,13 @@ def _solve_gmp_gradient(spec: RuleEngineOutput, W: float, H: float) -> "Layout":
     if nc_corr_id:
         _ensure_rooms_touch_corridor(layout, cls["nc"], [nc_corr_id])
     _place_airlock_doors(layout)
+    if rng is not None and variant_index % 3 == 2:
+        _mirror_layout_x(layout)
+    layout.annotations.append({
+        "type": "variant",
+        "seed": variant_seed,
+        "index": variant_index,
+    })
     return layout
 
 
@@ -811,6 +934,8 @@ def solve(
     building_h_mm: float = 42500,
     dynamic_rooms: bool = False,
     auto_canvas: bool = False,
+    variant_seed: int | None = None,
+    variant_index: int = 0,
 ) -> Layout:
     """strip-band 결정론적 배치 솔버.
 
@@ -828,7 +953,13 @@ def solve(
     if dynamic_rooms:
         # [2026-06-02 v3] 외부(소연) spec → GMP 청정도 구배 토폴로지(NC→D→C).
         # 사용자 도면 피드백(②③⑤) 반영: D복도 + 가운 게이트 + 양측 return 복도.
-        layout = _solve_gmp_gradient(spec, building_w_mm, building_h_mm)
+        layout = _solve_gmp_gradient(
+            spec,
+            building_w_mm,
+            building_h_mm,
+            variant_seed=variant_seed,
+            variant_index=variant_index,
+        )
         _normalize_door_widths(layout)        # [피드백 0607] 도어 폭 통일
         return layout
 
@@ -1049,7 +1180,7 @@ def _place_right_stack(layout, room_by_id, ids, x, y, w, h):
 
 EQUIPMENT_VISUAL_SCALE = 0.80   # 사용자 요청: 박스 시각 표시 기본 20% 축소
                                 # (실제 W_mm/D_mm 데이터는 무변경)
-EQUIPMENT_MIN_SCALE = 0.25      # 자동 축소 하한 (아래로는 안 줄임)
+EQUIPMENT_MIN_SCALE = 0.02      # 자동 축소 하한 (전실 겹침보다 축소를 우선)
 
 
 def _pack_row_major(equips, inner_w, inner_h, scale, eq_gap):
@@ -1074,6 +1205,99 @@ def _pack_row_major(equips, inner_w, inner_h, scale, eq_gap):
     return placed
 
 
+def _pack_fit_grid(equips, inner_w, inner_h, eq_gap):
+    """Last-resort grid pack constrained to the available inner rectangle."""
+    if not equips:
+        return []
+    n = len(equips)
+    best = None
+    for cols in range(1, n + 1):
+        rows = math.ceil(n / cols)
+        cell_w = (inner_w - (cols - 1) * eq_gap) / cols
+        cell_h = (inner_h - (rows - 1) * eq_gap) / rows
+        if cell_w <= 0 or cell_h <= 0:
+            continue
+        scale = min(min(cell_w / max(eq.W_mm, 1.0), cell_h / max(eq.D_mm, 1.0)) for eq in equips)
+        if best is None or scale > best[0]:
+            best = (scale, cols, rows, cell_w, cell_h)
+    if best is None:
+        scale, cols, cell_w, cell_h = 0.005, n, inner_w / n, inner_h
+    else:
+        scale, cols, _rows, cell_w, cell_h = best
+    scale = max(scale * 0.92, 0.005)
+    placed = []
+    for idx, eq in enumerate(equips):
+        row = idx // cols
+        col = idx % cols
+        ew = min(eq.W_mm * scale, cell_w)
+        eh = min(eq.D_mm * scale, cell_h)
+        rx = col * (cell_w + eq_gap) + max((cell_w - ew) / 2.0, 0.0)
+        ry = row * (cell_h + eq_gap) + max((cell_h - eh) / 2.0, 0.0)
+        placed.append((eq, rx, ry, ew, eh))
+    return placed
+
+
+def _equipment_inner_bounds(layout: Layout, proom: PlacedRoom) -> tuple[float, float, float, float]:
+    """장비 배치 가능 영역. 같은 방에 붙은 AL 박스와 라벨 영역을 제외한다."""
+    wall_margin = 2200
+    top_label = 6000
+    bottom_pad = 2500
+    r = proom.rect
+    x0 = r.x + wall_margin
+    y0 = r.y + top_label
+    x1 = r.x2 - wall_margin
+    y1 = r.y2 - bottom_pad
+    pad = 1000
+    attached_airlocks = [
+        pa for pa in layout.airlocks.values()
+        if pa.attached_room_id == proom.room.id
+    ]
+
+    for pa in attached_airlocks:
+        ar = pa.rect
+        if pa.side == "north":
+            y0 = max(y0, ar.y2 + pad)
+        elif pa.side == "south":
+            y1 = min(y1, ar.y - pad)
+        elif pa.side == "west":
+            x0 = max(x0, ar.x2 + pad)
+        elif pa.side == "east":
+            x1 = min(x1, ar.x - pad)
+
+    # 방이 너무 작거나 AL 이 과밀하면 최소 영역으로 fallback 하되, AL 쪽에서 떨어뜨린다.
+    if x1 - x0 < 1000:
+        left_limit = r.x + 1000
+        right_limit = r.x2 - 1000
+        for pa in attached_airlocks:
+            ar = pa.rect
+            if pa.side == "west":
+                left_limit = max(left_limit, ar.x2 + pad)
+            elif pa.side == "east":
+                right_limit = min(right_limit, ar.x - pad)
+        if right_limit - left_limit >= 1000:
+            x0, x1 = left_limit, right_limit
+        else:
+            x0 = r.x + wall_margin
+            x1 = max(x0 + 1000, r.x2 - wall_margin)
+    if y1 - y0 < 1000:
+        upper_limit = r.y + 1000
+        lower_limit = r.y2 - 1000
+        for pa in attached_airlocks:
+            ar = pa.rect
+            if pa.side == "north":
+                upper_limit = max(upper_limit, ar.y2 + pad)
+            elif pa.side == "south":
+                lower_limit = min(lower_limit, ar.y - pad)
+        if lower_limit - upper_limit >= 1000:
+            y0, y1 = upper_limit, lower_limit
+        else:
+            y0 = min(max(r.y + top_label, r.y), r.y2 - 1000)
+            y1 = min(r.y2 - bottom_pad, r.y2)
+            if y1 - y0 < 1000:
+                y1 = min(y0 + 1000, r.y2)
+    return x0, y0, max(x1 - x0, 1000), max(y1 - y0, 1000)
+
+
 def _place_equipment_grid(layout, use_actual_mm: bool = False, eq_gap: float = 800.0):
     """Room 내부에 장비를 process_step 순서대로 grid 배치.
     장비가 모두 방 안에 들어가도록 scale 을 자동 조정 (사용자 요청).
@@ -1086,9 +1310,6 @@ def _place_equipment_grid(layout, use_actual_mm: bool = False, eq_gap: float = 8
     equipment_clearance_mm.between_equipment 를 넘겨 GMP 컴플라이언스 충족
     (기본 800 은 strip-band 보존용 — baselines 불변).
     """
-    wall_margin = 2200    # 좌/우
-    top_label = 6000      # 위쪽 — 라벨 3줄 공간
-    bottom_pad = 2500     # 아래쪽
     base_scale = 1.0 if use_actual_mm else EQUIPMENT_VISUAL_SCALE
     min_scale = 1.0 if use_actual_mm else EQUIPMENT_MIN_SCALE
     for proom in layout.rooms.values():
@@ -1096,10 +1317,7 @@ def _place_equipment_grid(layout, use_actual_mm: bool = False, eq_gap: float = 8
         if not equips:
             continue
 
-        inner_x = proom.rect.x + wall_margin
-        inner_y = proom.rect.y + top_label
-        inner_w = max(proom.rect.w - 2 * wall_margin, 1000)
-        inner_h = max(proom.rect.h - top_label - bottom_pad, 1000)
+        inner_x, inner_y, inner_w, inner_h = _equipment_inner_bounds(layout, proom)
 
         # 기본 scale 부터 시작해, 다 들어갈 때까지 점진 축소
         # use_actual_mm=True 면 scale 고정 1.0 (축소 안 함)
@@ -1111,17 +1329,9 @@ def _place_equipment_grid(layout, use_actual_mm: bool = False, eq_gap: float = 8
                 break
             scale *= 0.9   # 10% 씩 줄여가며 재시도
         if placed is None:
-            # 하한까지 줄여도 안 들어감 → 강제로 하한 scale 로 packing(잘릴 수 있음)
-            scale = min_scale
-            placed = []
-            cx, cy, row_h = 0.0, 0.0, 0.0
-            for eq in equips:
-                ew, eh = eq.W_mm * scale, eq.D_mm * scale
-                if cx + ew > inner_w:
-                    cx, cy, row_h = 0.0, cy + row_h + eq_gap, 0.0
-                placed.append((eq, cx, cy, ew, eh))
-                cx += ew + eq_gap
-                row_h = max(row_h, eh)
+            # 하한까지 줄여도 안 들어가면, 전실을 침범하지 않도록 안전 영역 안에서
+            # 균등 grid 로 재배치한다. 장비 시각 크기보다 겹침 방지가 우선이다.
+            placed = _pack_fit_grid(equips, inner_w, inner_h, eq_gap)
 
         for eq, rx, ry, ew, eh in placed:
             proom.equipment.append(
@@ -1175,13 +1385,14 @@ def _place_doors(layout, adjacency: list[Adjacency]):
         if adj.from_id in layout.airlocks or adj.to_id in layout.airlocks:
             continue
 
-        # [피드백 #2] 주요 공정실끼리 직접 인접 도어 삭제 — 공정물은 도어가 아니라
-        # 벽/CIP 배관으로 이동(규정 Product §2, 예: Purif1↔Purif2 도어 없음).
-        # 동일 청정등급 process↔process 인접은 도어를 그리지 않는다.
+        # 최종 피드백: 주요 공정룸 소속 전실(PAL/MAL/CAL)을 제외하면 사람 이동은
+        # Room↔Room 직접 문이 아니라 복도를 통해야 한다. Product 는 벽/CIP 배관
+        # flow 로 표현하고, 사람용 door 는 그리지 않는다.
         ra = layout.rooms.get(adj.from_id)
         rb = layout.rooms.get(adj.to_id)
-        if (ra and rb and ra.room.category == "process" and rb.room.category == "process"
-                and ra.room.clean_grade == rb.room.clean_grade):
+        if (ra and rb
+                and not (ra.room.is_corridor or "CORRIDOR" in ra.room.id.upper())
+                and not (rb.room.is_corridor or "CORRIDOR" in rb.room.id.upper())):
             continue
 
         a = _lookup_rect(layout, adj.from_id)

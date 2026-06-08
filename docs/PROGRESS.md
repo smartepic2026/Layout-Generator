@@ -1,5 +1,37 @@
 # PROGRESS — 작업 진행 상황
 
+## [2026-06-09] 팀장님 URS 1~5 최종 고도화: validation, variants, flow 가독성, legend/status 패널 (D-036) — 진행 반영
+
+팀장님 제공 URS 1~5(`input_urs/URS_ConceptualDesign for layout_0607-{1..5}.xlsx`)
+기준으로 도면 생성·검증 경로를 재정비했다.
+
+- **3 variants 생성 CLI**: `draw --seed --variant --variants --report` 추가.
+  동일 seed는 재현 가능, variant index는 room order/split/mirror 후보를 바꾼다.
+  출력은 `output/audit_0608/urs_0607-{1..5}_final_v{1..3}.svg` 및 report JSON.
+- **도면 geometric validator 추가**: Grade D room-D corridor 인접, NC-D/D-C gowning·MAL
+  gate 양측 corridor 접촉, 비-airlock room-room door 금지, 장비-airlock overlap,
+  면적비율 편차를 검사. 팀장님 URS 1~5 x 3 variants = **15개 hard error 0**.
+- **면적/footprint 반영 강화**: `Room.area_ratio_pct` 계약 필드 추가, URS
+  `spec.building` canvas 사용, zone 폭을 room area 합 기반으로 1차 배분.
+- **D-zone 및 빈 공간 수정**: DS storage/IPC/Cell bank/Washing/Buffer prep 등
+  Grade D room은 D corridor 직접 인접을 유지하면서 D-zone 폭을 채워, 도면 내 흰
+  미배치 공간이 남지 않도록 수정.
+- **전실/장비 overlap 수정**: 장비 배치 안전 영역이 PAL/MAL/CAL 박스를 제외하도록
+  계산. row-major 실패 시에도 전실 침범 없이 안전 영역 안에서 grid fallback.
+- **Flow 렌더링 재정비**:
+  - Product 색상을 Violet(`#7C3AED`)에서 Orange(`#F97316`)로 변경해 Personnel과 분리.
+  - 같은 색 flow를 lane별로 여러 줄 벌리던 방식 제거.
+  - flow를 segment별 `<line>`이 아니라 연결된 `<path>`로 렌더링해 L자 꺾임 끊김 완화.
+  - 중복 flow signature dedupe.
+- **Legend/정보 패널 개선**: 우측 panel 폭 확장, 긴 grade 설명 축약, FLOW 범례를 실제
+  flow 색상으로 표시, `DRAWING INFO`에 canvas W/H·면적·placed rooms·corridors·
+  airlocks·doors·modality 추가.
+
+검증:
+- `python3 -m pytest tests/test_layout_validation.py tests/test_drawing_agent.py` → **10 passed**.
+- `output/audit_0608` 최종 SVG 15개 XML parse 정상.
+- 최신 report 기준 15 variants 모두 validation hard error 0.
+
 ## [2026-06-07] 0607 전수 감사(워크플로우) + W1 건물 footprint 계약 포함 (D-035) — 브랜치 `drawing/floorplan-v2`
 
 "모든 걸 해결" 지시 → ultracode 워크플로우(5 에이전트) 증거기반 전수 감사 →

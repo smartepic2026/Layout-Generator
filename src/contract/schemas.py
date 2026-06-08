@@ -205,6 +205,7 @@ class Room(StrictModel):
     category: Literal["process", "auxiliary", "NC"]
     clean_grade: Grade
     area_m2: float
+    area_ratio_pct: Optional[float] = None
     ceiling_height_mm: int = 3000
     has_well_ceiling: bool = False
     volume_m3: float = 0
