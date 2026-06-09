@@ -247,7 +247,7 @@ async function checkBackend(){
       setBanner('live','✓ 백엔드 연결됨 — 실제 Rule Engine·Validation 파이프라인을 실행합니다.'
         +(h.validation_available?'':' (RAG DB 미설치: 검증은 건너뜁니다.)'));
       setDocState(docConnected, docConnected ? `연결됨 (${h.doc_agent_mode})` : '미연결 (Not connected)');
-      return;
+      return true;
     }catch(e){}
   }
   LIVE=false;
@@ -257,6 +257,7 @@ async function checkBackend(){
   setBanner('demo','● 데모 모드 — 백엔드(localhost:8100)에 연결되지 않아 내장 예시 결과로 동작합니다. '
     +'실제 실행은 backend/README 대로 서버를 켜세요.');
   setDocState(false, '미연결 (DEMO)');
+  return false;
 }
 function setBanner(cls,txt){const b=$('#modeBanner');b.className='banner show '+cls;$('#modeTxt').textContent=txt;}
 function setDocState(on,txt){
@@ -320,20 +321,18 @@ $('#runBtn').onclick=async()=>{
   if(!uploaded)return;
   $('#runBtn').disabled=true;$('#pipeLog').innerHTML='';
   try{
-    if(LIVE){ await runLive(); }
-    else{ await runDemo(); }
+    await checkBackend();
+    if(!LIVE)throw new Error('백엔드(localhost:8100)에 연결되지 않아 실제 도면을 만들 수 없습니다.');
+    await runLive();
   }catch(e){
     logLine('오류',String(e),true);
-    if(LIVE){
-      ran=false;
-      lastRunId=null;
-      lastDrawingSvg=null;
-      setDocState(false,'실행 실패');
-      renderPipe(null,false);
-      $('#runBtn').disabled=false;
-      return;
-    }
-    await runDemo();
+    ran=false;
+    lastRunId=null;
+    lastDrawingSvg=null;
+    setDocState(false,'실행 실패');
+    renderPipe(null,false);
+    $('#runBtn').disabled=false;
+    return;
   }
   ran=true;renderResults();
   $('#runBtn').disabled=false;$('#runBtn').textContent='▶ 다시 실행';
@@ -386,8 +385,8 @@ async function runDemo(){
   for(let i=0;i<3;i++){renderPipe(i,false);
     if(i===2&&!$('#optVal').checked){logLine('Validation','검증 건너뜀 (옵션 off)',true);await wait(300);continue;}
     logLine(msgs[i][0],msgs[i][1]);await wait(650);}
-  renderPipe(3,true);logLine('Drawing Agent','데모 모드 — placeholder 도면 표시',true);logLine('완료','7블록 + 검증 리포트 준비됨 ✔');
-  setDocState(false,'데모 placeholder');
+  renderPipe(3,true);logLine('Drawing Agent','백엔드 미연결 — 실제 도면 없음',true);logLine('완료','데모 7블록 표시됨');
+  setDocState(false,'백엔드 미연결');
 }
 
 /* ---------- RESULTS ---------- */
@@ -469,7 +468,17 @@ function renderDrawingSvg(svg){
   }
 }
 $('#previewDraw').onclick=async()=>{
-  if(!ran){alert('먼저 파이프라인을 실행하세요.');return;}
+  if(!ran){
+    await checkBackend();
+    if(!LIVE){alert('백엔드(localhost:8100)에 연결되지 않아 실제 도면을 가져올 수 없습니다.');return;}
+    uploaded=uploaded||{name:'URS_ConceptualDesign for layout_0607-1.xlsx (서버 예시)',size:21400,file:null,sheets:null,sample:true};
+    showFileInfo();buildSamplePreview();$('#runBtn').disabled=false;
+    $('#pipeLog').innerHTML='';
+    try{
+      await runLive();
+      ran=true;renderResults();
+    }catch(e){alert(String(e));return;}
+  }
   try{
     const svg=await getDrawingSvg();
     renderDrawingSvg(svg);
