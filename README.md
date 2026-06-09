@@ -10,6 +10,28 @@ URS(User Requirements Specification)를 입력받아 EU GMP Annex 1과 사내 La
 
 ---
 
+## 웹 UI 빠른 실행
+
+로컬 사이트는 FastAPI 백엔드가 `index.html`을 같이 서빙합니다. 레포 루트에서 아래 중 하나로 실행하세요.
+
+```bash
+# macOS/Linux
+./backend/run_backend.sh
+
+# 또는 직접 실행
+python -m uvicorn backend.app:app --reload --port 8100
+```
+
+Windows에서는 `backend/run_backend.bat`를 실행합니다. 서버가 뜨면 브라우저에서:
+
+```text
+http://localhost:8100/
+```
+
+상단 상태가 `백엔드 연결됨 (LIVE)`로 보여야 실제 Rule Engine + Drawing Agent가 연결된 상태입니다. 자세한 사용법은 [backend/README.md](backend/README.md)를 참고하세요.
+
+---
+
 ## 1. 전체 파이프라인
 
 ```

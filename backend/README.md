@@ -3,7 +3,7 @@
 URS 업로드 → Rule Engine → Validation(RAG) 파이프라인을 웹 서비스로 래핑한다.
 프런트엔드(`index.html`)도 이 서버가 같은 포트에서 서빙하므로 별도 정적 서버가 필요 없다.
 
-## 실행
+## 로컬 사이트 실행
 
 ```bash
 # 레포 루트에서
@@ -12,10 +12,40 @@ pip install -r backend/requirements.txt   # fastapi / uvicorn / python-multipart
 python -m uvicorn backend.app:app --reload --port 8100
 ```
 
-또는 `backend/run_backend.bat`(Windows) · `backend/run_backend.sh`(mac/Linux) 더블클릭/실행.
+또는 OS에 맞는 실행 파일을 사용한다.
 
-브라우저에서 **http://localhost:8100** 접속 → 프런트엔드가 열리고 자동으로 "백엔드 연결됨(LIVE)" 상태가 된다.
-서버를 켜지 않고 `index.html` 을 그냥 열면 내장 예시 결과로 동작하는 **데모 모드**로 떨어진다.
+```bash
+# macOS/Linux
+./backend/run_backend.sh
+```
+
+Windows에서는 `backend/run_backend.bat`를 더블클릭하거나 터미널에서 실행한다.
+
+서버 실행 후 브라우저에서 아래 주소를 연다.
+
+```text
+http://localhost:8100/
+```
+
+서버 터미널은 계속 열어 둔다. 터미널을 닫으면 백엔드도 종료된다.
+
+### 사이트에서 도면 생성하기
+
+1. 상단 상태가 `백엔드 연결됨 (LIVE)`인지 확인한다.
+2. `예시 데이터로 채우기`를 누르면 서버의 `input_urs/URS_ConceptualDesign for layout_0607-1.xlsx`로 실제 파이프라인이 실행된다.
+3. 직접 테스트하려면 URS `.xlsx` 파일을 업로드한다.
+4. `파이프라인 실행`을 누른다.
+5. 실행이 완료되면 `도면 (Drawing Agent)` 영역에 SVG 도면이 자동 렌더링된다.
+6. 필요하면 `미리보기` 또는 `도면 다운로드`를 누른다.
+
+`index.html` 파일을 브라우저에서 직접 열기보다 반드시 `http://localhost:8100/`로 접속한다. 직접 파일을 열면 브라우저 환경에 따라 백엔드 탐지가 실패할 수 있다.
+
+### 자주 막히는 경우
+
+- 화면이 계속 `DEMO` 또는 `백엔드 미연결`이면 서버가 켜져 있는지 확인한다: `http://localhost:8100/health`
+- Safari/Chrome이 예전 JS를 캐시하면 `Cmd + Shift + R`로 강력 새로고침한다.
+- 도면 XML 오류가 보이면 기존 run URL 캐시일 수 있으니 메인 화면에서 새로 실행한다. `/runs/{id}/drawing` 응답은 `Cache-Control: no-store`로 제공된다.
+- `예시 데이터로 채우기`도 실제 `/runs/sample`을 호출하므로, 도면이 안 뜨면 백엔드 로그와 `/health`를 먼저 확인한다.
 
 ## 엔드포인트
 
@@ -24,6 +54,7 @@ python -m uvicorn backend.app:app --reload --port 8100
 | `GET` | `/` | 프런트엔드(index.html) 서빙 |
 | `GET` | `/health` | 상태 + 검증/Doc Agent 연결 여부 |
 | `POST` | `/runs` | URS 업로드(multipart `file`) + 옵션 → `run_id`. 옵션: `exclude_airlock_rooms`, `bio_isolation`, `run_validation` |
+| `POST` | `/runs/sample` | 서버 내 예시 URS(`input_urs/URS_ConceptualDesign for layout_0607-1.xlsx`)로 실제 파이프라인 실행 |
 | `GET` | `/runs/{id}` | 진행 상태(queued→parsing→ruling→validating→done) + 단계별 로그 + stats |
 | `GET` | `/runs/{id}/output` | 7블록 JSON (Rule Engine 출력) |
 | `GET` | `/runs/{id}/validation` | 검증 verdict (confirmed/review/false + RAG 인용) |
