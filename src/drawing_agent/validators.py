@@ -37,6 +37,19 @@ def _is_corridor_id(rid: str) -> bool:
     return "CORRIDOR" in rid.upper()
 
 
+def _door_touches_rect(door, rect: Rect, tol: float = 700.0) -> bool:
+    x_ok = rect.x - tol <= door.x <= rect.x2 + tol
+    y_ok = rect.y - tol <= door.y <= rect.y2 + tol
+    if not (x_ok and y_ok):
+        return False
+    return (
+        abs(door.x - rect.x) <= tol
+        or abs(door.x - rect.x2) <= tol
+        or abs(door.y - rect.y) <= tol
+        or abs(door.y - rect.y2) <= tol
+    )
+
+
 def _find_room(layout: Layout, *subs: str, exclude: tuple[str, ...] = ()) -> str | None:
     for rid in layout.rooms:
         up = rid.upper()
@@ -113,6 +126,19 @@ def validate_layout(spec: RuleEngineOutput, layout: Layout) -> list[LayoutViolat
             out.append(LayoutViolation(
                 "DOOR_001", "error", f"{adj.from_id}->{adj.to_id}",
                 "Non-airlock room-to-room personnel door is not allowed; use a corridor.",
+            ))
+
+    for rid, pr in layout.rooms.items():
+        if _is_corridor_id(rid) or pr.room.is_airlock or _is_al_fake_room(pr.room):
+            continue
+        has_door = any(_door_touches_rect(d, pr.rect) for d in layout.doors)
+        if not has_door:
+            attached_als = [pa for pa in layout.airlocks.values() if pa.attached_room_id == rid]
+            has_door = any(_door_touches_rect(d, pa.rect) for pa in attached_als for d in layout.doors)
+        if not has_door:
+            out.append(LayoutViolation(
+                "DOOR_002", "error", rid,
+                "Room has no visible access door to a corridor or owned airlock.",
             ))
 
     for aid, pa in layout.airlocks.items():

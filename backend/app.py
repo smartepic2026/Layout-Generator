@@ -72,6 +72,7 @@ _LOCK = threading.Lock()
 UPLOAD_DIR = ROOT / "backend" / "_uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 SAMPLE_URS = ROOT / "input_urs" / "URS_ConceptualDesign for layout_0607-1.xlsx"
+TEMPLATE_URS = ROOT / "input_urs" / "예제_URS_템플릿.xlsx"
 
 
 def _now() -> str:
@@ -176,6 +177,19 @@ def health() -> dict:
     }
 
 
+@app.get("/templates/urs")
+def get_urs_template() -> Response:
+    template = TEMPLATE_URS if TEMPLATE_URS.exists() else SAMPLE_URS
+    if not template.exists():
+        raise HTTPException(404, "URS template not found")
+    return FileResponse(
+        str(template),
+        filename=template.name,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 @app.post("/runs")
 async def create_run(
     file: UploadFile = File(...),
@@ -274,7 +288,12 @@ def get_validation(run_id: str) -> Response:
 
 
 @app.get("/runs/{run_id}/drawing")
-def get_drawing(run_id: str) -> Response:
+def get_drawing(
+    run_id: str,
+    flow_mode: str = "full",
+    variant_index: int = 0,
+    variant_seed: int = 42,
+) -> Response:
     """도면 반환. Drawing Agent 연결 시 실제 SVG, 미연결 시 503."""
     run = _get(run_id)
     if run["output"] is None:
@@ -284,8 +303,17 @@ def get_drawing(run_id: str) -> Response:
         if _DOC_AGENT_ERROR:
             detail += f" (초기화 오류: {_DOC_AGENT_ERROR})"
         raise HTTPException(503, detail)
+    if flow_mode not in {"full", "main", "off"}:
+        raise HTTPException(400, "flow_mode must be one of: full, main, off")
+    if variant_index < 0 or variant_index > 12:
+        raise HTTPException(400, "variant_index must be between 0 and 12")
     try:
-        drawing = _CONNECTED_DOC_AGENT.generate(run["output"])
+        drawing = _CONNECTED_DOC_AGENT.generate(
+            run["output"],
+            flow_mode=flow_mode,
+            variant_seed=variant_seed,
+            variant_index=variant_index,
+        )
     except Exception as e:                                    # 외부 모듈 실행 오류
         raise HTTPException(502, f"Doc Agent 도면 생성 실패: {type(e).__name__}: {e}")
     return Response(

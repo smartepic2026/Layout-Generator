@@ -4,21 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BioForge CD Studio — GMP Layout Workspace</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#ffffff; --soft:#f7f8fa; --soft2:#f0f2f5;
+  --page-bg: #f7f7f8 ;
+  --glass:rgba(255,255,255,.68);
+  --glass-strong:rgba(255,255,255,.82);
+  --glass-soft:rgba(255,255,255,.46);
+  --glass-line:rgba(255,255,255,.68);
   --txt:#0a0a0a; --mut:#5b6370; --mut2:#8b919c; --line:#e3e6ea; --line2:#d2d7de;
   --blue:#1351d8; --blue-d:#0f3fa7; --blue-soft:#eaf0fe;
   --red:#d62828; --red-soft:#fdeaea;
-  --radius:14px; --shadow:0 1px 3px rgba(10,10,10,.06),0 6px 24px -12px rgba(10,10,10,.12);
+  --radius:14px; --shadow:0 1px 3px rgba(10,10,10,.06),0 16px 44px -24px rgba(31,41,55,.26);
+}
+body[data-theme="dark"]{
+  --bg:#111318; --soft:#171b22; --soft2:#202634;
+  --page-bg: #0b0b0e;
+  --glass:rgba(20,24,31,.68);
+  --glass-strong:rgba(21,25,33,.86);
+  --glass-soft:rgba(25,30,39,.48);
+  --glass-line:rgba(255,255,255,.10);
+  --txt:#f4f7fb; --mut:#aab3c2; --mut2:#7f8a9b; --line:#2b3340; --line2:#3b4657;
+  --blue:#69dfff; --blue-d:#9abbff; --blue-soft:#172947;
+  --red:#ff6b6b; --red-soft:#351b22;
+  --shadow:0 1px 3px rgba(0,0,0,.35),0 12px 28px -16px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Pretendard','Segoe UI',system-ui,-apple-system,sans-serif;
-  background:var(--bg);color:var(--txt);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+body{font-family:'Pretendard',system-ui,-apple-system,sans-serif;
+  background:var(--page-bg);background-attachment:fixed;color:var(--txt);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:linear-gradient(90deg,rgba(255,255,255,.32),rgba(255,255,255,0) 28%,rgba(255,255,255,.24) 68%,rgba(255,255,255,0));
+  opacity:.55}
+body[data-theme="dark"]:before{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,0) 30%,rgba(255,255,255,.035) 70%,rgba(255,255,255,0));opacity:1}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav{position:sticky;top:0;z-index:50;background:var(--glass-strong);backdrop-filter:blur(18px) saturate(1.22);-webkit-backdrop-filter:blur(18px) saturate(1.22);border-bottom:1px solid var(--glass-line)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
 .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.2px}
 .brand .logo{width:34px;height:34px;border-radius:9px;background:var(--blue);display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
@@ -34,7 +56,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 h1{font-size:38px;line-height:1.18;margin:14px 0 12px;font-weight:800;letter-spacing:-.8px}
 .lede{color:var(--mut);font-size:16px;max-width:680px}
 .stats{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
-.stat{flex:1;min-width:150px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.stat{flex:1;min-width:150px;background:var(--glass-soft);border:1px solid var(--glass-line);border-radius:var(--radius);padding:16px 18px;backdrop-filter:blur(14px) saturate(1.15);-webkit-backdrop-filter:blur(14px) saturate(1.15)}
 .stat b{font-size:21px;display:block;color:var(--blue)}
 .stat span{font-size:12.5px;color:var(--mut)}
 section{padding:32px 0}
@@ -42,10 +64,10 @@ section{padding:32px 0}
 .step-label i{width:23px;height:23px;border-radius:7px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800}
 h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .sub{color:var(--mut);font-size:14px;margin-bottom:20px;max-width:740px}
-.card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card{background:var(--glass);border:1px solid var(--glass-line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);backdrop-filter:blur(18px) saturate(1.18);-webkit-backdrop-filter:blur(18px) saturate(1.18)}
 .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
-@media(max-width:880px){.grid2{grid-template-columns:1fr}.navlinks{display:none}h1{font-size:29px}}
-.drop{border:2px dashed var(--line2);border-radius:13px;padding:40px 24px;text-align:center;transition:.18s;cursor:pointer;background:var(--soft)}
+@media(max-width:880px){.grid2{grid-template-columns:1fr}.navlinks{display:none}h1{font-size:29px}.direct-layout,.draw-controls{grid-template-columns:1fr}.direct-panel{resize:none;max-width:none}.sheet-form{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--line2);border-radius:13px;padding:40px 24px;text-align:center;transition:.18s;cursor:pointer;background:var(--glass-soft);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .drop:hover,.drop.over{border-color:var(--blue);background:var(--blue-soft)}
 .drop .ic{font-size:34px;margin-bottom:8px}
 .drop b{font-size:15px} .drop p{color:var(--mut);font-size:13px;margin-top:5px}
@@ -53,14 +75,15 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;padding:11px 20px;border-radius:10px;background:var(--blue);color:#fff;transition:.15s}
 .btn:hover{background:var(--blue-d)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.ghost{background:#fff;border:1px solid var(--line2);color:var(--txt)}
+.btn.ghost{background:var(--glass-soft);border:1px solid var(--line2);color:var(--txt);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
+.btn.ghost.on{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
 .btn.danger{background:var(--red)} .btn.danger:hover{background:#b71f1f}
 .btn.sm{padding:8px 14px;font-size:13px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.fileinfo{margin-top:15px;padding:13px 15px;border-radius:10px;background:var(--soft);border:1px solid var(--line);font-size:13px;display:none}
+.fileinfo{margin-top:15px;padding:13px 15px;border-radius:10px;background:var(--glass-soft);border:1px solid var(--glass-line);font-size:13px;display:none}
 .fileinfo.show{display:block} .fileinfo .nm{font-weight:700;color:var(--blue)}
-.opt{display:flex;align-items:center;gap:10px;padding:12px 15px;border:1px solid var(--line);border-radius:10px;background:var(--soft);margin-top:11px;font-size:13.5px}
+.opt{display:flex;align-items:center;gap:10px;padding:12px 15px;border:1px solid var(--glass-line);border-radius:10px;background:var(--glass-soft);margin-top:11px;font-size:13.5px}
 .switch{position:relative;width:42px;height:24px;flex:none}
 .switch input{opacity:0;width:0;height:0}
 .slider{position:absolute;inset:0;background:var(--line2);border-radius:99px;transition:.2s;cursor:pointer}
@@ -70,15 +93,53 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .muted{color:var(--mut);font-size:12.5px}
 .banner{display:none;align-items:center;gap:10px;padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:18px;border:1px solid}
 .banner.show{display:flex}
-.banner.demo{background:var(--red-soft);border-color:var(--red);color:var(--red)}
-.banner.live{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-d)}
+.banner.demo{background:color-mix(in srgb,var(--red-soft) 78%,transparent);border-color:var(--red);color:var(--red)}
+.banner.live{background:color-mix(in srgb,var(--blue-soft) 78%,transparent);border-color:var(--blue);color:var(--blue-d)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:34px;height:34px;border:1px solid var(--line2);border-radius:9px;background:var(--glass-soft);color:var(--txt);cursor:pointer;font-family:inherit;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.input-tabs{display:flex;border-bottom:1px solid var(--line);margin:-6px -2px 18px;gap:8px}
+.input-tab{border:0;background:transparent;color:var(--mut);font-family:inherit;font-weight:700;padding:10px 4px;border-bottom:3px solid transparent;cursor:pointer}
+.input-tab.on{color:var(--blue);border-color:var(--blue)}
+.direct-guide{display:flex;justify-content:space-between;gap:14px;align-items:center;border:1px solid var(--glass-line);border-radius:12px;padding:15px;background:var(--glass-soft);margin-bottom:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.direct-layout{display:block}
+.direct-layout.full{grid-template-columns:1fr}
+.direct-panel{resize:horizontal;overflow:auto;min-width:320px;max-width:100%;width:100%}
+.direct-layout.full .direct-panel{resize:none;max-width:none}
+.direct-fullscreen{position:fixed;inset:18px;z-index:200;background:var(--glass-strong);border:1px solid var(--glass-line);border-radius:14px;padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.28);overflow:auto;backdrop-filter:blur(22px) saturate(1.2);-webkit-backdrop-filter:blur(22px) saturate(1.2)}
+.direct-fullscreen .direct-panel{resize:none;max-width:none}
+.sheet-form{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:12px}
+.sheet-form .wide{grid-column:1/-1}
+.field label{display:flex;justify-content:space-between;gap:8px;color:var(--mut);font-size:12px;font-weight:700;margin-bottom:5px}
+.celltag{font-family:ui-monospace,Menlo,monospace;color:var(--blue);background:var(--blue-soft);border-radius:6px;padding:1px 6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;background:var(--glass-strong);color:var(--txt);font:inherit;font-size:14px}
+.field textarea{min-height:110px;resize:vertical}
+.choice-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip-choice{border:1px solid var(--line2);background:var(--glass-soft);color:var(--txt);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.chip-choice.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.draw-controls{margin-top:16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.variant-tabs,.flow-toggles{display:flex;gap:8px;flex-wrap:wrap}
+.flow-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;background:var(--glass-soft);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.flow-toggle input{accent-color:var(--blue)}
+.swatch{width:10px;height:10px;border-radius:50%;display:inline-block}
+.draw-meta{margin-top:10px;color:var(--mut);font-size:12px}
+.table-wrap{overflow:auto;max-height:520px;border:1px solid var(--line);border-radius:10px}
+.data-table{width:max-content;min-width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.data-table th,.data-table td{white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.data-table th{position:sticky;top:0;z-index:2}
+.data-table th.resizable{position:sticky}
+.col-resizer{position:absolute;right:-3px;top:0;width:8px;height:100%;cursor:col-resize;user-select:none}
+.col-resizer:after{content:"";position:absolute;left:3px;top:20%;bottom:20%;width:1px;background:var(--line2)}
+.editable-table{min-width:960px}
+.editable-table input,.editable-table select{width:100%;border:1px solid var(--line2);border-radius:8px;padding:8px 9px;background:var(--glass-strong);color:var(--txt);font:inherit}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 8px}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
   <div class="brand"><div class="logo">BF</div><div>BioForge CD Studio<small>GMP Layout · URS → CD Package</small></div></div>
   <div class="navlinks"><a href="#upload">업로드</a><a href="#pipe">처리 과정</a><a href="#result">결과</a><a href="#drawing">도면</a><a href="#logic">엔진 로직</a></div>
-  <span class="conn off" id="conn"><span class="d"></span><span id="connTxt">백엔드 확인 중…</span></span>
+  <div class="nav-actions"><button class="icon-btn" id="themeToggle" title="다크모드">◐</button>
+    <span class="conn off" id="conn"><span class="d"></span><span id="connTxt">백엔드 확인 중…</span></span></div>
 </div></nav>
 
 <header class="hero"><div class="wrap">
@@ -97,14 +158,47 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 <section id="upload"><div class="wrap">
   <div class="banner" id="modeBanner"><span id="modeTxt"></span></div>
   <div class="step-label"><i>1</i>INPUT</div>
-  <h2>URS 워크북 업로드</h2>
+  <div class="row" style="justify-content:space-between;align-items:flex-end">
+    <h2 style="margin-bottom:0">URS 워크북 업로드</h2>
+    <a class="btn sm" href="/templates/urs" id="templateDownload">URS 템플릿 다운로드</a>
+  </div>
   <p class="sub">URS 엑셀 파일을 드래그하거나 클릭해 선택하세요. 시트 구조를 미리 확인한 뒤 파이프라인을 실행합니다.</p>
   <div class="grid2">
     <div class="card">
-      <div class="drop" id="drop"><div class="ic">⬆</div>
-        <b>파일을 드래그해 놓거나 클릭해 선택</b>
-        <p>URS ConceptualDesign for layout (.xlsx)</p>
-        <div class="fmt">지원 포맷 : XLSX / XLS / CSV</div></div>
+      <div class="input-tabs">
+        <button class="input-tab on" data-input-mode="excel">엑셀 업로드</button>
+        <button class="input-tab" data-input-mode="direct">직접 입력</button>
+      </div>
+      <div id="excelInputPane">
+        <div class="drop" id="drop"><div class="ic">⬆</div>
+          <b>파일을 드래그해 놓거나 클릭해 선택</b>
+          <p>URS ConceptualDesign for layout (.xlsx)</p>
+          <div class="fmt">지원 포맷 : XLSX / XLS / CSV</div></div>
+      </div>
+      <div id="directInputPane" style="display:none">
+        <div class="direct-guide">
+          <div>
+            <div style="font-weight:800;margin-bottom:4px">직접 입력 안내</div>
+            <p class="muted">3개 시트 영역을 나눠 입력합니다. Room·장비·전실은 행을 추가해서 작성하고, 입력값으로 XLSX를 생성해 같은 백엔드 파이프라인으로 실행합니다.</p>
+          </div>
+          <div class="row">
+            <button class="btn sm" id="buildDirectBtn" type="button">입력값으로 URS 생성</button>
+            <button class="btn ghost sm" id="directFullBtn" type="button">전체화면</button>
+          </div>
+        </div>
+        <div class="direct-layout" id="directLayout">
+          <div class="direct-panel">
+            <div class="row" style="justify-content:space-between;margin-bottom:12px">
+              <div class="row">
+                <button class="tab on direct-sheet" data-sheet="s1">Sheet 1 · 제품</button>
+                <button class="tab direct-sheet" data-sheet="s2">Sheet 2 · 건물</button>
+                <button class="tab direct-sheet" data-sheet="s3">Sheet 3 · Room/장비</button>
+              </div>
+            </div>
+            <div id="directForm"></div>
+          </div>
+        </div>
+      </div>
       <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
       <div class="fileinfo" id="fileinfo"></div>
       <div class="row" style="margin-top:15px">
@@ -114,6 +208,7 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
     </div>
     <div class="card">
       <div class="muted" style="font-weight:700;color:var(--txt);margin-bottom:10px">실행 옵션</div>
+      <div class="muted" style="margin-bottom:10px">아래 옵션은 실행 시 백엔드 `/runs` 요청에 같이 전달됩니다.</div>
       <div class="opt"><label class="switch"><input type="checkbox" id="optExclAL"><span class="slider"></span></label>
         <div><div style="font-weight:600">전실 중복 제거 <span class="muted">(exclude_airlock_rooms)</span></div>
         <div class="muted">rooms[]에서 전실 Room 제외 (48→30). airlocks·adjacency 불변.</div></div></div>
@@ -161,7 +256,17 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
         <p class="muted" style="margin-top:6px">입력 계약: 7블록 JSON · 출력 포맷: SVG · backend.app `/runs/{id}/drawing`</p></div>
       <div class="row"><button class="btn ghost sm" id="previewDraw">미리보기</button>
         <button class="btn sm" id="downloadDraw">⬇ 도면 다운로드</button></div></div>
-    <div id="drawCanvas" style="margin-top:18px;border:1px dashed var(--line2);border-radius:12px;min-height:330px;display:grid;place-items:center;background:var(--soft);overflow:hidden"></div>
+    <div class="draw-controls">
+      <div class="variant-tabs" id="variantTabs"></div>
+      <div class="flow-toggles" id="flowToggles">
+        <label class="flow-toggle"><input type="checkbox" data-flow="personnel" checked><span class="swatch" style="background:#4f46e5"></span>Personnel</label>
+        <label class="flow-toggle"><input type="checkbox" data-flow="material" checked><span class="swatch" style="background:#0f766e"></span>Material</label>
+        <label class="flow-toggle"><input type="checkbox" data-flow="waste" checked><span class="swatch" style="background:#e11d48"></span>Waste</label>
+        <label class="flow-toggle"><input type="checkbox" data-flow="product" checked><span class="swatch" style="background:#7c3aed"></span>Product</label>
+      </div>
+    </div>
+    <div class="draw-meta" id="drawMeta">variant 3개를 생성하면 여기서 도면을 전환하고, 원하는 동선만 켜서 볼 수 있습니다.</div>
+    <div id="drawCanvas" style="margin-top:18px;border:1px dashed var(--line2);border-radius:12px;min-height:330px;display:grid;place-items:center;background:var(--glass-soft);overflow:hidden"></div>
   </div>
 </div></section>
 
@@ -185,7 +290,7 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .pipe{display:flex;gap:0;flex-wrap:wrap}
 .pstep{flex:1;min-width:140px;text-align:center;position:relative;padding:8px 6px}
 .pstep:not(:last-child):after{content:"";position:absolute;top:33px;right:-2px;width:100%;height:2px;background:var(--line);z-index:0}
-.pstep .dot{width:52px;height:52px;border-radius:14px;margin:0 auto 9px;display:grid;place-items:center;background:#fff;border:1px solid var(--line2);font-size:20px;position:relative;z-index:1;transition:.3s}
+.pstep .dot{width:52px;height:52px;border-radius:14px;margin:0 auto 9px;display:grid;place-items:center;background:var(--glass-strong);border:1px solid var(--glass-line);font-size:20px;position:relative;z-index:1;transition:.3s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .pstep .nm{font-weight:600;font-size:13px} .pstep .st{font-size:11.5px;color:var(--mut2);margin-top:2px}
 .pstep.active .dot{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 4px rgba(19,81,216,.1)}
 .pstep.active .st{color:var(--blue)}
@@ -193,29 +298,29 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .pstep.ext .dot{border-style:dashed} .pstep.pending .dot{border-color:var(--red);color:var(--red)} .pstep.pending .st{color:var(--red)}
 .pstep.active .dot .spin{position:absolute;inset:-1px;border:2px solid transparent;border-top-color:var(--blue);border-radius:14px;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.pipe-log{margin-top:18px;background:#0a0a0a;border-radius:10px;padding:13px 15px;font-family:ui-monospace,Menlo,monospace;font-size:12px;max-height:180px;overflow:auto;display:none;color:#d8dde6}
+.pipe-log{margin-top:18px;background:#0a0a0a;border-radius:10px;padding:13px 15px;font-family:ui-monospace,Menlo,monospace;font-size:12px;max-height:360px;overflow:auto;display:none;color:#d8dde6}
 .pipe-log.show{display:block} .pipe-log .ln{padding:2px 0} .pipe-log .ln b{color:#7aa7ff} .pipe-log .ln.warn b{color:#ff8a8a} .pipe-log .ln.warn{color:#ffc2c2}
-.tab{padding:9px 15px;border-radius:9px;border:1px solid var(--line2);background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:var(--mut);font-family:inherit;transition:.15s}
+.tab{padding:9px 15px;border-radius:9px;border:1px solid var(--line2);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;color:var(--mut);font-family:inherit;transition:.15s}
 .tab:hover{color:var(--txt)} .tab.on{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
 .tab .n{font-size:11px;opacity:.7;margin-left:4px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line)}
-th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:#fff}
+th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:var(--glass-strong);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 tr:hover td{background:var(--soft)}
 .pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid var(--line2);color:var(--txt)}
 .pill.b{color:var(--blue);border-color:var(--blue);background:var(--blue-soft)}
 .pill.r{color:var(--red);border-color:var(--red);background:var(--red-soft)}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:4px}
-.kvi{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.kvi{background:var(--glass-soft);border:1px solid var(--glass-line);border-radius:11px;padding:13px 15px}
 .kvi .k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px} .kvi .v{font-size:18px;font-weight:700;margin-top:3px}
-.rcard{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-bottom:10px}
+.rcard{background:var(--glass-soft);border:1px solid var(--glass-line);border-radius:11px;padding:14px 16px;margin-bottom:10px}
 .rcard h4{font-size:14px;margin-bottom:4px} .rcard .src{font-size:11.5px;color:var(--mut2);margin-top:7px}
 .tag{font-size:11.5px;color:var(--blue);font-family:ui-monospace,monospace}
 .flowline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
-.fnode{background:#fff;border:1px solid var(--line2);border-radius:8px;padding:5px 10px;font-size:12px}
+.fnode{background:var(--glass-soft);border:1px solid var(--line2);border-radius:8px;padding:5px 10px;font-size:12px}
 .farrow{color:var(--mut2)}
 .verdict-sum{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.vbox{flex:1;min-width:125px;border-radius:12px;padding:14px;border:1px solid var(--line);background:var(--soft)} .vbox b{font-size:25px;display:block}
+.vbox{flex:1;min-width:125px;border-radius:12px;padding:14px;border:1px solid var(--glass-line);background:var(--glass-soft)} .vbox b{font-size:25px;display:block}
 .vbox.r{border-color:var(--red);background:var(--red-soft)} .vbox.r b{color:var(--red)}
 .vbox.b{border-color:var(--blue);background:var(--blue-soft)} .vbox.b b{color:var(--blue)}
 </style>
@@ -224,7 +329,17 @@ const DATA = {"rooms": [{"room_id": "R_MEDIA_PREPARATION", "name_ko": "배지조
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let BASE = '';
 let uploaded=null, ran=false, LIVE=false, lastOutput=null, lastVerdict=null;
-let lastRunId=null, lastDrawingSvg=null, docConnected=false, docMode='internal';
+let lastRunId=null, docConnected=false, docMode='internal';
+let drawingSvgs={}, currentVariant=0, currentInputMode='excel', currentDirectSheet='s1';
+
+/* ---------- theme ---------- */
+function applyTheme(theme){
+  document.body.dataset.theme=theme;
+  localStorage.setItem('bf_theme',theme);
+  $('#themeToggle').textContent=theme==='dark'?'☀':'◐';
+}
+applyTheme(localStorage.getItem('bf_theme')||'light');
+$('#themeToggle').onclick=()=>applyTheme(document.body.dataset.theme==='dark'?'light':'dark');
 
 /* ---------- backend detection ---------- */
 function backendCandidates(){
@@ -298,8 +413,236 @@ function renderSheets(){if(!uploaded.sheets)return;$('#sheetPrev').style.display
   drawSheet(uploaded.sheets[0]);}
 function drawSheet(s){const b=$('#sheetBody');if(!s.rows.length){b.innerHTML='<p class="muted">빈 시트</p>';return;}
   const head=s.rows[0],body=s.rows.slice(1,30);
-  b.innerHTML=`<table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r=>`<tr>${head.map((_,i)=>`<td>${esc(r[i]??'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
+  b.innerHTML=`<table class="data-table resizable-table"><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r=>`<tr>${head.map((_,i)=>`<td>${esc(r[i]??'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  makeResizableTables(b);
+}
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function makeResizableTables(root=document){
+  root.querySelectorAll('table').forEach(table=>{
+    if(table.dataset.resizableReady)return;
+    table.classList.add('data-table','resizable-table');
+    table.dataset.resizableReady='1';
+    const ths=[...table.querySelectorAll('thead th')];
+    const colgroup=document.createElement('colgroup');
+    ths.forEach((th,i)=>{
+      const col=document.createElement('col');
+      const preset=th.dataset.w||Math.max(110,Math.min(260,(th.textContent||'').length*18+70));
+      col.style.width=preset+'px';
+      colgroup.appendChild(col);
+      th.classList.add('resizable');
+      const grip=document.createElement('span');
+      grip.className='col-resizer';
+      grip.onmousedown=e=>{
+        e.preventDefault();
+        const startX=e.clientX, startW=col.getBoundingClientRect().width;
+        const move=ev=>{col.style.width=Math.max(70,startW+ev.clientX-startX)+'px';};
+        const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+        document.addEventListener('mousemove',move);
+        document.addEventListener('mouseup',up);
+      };
+      th.appendChild(grip);
+    });
+    table.prepend(colgroup);
+  });
+}
+
+/* ---------- direct URS input ---------- */
+const DIRECT_FIELDS={
+  s1:[
+    {id:'drug_type',label:'의약품 구분',cell:'B3',type:'choice',choices:['Therapeutics','Vaccine','Cell therapy'],value:'Therapeutics'},
+    {id:'item_type',label:'품목 종류',cell:'C3',type:'choice',choices:['mAb','Protein','ADC'],value:'mAb'},
+    {id:'process_stage',label:'공정 단계',cell:'D3',type:'choice',choices:['원료의약품 (DS)','완제의약품 (DP)'],value:'원료의약품 (DS)'},
+    {id:'facility_type',label:'시설 구분',cell:'E3',type:'choice',choices:['전용 시설','Multi-product','Pilot'],value:'전용 시설'},
+    {id:'equipment_concept',label:'공정장비 컨셉',cell:'F3',type:'choice',choices:['Multi-use','Single-use','Hybrid'],value:'Multi-use'},
+    {id:'authority',label:'목표 규제기관',cell:'G3',type:'choice',choices:['FDA','EU GMP','WHO','MFDS'],value:'FDA'},
+  ],
+  s2:[
+    {id:'floors',label:'층수',cell:'B4',type:'choice',choices:['1층','2층','3층'],value:'3층'},
+    {id:'area',label:'제공 면적 (m²)',cell:'C4',type:'number',value:'3340'},
+    {id:'size',label:'제공 규격 (mm)',cell:'D4',type:'text',value:'78500mm * 42500mm',wide:true},
+    {id:'personnel_flow',label:'인원 출입',cell:'B6',type:'choice',choices:['시계방향','반시계방향','분리'],value:'시계방향'},
+    {id:'material_flow',label:'자재 반입',cell:'C6',type:'choice',choices:['시계방향','반시계방향','분리'],value:'시계방향'},
+  ],
+  s3:[],
+};
+const DIRECT_TABLES={
+  rooms:{
+    title:'Room 영역',
+    storage:'bf_direct_rooms',
+    origin:'A4',
+    columns:[
+      ['name_ko','Room명(한글)','text'],['name_en','Room명(영문)','text'],['grade','등급','grade'],
+      ['area','면적 m²','number'],['flow','흐름','flow'],['dp','차압 Pa','number'],['acph','ACPH','number'],['category','구역','category']
+    ],
+    rows:[
+      {name_ko:'배지조제실',name_en:'Media preparation',grade:'C',area:'100',flow:'Both-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'버퍼조제실',name_en:'Buffer preparation',grade:'C',area:'200',flow:'Both-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'Seed 접종실',name_en:'Inoculation',grade:'C',area:'40',flow:'One-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'배양실',name_en:'Cell Culture',grade:'C',area:'150',flow:'One-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'회수실',name_en:'Harvest',grade:'C',area:'60',flow:'One-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'정제실1',name_en:'Purification 1',grade:'C',area:'300',flow:'One-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'정제실2',name_en:'Purification 2',grade:'C',area:'100',flow:'One-way',dp:'35',acph:'30',category:'process'},
+      {name_ko:'DS 보관실',name_en:'DS storage',grade:'D',area:'50',flow:'Both-way',dp:'15',acph:'20',category:'auxiliary'},
+    ],
+  },
+  equipment:{
+    title:'장비 영역',
+    storage:'bf_direct_equipment',
+    origin:'J4',
+    columns:[
+      ['room_en','소속 Room','text'],['name','장비명','text'],['width','W mm','number'],['depth','D mm','number'],['height','H mm','number'],['qty','수량','number']
+    ],
+    rows:[
+      {room_en:'Media preparation',name:'Weigh booth',width:'3500',depth:'3000',height:'3000',qty:'1'},
+      {room_en:'Buffer preparation',name:'Mixing Tank 4000L',width:'3500',depth:'2500',height:'5000',qty:'1'},
+      {room_en:'Inoculation',name:'Isolator',width:'4000',depth:'2000',height:'3000',qty:'1'},
+    ],
+  },
+  airlocks:{
+    title:'전실/동선 영역',
+    storage:'bf_direct_airlocks',
+    origin:'Q4',
+    columns:[
+      ['room_en','연결 Room','text'],['type','전실 타입','airlock'],['direction','방향','direction'],['grade','등급','grade'],['flow_type','압력 패턴','pressure']
+    ],
+    rows:[
+      {room_en:'Inoculation',type:'CAL',direction:'in',grade:'C',flow_type:'cascade'},
+      {room_en:'Cell Culture',type:'PAL',direction:'in',grade:'C',flow_type:'cascade'},
+      {room_en:'Cell Culture',type:'MAL',direction:'out',grade:'C',flow_type:'cascade'},
+    ],
+  },
+};
+const DIRECT_OPTIONS={
+  grade:['A','B','C','D','CNC','NC'],
+  flow:['One-way','Both-way'],
+  category:['process','auxiliary','NC','corridor'],
+  airlock:['PAL','MAL','CAL'],
+  direction:['in','out'],
+  pressure:['cascade','sink','bubble'],
+};
+function setInputMode(mode){
+  currentInputMode=mode;
+  $$('.input-tab').forEach(b=>b.classList.toggle('on',b.dataset.inputMode===mode));
+  $('#excelInputPane').style.display=mode==='excel'?'block':'none';
+  $('#directInputPane').style.display=mode==='direct'?'block':'none';
+}
+$$('.input-tab').forEach(b=>b.onclick=()=>setInputMode(b.dataset.inputMode));
+function getDirectValue(sheet,id){
+  const f=DIRECT_FIELDS[sheet].find(x=>x.id===id);
+  return localStorage.getItem('bf_direct_'+sheet+'_'+id) ?? f.value ?? '';
+}
+function setDirectValue(sheet,id,value){
+  localStorage.setItem('bf_direct_'+sheet+'_'+id,value);
+}
+function loadDirectRows(key){
+  const meta=DIRECT_TABLES[key];
+  try{return JSON.parse(localStorage.getItem(meta.storage))||meta.rows.map(r=>({...r}));}
+  catch(e){return meta.rows.map(r=>({...r}));}
+}
+function saveDirectRows(key,rows){
+  localStorage.setItem(DIRECT_TABLES[key].storage,JSON.stringify(rows));
+}
+function directCellControl(key,rowIdx,col,value){
+  const type=col[2], id=col[0];
+  if(DIRECT_OPTIONS[type]){
+    return `<select data-direct-table="${key}" data-row="${rowIdx}" data-col="${id}">
+      ${DIRECT_OPTIONS[type].map(v=>`<option value="${esc(v)}"${v===value?' selected':''}>${esc(v)}</option>`).join('')}
+    </select>`;
+  }
+  return `<input data-direct-table="${key}" data-row="${rowIdx}" data-col="${id}" type="${type||'text'}" value="${esc(value??'')}">`;
+}
+function renderDirectTable(key){
+  const meta=DIRECT_TABLES[key], rows=loadDirectRows(key);
+  return `<div class="section-head"><div><b>${meta.title}</b> <span class="celltag">${meta.origin}</span></div>
+    <button class="btn ghost sm" type="button" data-add-row="${key}">+ 행 추가</button></div>
+    <div class="table-wrap" style="max-height:360px"><table class="data-table resizable-table editable-table">
+      <thead><tr>${meta.columns.map(c=>`<th>${esc(c[1])}</th>`).join('')}<th>삭제</th></tr></thead>
+      <tbody>${rows.map((row,ri)=>`<tr>${meta.columns.map(c=>`<td>${directCellControl(key,ri,c,row[c[0]])}</td>`).join('')}
+        <td><button class="btn ghost sm" type="button" data-del-row="${key}" data-row="${ri}">삭제</button></td></tr>`).join('')}</tbody>
+    </table></div>`;
+}
+function bindDirectTables(){
+  $$('[data-direct-table]').forEach(el=>el.oninput=el.onchange=()=>{
+    const key=el.dataset.directTable, rows=loadDirectRows(key);
+    rows[Number(el.dataset.row)][el.dataset.col]=el.value;
+    saveDirectRows(key,rows);
+  });
+  $$('[data-add-row]').forEach(btn=>btn.onclick=()=>{
+    const key=btn.dataset.addRow, meta=DIRECT_TABLES[key], rows=loadDirectRows(key);
+    const blank={}; meta.columns.forEach(c=>blank[c[0]]=DIRECT_OPTIONS[c[2]]?DIRECT_OPTIONS[c[2]][0]:'');
+    rows.push(blank); saveDirectRows(key,rows); renderDirectForm();
+  });
+  $$('[data-del-row]').forEach(btn=>btn.onclick=()=>{
+    const key=btn.dataset.delRow, rows=loadDirectRows(key);
+    rows.splice(Number(btn.dataset.row),1); saveDirectRows(key,rows); renderDirectForm();
+  });
+}
+function renderDirectForm(){
+  if(currentDirectSheet==='s3'){
+    $('#directForm').innerHTML=renderDirectTable('rooms')+renderDirectTable('equipment')+renderDirectTable('airlocks');
+    bindDirectTables();
+    makeResizableTables($('#directForm'));
+    return;
+  }
+  const fields=DIRECT_FIELDS[currentDirectSheet];
+  $('#directForm').innerHTML=`<div class="sheet-form">${fields.map(f=>{
+    const val=getDirectValue(currentDirectSheet,f.id);
+    const label=`<label><span>${f.label}</span><span class="celltag">${f.cell}</span></label>`;
+    if(f.type==='choice'){
+      return `<div class="field ${f.wide?'wide':''}">${label}<div class="choice-row" data-direct="${f.id}">
+        ${f.choices.map(c=>`<button type="button" class="chip-choice${c===val?' on':''}" data-value="${esc(c)}">${esc(c)}</button>`).join('')}
+      </div></div>`;
+    }
+    if(f.type==='textarea'){
+      return `<div class="field wide">${label}<textarea data-direct-input="${f.id}">${esc(val)}</textarea></div>`;
+    }
+    return `<div class="field ${f.wide?'wide':''}">${label}<input data-direct-input="${f.id}" type="${f.type||'text'}" value="${esc(val)}"></div>`;
+  }).join('')}</div>`;
+  $$('[data-direct-input]').forEach(el=>el.oninput=()=>setDirectValue(currentDirectSheet,el.dataset.directInput,el.value));
+  $$('[data-direct]').forEach(group=>group.onclick=e=>{
+    const btn=e.target.closest('.chip-choice'); if(!btn)return;
+    setDirectValue(currentDirectSheet,group.dataset.direct,btn.dataset.value);
+    renderDirectForm();
+  });
+}
+$$('.direct-sheet').forEach(b=>b.onclick=()=>{
+  currentDirectSheet=b.dataset.sheet;
+  $$('.direct-sheet').forEach(x=>x.classList.toggle('on',x===b));
+  renderDirectForm();
+});
+$('#directFullBtn').onclick=()=>{
+  const pane=$('#directInputPane');
+  pane.classList.toggle('direct-fullscreen');
+  $('#directFullBtn').textContent=pane.classList.contains('direct-fullscreen')?'닫기':'전체화면';
+};
+async function buildDirectWorkbook(){
+  if(!LIVE)await checkBackend();
+  const r=await fetch((BASE||'')+'/templates/urs',{cache:'no-store'});
+  if(!r.ok)throw new Error('URS 템플릿 다운로드 실패 ('+r.status+')');
+  const wb=XLSX.read(await r.arrayBuffer(),{type:'array'});
+  const s1=wb.Sheets[wb.SheetNames[0]], s2=wb.Sheets[wb.SheetNames[1]], s3=wb.Sheets[wb.SheetNames[2]||wb.SheetNames[1]];
+  for(const f of DIRECT_FIELDS.s1)XLSX.utils.sheet_add_aoa(s1,[[getDirectValue('s1',f.id)]],{origin:f.cell});
+  for(const f of DIRECT_FIELDS.s2)XLSX.utils.sheet_add_aoa(s2,[[getDirectValue('s2',f.id)]],{origin:f.cell});
+  for(const key of Object.keys(DIRECT_TABLES)){
+    const meta=DIRECT_TABLES[key], rows=loadDirectRows(key);
+    const aoa=[meta.columns.map(c=>c[1])].concat(rows.map(r=>meta.columns.map(c=>r[c[0]]??'')));
+    XLSX.utils.sheet_add_aoa(s3,aoa,{origin:meta.origin});
+  }
+  const bytes=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  return new File([bytes],`direct_URS_${Date.now()}.xlsx`,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+$('#buildDirectBtn').onclick=async()=>{
+  try{
+    const f=await buildDirectWorkbook();
+    uploaded={name:f.name,size:f.size,file:f,sample:false,sheets:null,direct:true};
+    showFileInfo();
+    $('#runBtn').disabled=false;
+    const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
+    uploaded.sheets=wb.SheetNames.map(n=>({name:n,rows:XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''}).slice(0,40)}));
+    renderSheets();
+  }catch(e){alert(String(e));}
+};
+renderDirectForm();
 
 /* ---------- pipeline view ---------- */
 const STEPS=[{k:'parse',ic:'📥',nm:'URS 파싱'},{k:'rule',ic:'⚙',nm:'Rule Engine'},{k:'valid',ic:'🔍',nm:'Validation (RAG)'},{k:'doc',ic:'📐',nm:'Drawing Agent'}];
@@ -328,7 +671,7 @@ $('#runBtn').onclick=async()=>{
     logLine('오류',String(e),true);
     ran=false;
     lastRunId=null;
-    lastDrawingSvg=null;
+    drawingSvgs={};
     setDocState(false,'실행 실패');
     renderPipe(null,false);
     $('#runBtn').disabled=false;
@@ -353,7 +696,7 @@ async function runLive(){
   const cr=await fetch(BASE+endpoint,{method:'POST',body:fd});
   if(!cr.ok)throw new Error('run 생성 실패 ('+cr.status+')');
   const {run_id}=await cr.json();
-  lastRunId=run_id; lastDrawingSvg=null;
+  lastRunId=run_id; drawingSvgs={}; currentVariant=0; renderVariantTabs();
   let seen=0,st;
   for(let i=0;i<600;i++){
     const r=await fetch(BASE+'/runs/'+run_id,{cache:'no-store'});st=await r.json();
@@ -371,13 +714,13 @@ async function runLive(){
   docConnected=!!st.drawing_available;
   setDocState(docConnected, docConnected?`연결됨 (${docMode})`:'미연결 (Not connected)');
   if(docConnected){
-    const svg=await getDrawingSvg();
-    renderDrawingSvg(svg);
+    await preloadDrawingVariants();
+    renderDrawingSvg(drawingSvgs[currentVariant]);
     setDocState(true,'SVG 렌더링 완료');
   }
 }
 async function runDemo(){
-  lastRunId=null; lastDrawingSvg=null;
+  lastRunId=null; drawingSvgs={}; currentVariant=0; renderVariantTabs();
   lastOutput={rooms:DATA.rooms,airlocks:DATA.airlocks,adjacency:DATA.adjacency,flow_paths:DATA.flow_paths,zones:DATA.zones,constraints:DATA.constraints,meta:DATA.meta};
   lastVerdict=$('#optVal').checked?DATA.verdict:null;
   const msgs=[['파싱','URS 워크북 로드 · 방 48 / 장비 65 인식'],['Rule Engine','15 GMP 룰 적용 · 7블록 산출 (rationale 399)'],
@@ -427,10 +770,51 @@ function resPanel(k){const el=$('#resPanel');const c='<div class="card">';const 
     <div class="kvi"><div class="k">장비 간격 (mm)</div><div class="v">${cn.equipment_clearance_mm.between_equipment}</div><div class="muted">벽 ${cn.equipment_clearance_mm.to_wall_min}–${cn.equipment_clearance_mm.to_wall_max}</div></div>
     <div class="kvi"><div class="k">공정구역 면적비</div><div class="v">${cn.process_zone_area_ratio.min*100}–${cn.process_zone_area_ratio.max*100}%</div></div>
     <div class="kvi"><div class="k">공급↔리턴 직결</div><div class="v">${cn.supply_return_no_direct_connection?'차단':'허용'}</div></div></div></div>`;}
+  makeResizableTables(el);
 }
 function nm(id){return (DATA.room_name&&DATA.room_name[id])?DATA.room_name[id]:String(id).replace(/^R_/,'').replace(/_/g,' ')}
 
 /* ---------- DRAWING ---------- */
+const VARIANT_COUNT=3;
+const FLOW_LABELS={personnel:'Personnel',material:'Material',waste:'Waste',product:'Product'};
+function renderVariantTabs(){
+  const box=$('#variantTabs');
+  box.innerHTML='';
+  for(let i=0;i<VARIANT_COUNT;i++){
+    const b=document.createElement('button');
+    b.className='tab'+(i===currentVariant?' on':'');
+    b.textContent=`Variant ${i+1}`;
+    b.onclick=async()=>{
+      currentVariant=i;
+      renderVariantTabs();
+      try{renderDrawingSvg(await getDrawingSvg(i));}
+      catch(e){alert(String(e));}
+    };
+    box.appendChild(b);
+  }
+}
+renderVariantTabs();
+async function preloadDrawingVariants(){
+  await Promise.all([...Array(VARIANT_COUNT)].map((_,i)=>getDrawingSvg(i).catch(e=>{
+    logLine('Drawing',`Variant ${i+1} 생성 실패: ${e.message||e}`,true);
+    throw e;
+  })));
+}
+function activeFlowNames(){
+  return Object.entries(FLOW_LABELS)
+    .filter(([k])=>$(`#flowToggles input[data-flow="${k}"]`)?.checked)
+    .map(([,v])=>v);
+}
+function applyFlowFilters(){
+  const svg=$('#drawCanvas svg');
+  if(!svg)return;
+  Object.keys(FLOW_LABELS).forEach(k=>{
+    const on=$(`#flowToggles input[data-flow="${k}"]`)?.checked ?? true;
+    svg.querySelectorAll(`.flow-${k},#flow-${k}`).forEach(el=>{el.style.display=on?'':'none';});
+  });
+  $('#drawMeta').textContent=`Variant ${currentVariant+1}/${VARIANT_COUNT} · ${activeFlowNames().join(', ') || '동선 숨김'}`;
+}
+$$('#flowToggles input').forEach(cb=>cb.onchange=applyFlowFilters);
 function placeholderSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="100%" style="max-width:600px">
   <defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#e3e6ea" stroke-width="1"/></pattern></defs>
   <rect width="640" height="360" fill="#fff"/><rect width="640" height="360" fill="url(#grid)"/>
@@ -440,17 +824,18 @@ function placeholderSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBo
   <rect x="60" y="190" width="300" height="110" fill="#f7f8fa" stroke="#8b919c" stroke-dasharray="5 4"/>
   <text x="320" y="335" fill="#8b919c" font-size="13" text-anchor="middle" font-family="monospace">Drawing Agent 연결 시 실제 도면이 여기 렌더링됩니다</text>
   <text x="320" y="30" fill="#0a0a0a" font-size="14" text-anchor="middle" font-weight="bold">GMP Layout — Placeholder Preview</text></svg>`;}
-async function getDrawingSvg(){
-  if(lastDrawingSvg)return lastDrawingSvg;
+async function getDrawingSvg(variantIndex=currentVariant){
+  if(drawingSvgs[variantIndex])return drawingSvgs[variantIndex];
   if(!LIVE)throw new Error('백엔드가 연결되지 않아 실제 도면을 가져올 수 없습니다.');
   if(!lastRunId)throw new Error('실제 URS 파일로 파이프라인을 먼저 실행해야 도면을 가져올 수 있습니다.');
-  const r=await fetch(BASE+'/runs/'+lastRunId+'/drawing',{cache:'no-store'});
+  const qs=new URLSearchParams({flow_mode:'full',variant_index:String(variantIndex),variant_seed:'42'});
+  const r=await fetch(BASE+'/runs/'+lastRunId+'/drawing?'+qs.toString(),{cache:'no-store'});
   if(!r.ok){
     const msg=await r.text().catch(()=>'');
     throw new Error('도면 생성 실패 ('+r.status+') '+msg);
   }
-  lastDrawingSvg=await r.text();
-  return lastDrawingSvg;
+  drawingSvgs[variantIndex]=await r.text();
+  return drawingSvgs[variantIndex];
 }
 function renderDrawingSvg(svg){
   const canvas=$('#drawCanvas');
@@ -466,6 +851,7 @@ function renderDrawingSvg(svg){
     el.style.height='auto';
     el.style.display='block';
   }
+  applyFlowFilters();
 }
 $('#previewDraw').onclick=async()=>{
   if(!ran){
@@ -480,7 +866,7 @@ $('#previewDraw').onclick=async()=>{
     }catch(e){alert(String(e));return;}
   }
   try{
-    const svg=await getDrawingSvg();
+    const svg=await getDrawingSvg(currentVariant);
     renderDrawingSvg(svg);
     setDocState(LIVE&&lastRunId,'SVG 렌더링 완료');
   }catch(e){alert(String(e));}
@@ -488,9 +874,9 @@ $('#previewDraw').onclick=async()=>{
 $('#downloadDraw').onclick=async()=>{
   if(!ran){alert('먼저 파이프라인을 실행하세요.');return;}
   try{
-    const svg=await getDrawingSvg();
+    const svg=await getDrawingSvg(currentVariant);
     const blob=new Blob([svg.trim()],{type:'image/svg+xml'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`GMP_layout_${lastRunId}.svg`;a.click();
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`GMP_layout_${lastRunId}_v${currentVariant+1}.svg`;a.click();
   }catch(e){alert(String(e));}
 };
 $('#drawCanvas').innerHTML=`<div style="text-align:center;color:var(--mut);padding:38px"><div style="font-size:30px">📐</div>
@@ -501,15 +887,16 @@ $('#drawCanvas').innerHTML=`<div style="text-align:center;color:var(--mut);paddi
 let curLogic=null;
 $$('.logic-toggle').forEach(b=>b.onclick=()=>{const t=b.dataset.t,p=$('#logicPanel');
   if(curLogic===t){p.style.display='none';curLogic=null;$$('.logic-toggle').forEach(x=>x.classList.remove('on'));return;}
-  curLogic=t;$$('.logic-toggle').forEach(x=>x.classList.toggle('on',x===b));p.style.display='block';logicPanel(t);});
+  curLogic=t;$$('.logic-toggle').forEach(x=>x.classList.toggle('on',x===b));logicPanel(t);p.style.display='block';p.hidden=false;p.scrollIntoView({behavior:'smooth',block:'nearest'});});
 function logicPanel(t){const p=$('#logicPanel');
-  if(t==='rules'){p.innerHTML=DATA.rules.map(r=>`<div class="rcard"><h4>${r.title} <span class="tag">${r.id}</span></h4><div>${r.logic}</div><div class="src">근거: ${r.source}</div></div>`).join('');}
-  else if(t==='rationale'){const rs=(lastOutput&&lastOutput.rationale)?lastOutput.rationale.slice(0,60):DATA.rationale_sample;const tot=(lastOutput&&lastOutput.rationale)?lastOutput.rationale.length:DATA.rationale_total;
+  if(t==='rules'){const rules=(lastOutput&&lastOutput.rules)||DATA.rules||[];
+    p.innerHTML=rules.length?rules.map(r=>`<div class="rcard"><h4>${esc(r.title||r.id)} <span class="tag">${esc(r.id)}</span></h4><div>${esc(r.logic||r.description||'')}</div><div class="src">근거: ${esc(r.source||r.source_reference||'URS/KB')}</div></div>`).join(''):'<p class="muted">표시할 룰 정보가 아직 없습니다.</p>';}
+  else if(t==='rationale'){const rs=(lastOutput&&lastOutput.rationale)?lastOutput.rationale.slice(0,80):(DATA.rationale_sample||[]);const tot=(lastOutput&&lastOutput.rationale)?lastOutput.rationale.length:(DATA.rationale_total||rs.length);
     p.innerHTML=`<p class="muted" style="margin-bottom:12px">적용 로그 ${tot}건 중 상위 ${rs.length}건. 각 결정은 입력 사실·적용 로직·근거로 추적됩니다.</p>`+
-    rs.map(r=>{const fl=(r.flags&&r.flags.length)?`<div style="margin-top:6px"><span class="pill r">flag ${r.flags.length}</span></div>`:'';
+    (rs.length?rs.map(r=>{const fl=(r.flags&&r.flags.length)?`<div style="margin-top:6px"><span class="pill r">flag ${r.flags.length}</span></div>`:'';
       return `<div class="rcard"><h4><span class="tag">${r.rule_id}</span> → ${nm(r.target_id)}</h4><div><b>결정:</b> ${esc(r.decision)}</div>
-      <div class="muted" style="margin-top:3px">로직: ${esc(r.applied_logic)}</div><div class="src">근거: ${esc(r.source_reference)}</div>${fl}</div>`;}).join('');}
-  else if(t==='verdict'){const v=lastVerdict||DATA.verdict;const fl=v.acknowledged_flags;const cnt={confirmed_violation:0,needs_user_review:0,false_alarm:0};
+      <div class="muted" style="margin-top:3px">로직: ${esc(r.applied_logic||'')}</div><div class="src">근거: ${esc(r.source_reference||'')}</div>${fl}</div>`;}).join(''):'<p class="muted">파이프라인 실행 후 rationale가 표시됩니다.</p>');}
+  else if(t==='verdict'){const v=lastVerdict||DATA.verdict||{};const fl=v.acknowledged_flags||[];const cnt={confirmed_violation:0,needs_user_review:0,false_alarm:0};
     fl.forEach(f=>cnt[f.verdict]=(cnt[f.verdict]||0)+1);
     p.innerHTML=`${lastVerdict?'':'<p class="muted" style="margin-bottom:10px">※ 데모 verdict (백엔드 연결 시 실제 검증 결과 표시)</p>'}
     <div class="verdict-sum">
@@ -519,7 +906,8 @@ function logicPanel(t){const p=$('#logicPanel');
     <div class="vbox b"><span class="muted">오탐(false alarm)</span><b>${cnt.false_alarm}</b></div></div>
     <div style="overflow:auto;max-height:460px"><table><thead><tr><th>룰</th><th>판정</th><th>RAG 인용</th><th>note</th></tr></thead><tbody>
     ${fl.map(f=>{const vc=f.verdict==='false_alarm'?'b':'r';return `<tr><td class="tag">${f.rule_id}</td><td><span class="pill ${vc}">${f.verdict}</span></td>
-      <td class="muted">${f.rag_citations.length?f.rag_citations.join('<br>'):'—'}</td><td class="muted" style="max-width:340px">${esc(f.note)}</td></tr>`}).join('')}</tbody></table></div>`;}
+      <td class="muted">${(f.rag_citations||[]).length?f.rag_citations.join('<br>'):'—'}</td><td class="muted" style="max-width:340px">${esc(f.note||'')}</td></tr>`}).join('')}</tbody></table></div>`;}
+  makeResizableTables(p);
 }
 checkBackend();
 </script>

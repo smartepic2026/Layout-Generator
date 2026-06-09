@@ -29,9 +29,9 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
         z3  건물 외곽선
         z4  Room fill
         z5  Room border/벽
-        z6  도어 + swing arc
-        z7  Airlock (pattern)
-        z8  장비
+        z6  장비
+        z7  도어 + swing arc
+        z8  Airlock (pattern)
         z9  Flow 화살표 (D-023 — spec.flow_paths 4종 그대로 렌더)
         z10 텍스트 라벨
         z11 치수선 (v1 simplified)
@@ -63,9 +63,9 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
 
     _emit_z4_room_fills(s, ox, oy, layout)
     _emit_z5_room_borders(s, ox, oy, layout)
+    _emit_z8_equipment(s, ox, oy, layout)
     _emit_z6_doors(s, ox, oy, layout)
     _emit_z7_airlocks(s, ox, oy, layout)
-    _emit_z8_equipment(s, ox, oy, layout)
     _emit_z9_flow_arrows(s, ox, oy, layout, spec, flow_mode)
 
     _emit_z10_labels(s, ox, oy, layout)

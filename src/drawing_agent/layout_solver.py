@@ -624,6 +624,44 @@ def _ensure_door(layout, room_rect: "Rect", corr_rect: "Rect") -> bool:
     return True
 
 
+def _door_touches_rect(door: PlacedDoor, rect: "Rect") -> bool:
+    """도어 중심이 방 경계선 근처에 있으면 해당 방의 출입문으로 본다."""
+    tol = 700.0
+    x_ok = rect.x - tol <= door.x <= rect.x2 + tol
+    y_ok = rect.y - tol <= door.y <= rect.y2 + tol
+    if not (x_ok and y_ok):
+        return False
+    on_vertical = abs(door.x - rect.x) <= tol or abs(door.x - rect.x2) <= tol
+    on_horizontal = abs(door.y - rect.y) <= tol or abs(door.y - rect.y2) <= tol
+    return on_vertical or on_horizontal
+
+
+def _is_corridor_room(pr: PlacedRoom) -> bool:
+    return bool(pr.room.is_corridor or "CORRIDOR" in pr.room.id.upper())
+
+
+def _ensure_all_rooms_have_access_doors(layout: Layout) -> None:
+    """모든 일반 Room 이 최소 1개 출입문을 갖도록 보정한다.
+
+    Rule Engine adjacency 가 방↔복도 edge 를 일부 누락해도 도면은 실제 출입 가능한
+    상태여야 한다. 우선 인접 복도에 문을 만들고, 공정실 소속 전실이 이미 붙어 있으면
+    전실 문을 출입구로 인정한다. Room↔Room 직접문은 만들지 않는다.
+    """
+    corridors = [pr.rect for pr in layout.rooms.values() if _is_corridor_room(pr)]
+    for rid, pr in layout.rooms.items():
+        if _is_corridor_room(pr) or pr.room.is_airlock:
+            continue
+        if any(_door_touches_rect(d, pr.rect) for d in layout.doors):
+            continue
+        attached_als = [pa for pa in layout.airlocks.values() if pa.attached_room_id == rid]
+        if attached_als and any(_door_touches_rect(d, pa.rect) for pa in attached_als for d in layout.doors):
+            continue
+        for cr in corridors:
+            if _ensure_door(layout, pr.rect, cr):
+                layout.annotations.append({"type": "access_door_synthesized", "room": rid})
+                break
+
+
 def _ensure_rooms_touch_corridor(layout, room_ids: list, corr_ids: list) -> None:
     """[A6 + containment] room_ids 각 방이 corr_ids 중 인접 복도에 도어를 갖게 보장.
     corr_ids 를 등급 경계에 맞게 제한하면(예: D방→D복도만) 부적절 등급 직결을 차단."""
@@ -874,11 +912,10 @@ def _solve_gmp_gradient(
     _place_row_aspect(layout, by_id, cls["top_row"], c_x0, proc_t[0], c_w, proc_t[1] - proc_t[0])
     _place_row_aspect(layout, by_id, cls["bottom_row"], c_x0, proc_b[0], c_w, proc_b[1] - proc_b[0])
 
-    # 에어록(공정행 내측) + 양방향 AL(supply) + 장비
+    # 에어록(공정행 내측) + 양방향 AL(supply) + 도어 + 장비
     _place_airlocks_in_rooms(layout, spec, cls["top_row"], is_top=True)
     _place_airlocks_in_rooms(layout, spec, cls["bottom_row"], is_top=False)
     _place_both_way_als(layout, spec, sx, sup[0], c_x0 + c_w - sx, sup[1] - sup[0])
-    _place_equipment_grid(layout, eq_gap=eq_gap_mm)
 
     # 도어: adjacency 기반 + D→C 게이트(Gowning·MAL-in) 합성 도어 = D복도(좌)·supply(우) 양쪽
     _place_doors(layout, spec.adjacency)
@@ -889,6 +926,7 @@ def _solve_gmp_gradient(
                 _ensure_door(layout, g, layout.rooms[cls["d_corridor"]].rect)
             if sc and sc in layout.rooms:
                 _ensure_door(layout, g, layout.rooms[sc].rect)
+
     # [D-034 / 피드백 0607] A6 + containment 보장:
     #   · NC 방 → NC 복도로만 출입
     #   · D 방 → Grade D 복도로만 출입(NC 직결 금지 — CIP/Monitoring 오염차단)
@@ -918,6 +956,8 @@ def _solve_gmp_gradient(
     if nc_corr_id:
         _ensure_rooms_touch_corridor(layout, cls["nc"], [nc_corr_id])
     _place_airlock_doors(layout)
+    _ensure_all_rooms_have_access_doors(layout)
+    _place_equipment_grid(layout, eq_gap=eq_gap_mm)
     if rng is not None and variant_index % 3 == 2:
         _mirror_layout_x(layout)
     layout.annotations.append({
@@ -1025,13 +1065,13 @@ def solve(
     # ── NC stack (right) ──
     _place_right_stack(layout, room_by_id, nc_right_ids, core_x1, 0, nc_w, building_h_mm)
 
-    # ── Equipment in each placed process Room ──
-    _place_equipment_grid(layout)
-
     # ── Doors from adjacency (방↔방, 방↔복도 공유 벽) ──
     _place_doors(layout, spec.adjacency)
     # ── Airlock doors: 각 에어록의 복도쪽 + 방쪽 가장자리 (참조 도면) ──
     _place_airlock_doors(layout)
+    _ensure_all_rooms_have_access_doors(layout)
+    # ── Equipment in each placed process Room ──
+    _place_equipment_grid(layout)
 
     return layout
 
@@ -1247,7 +1287,7 @@ def _equipment_inner_bounds(layout: Layout, proom: PlacedRoom) -> tuple[float, f
     y0 = r.y + top_label
     x1 = r.x2 - wall_margin
     y1 = r.y2 - bottom_pad
-    pad = 1000
+    pad = 2200
     attached_airlocks = [
         pa for pa in layout.airlocks.values()
         if pa.attached_room_id == proom.room.id
@@ -1263,6 +1303,24 @@ def _equipment_inner_bounds(layout: Layout, proom: PlacedRoom) -> tuple[float, f
             x0 = max(x0, ar.x2 + pad)
         elif pa.side == "east":
             x1 = min(x1, ar.x - pad)
+
+    # 문 스윙/출입구 부근은 장비가 걸치면 시각적으로 충돌해 보이므로 추가로 비운다.
+    # door.x/y 는 공유벽 중심 좌표다. 장비 배치 전에 door placement 를 먼저 수행하는
+    # layout 경로에서는 이 값으로 해당 벽 주변의 장비 가능 영역을 줄일 수 있다.
+    for door in layout.doors:
+        dx = max(r.x - pad, min(door.x, r.x2 + pad))
+        dy = max(r.y - pad, min(door.y, r.y2 + pad))
+        near = abs(dx - door.x) <= pad and abs(dy - door.y) <= pad
+        if not near:
+            continue
+        if abs(door.y - r.y) <= pad:
+            y0 = max(y0, r.y + pad + 1600)
+        elif abs(door.y - r.y2) <= pad:
+            y1 = min(y1, r.y2 - pad - 1600)
+        elif abs(door.x - r.x) <= pad:
+            x0 = max(x0, r.x + pad + 1600)
+        elif abs(door.x - r.x2) <= pad:
+            x1 = min(x1, r.x2 - pad - 1600)
 
     # 방이 너무 작거나 AL 이 과밀하면 최소 영역으로 fallback 하되, AL 쪽에서 떨어뜨린다.
     if x1 - x0 < 1000:
@@ -1550,9 +1608,10 @@ def solve_perimeter_ring(
         if chunk:
             _place_process_row(layout, room_by_id, chunk, cx0, cy0 + ri * rh, cw, rh)
 
-    # ── 에어록(공정 방 내측) + 장비 + 도어 ──
+    # ── 에어록(공정 방 내측) + 도어 + 장비 ──
     _place_airlocks_in_rooms(layout, spec, process, is_top=True)
-    _place_equipment_grid(layout)
     _place_doors(layout, spec.adjacency)
     _place_airlock_doors(layout)
+    _ensure_all_rooms_have_access_doors(layout)
+    _place_equipment_grid(layout)
     return layout

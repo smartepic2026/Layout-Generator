@@ -47,7 +47,7 @@ class DocumentationAgentPort:
     drawing_format: str = DRAWING_FORMAT
     media_type: str = MEDIA_TYPE
 
-    def generate(self, output_json: dict) -> bytes:
+    def generate(self, output_json: dict, **kwargs) -> bytes:
         raise NotImplementedError
 
     @staticmethod
@@ -83,7 +83,7 @@ class PythonImportDocAgent(DocumentationAgentPort):
         module = importlib.import_module(module_name)
         self._render = getattr(module, func_name)
 
-    def generate(self, output_json: dict) -> bytes:
+    def generate(self, output_json: dict, **kwargs) -> bytes:
         return self._as_bytes(self._render(output_json))
 
 
@@ -104,7 +104,7 @@ class HttpDocAgent(DocumentationAgentPort):
         self.url = os.environ.get("DOC_AGENT_URL", "http://localhost:9000/render")
         self.timeout = float(os.environ.get("DOC_AGENT_TIMEOUT", "180"))
 
-    def generate(self, output_json: dict) -> bytes:
+    def generate(self, output_json: dict, **kwargs) -> bytes:
         import httpx  # backend/requirements.txt 에 이미 포함
         r = httpx.post(self.url, json=output_json, timeout=self.timeout)
         r.raise_for_status()
@@ -128,7 +128,7 @@ class CliDocAgent(DocumentationAgentPort):
     def __init__(self) -> None:
         self.cmd = os.environ.get("DOC_AGENT_CMD", "doc_agent")
 
-    def generate(self, output_json: dict) -> bytes:
+    def generate(self, output_json: dict, **kwargs) -> bytes:
         workdir = pathlib.Path(tempfile.mkdtemp(prefix="docagent_"))
         in_path = workdir / "input.json"
         out_path = workdir / f"drawing.{self.drawing_format}"
@@ -163,18 +163,22 @@ class InternalDrawingAgent(DocumentationAgentPort):
         self.variant_seed = int(os.environ.get("DOC_AGENT_VARIANT_SEED", "42"))
         self.variant_index = int(os.environ.get("DOC_AGENT_VARIANT_INDEX", "0"))
 
-    def generate(self, output_json: dict) -> bytes:
+    def generate(self, output_json: dict, **kwargs) -> bytes:
         from src.contract.schemas import RuleEngineOutput
         from src.drawing_agent.data.tier1_ruleengine import adapt_external_dict
         from src.drawing_agent.floorplan import generate_floorplan
+
+        flow_mode = kwargs.get("flow_mode", self.flow_mode)
+        variant_seed = kwargs.get("variant_seed", self.variant_seed)
+        variant_index = kwargs.get("variant_index", self.variant_index)
 
         spec = RuleEngineOutput.model_validate(adapt_external_dict(output_json))
         svg, _layout = generate_floorplan(
             spec,
             dynamic_rooms=True,
-            flow_mode=self.flow_mode,
-            variant_seed=self.variant_seed,
-            variant_index=self.variant_index,
+            flow_mode=flow_mode,
+            variant_seed=variant_seed,
+            variant_index=variant_index,
         )
         return svg.encode("utf-8")
 
