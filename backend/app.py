@@ -158,7 +158,7 @@ FRONTEND = ROOT / "index.html"
 @app.get("/")
 def index() -> Response:
     if FRONTEND.exists():
-        return FileResponse(str(FRONTEND))
+        return FileResponse(str(FRONTEND), headers={"Cache-Control": "no-store"})
     return JSONResponse({"service": "BioForge CD Studio API", "see": "/docs"})
 
 
