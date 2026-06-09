@@ -433,7 +433,7 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
                 f'<text x="{cx:.2f}" y="{cy + 7:.2f}" text-anchor="middle" '
                 f'dominant-baseline="middle" font-size="7" '
                 f'fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)}>'
-                f'{sym} {_esc(ft)}</text>\n'
+                f'{_esc(f"{sym} {ft}")}</text>\n'
             )
     s.write('</g>\n')
 

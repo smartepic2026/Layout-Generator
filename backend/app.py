@@ -288,4 +288,8 @@ def get_drawing(run_id: str) -> Response:
         drawing = _CONNECTED_DOC_AGENT.generate(run["output"])
     except Exception as e:                                    # 외부 모듈 실행 오류
         raise HTTPException(502, f"Doc Agent 도면 생성 실패: {type(e).__name__}: {e}")
-    return Response(content=drawing, media_type=_CONNECTED_DOC_AGENT.media_type)
+    return Response(
+        content=drawing,
+        media_type=_CONNECTED_DOC_AGENT.media_type,
+        headers={"Cache-Control": "no-store"},
+    )

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import re
+import xml.etree.ElementTree as ET
 
 from src.drawing_agent.floorplan import generate_floorplan
 from src.drawing_agent.layout_solver import _is_al_fake_room
@@ -83,6 +84,16 @@ def test_svg_contains_legend_and_titleblock():
     assert "LEGEND" in svg
     assert "PROJECT" in svg
     assert "MODALITY" in svg
+
+
+def test_svg_is_valid_xml_with_sink_airlocks():
+    """Airlock sink labels include '<'; renderer must XML-escape text."""
+    spec = run_rule_engine(URSInput(), strict=True)
+    for airlock in spec.airlocks:
+        airlock.flow_type = "sink"
+    svg, _ = generate_floorplan(spec, dynamic_rooms=True)
+    ET.fromstring(svg)
+    assert "&gt;|&lt; sink" in svg
 
 
 def test_no_room_overflow_after_clip():
