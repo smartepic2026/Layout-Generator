@@ -20,3 +20,6 @@ output/*.dxf
 output/runs/
 output/scenarios/
 !output/.gitkeep
+backend/_uploads/
+input_urs/
+output/
