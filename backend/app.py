@@ -71,6 +71,7 @@ RUNS: dict[str, dict[str, Any]] = {}
 _LOCK = threading.Lock()
 UPLOAD_DIR = ROOT / "backend" / "_uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+SAMPLE_URS = ROOT / "input_urs" / "URS_ConceptualDesign for layout_0607-1.xlsx"
 
 
 def _now() -> str:
@@ -187,10 +188,38 @@ async def create_run(
     run_id = uuid.uuid4().hex[:12]
     dest = UPLOAD_DIR / f"{run_id}_{file.filename}"
     dest.write_bytes(await file.read())
+    return _start_run(
+        run_id, dest, file.filename, exclude_airlock_rooms, bio_isolation, run_validation,
+    )
 
+
+@app.post("/runs/sample")
+async def create_sample_run(
+    exclude_airlock_rooms: bool = Form(False),
+    bio_isolation: bool = Form(False),
+    run_validation: bool = Form(True),
+) -> dict:
+    if not SAMPLE_URS.exists():
+        raise HTTPException(404, f"sample URS not found: {SAMPLE_URS.name}")
+    run_id = uuid.uuid4().hex[:12]
+    dest = UPLOAD_DIR / f"{run_id}_{SAMPLE_URS.name}"
+    dest.write_bytes(SAMPLE_URS.read_bytes())
+    return _start_run(
+        run_id, dest, SAMPLE_URS.name, exclude_airlock_rooms, bio_isolation, run_validation,
+    )
+
+
+def _start_run(
+    run_id: str,
+    xlsx_path: Path,
+    filename: str,
+    exclude_airlock_rooms: bool,
+    bio_isolation: bool,
+    run_validation: bool,
+) -> dict:
     with _LOCK:
         RUNS[run_id] = {
-            "run_id": run_id, "status": "queued", "filename": file.filename,
+            "run_id": run_id, "status": "queued", "filename": filename,
             "created_at": _now(), "finished_at": None, "log": [],
             "output": None, "validation": None, "drawing_available": False,
             "options": {
@@ -201,7 +230,7 @@ async def create_run(
         }
     t = threading.Thread(
         target=_execute,
-        args=(run_id, dest, exclude_airlock_rooms, bio_isolation, run_validation),
+        args=(run_id, xlsx_path, exclude_airlock_rooms, bio_isolation, run_validation),
         daemon=True,
     )
     t.start()

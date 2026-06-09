@@ -273,7 +273,7 @@ drop.onclick=()=>fileEl.click();
 ['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('over')}));
 drop.addEventListener('drop',ev=>{if(ev.dataTransfer.files[0])handleFile(ev.dataTransfer.files[0])});
 fileEl.onchange=e=>{if(e.target.files[0])handleFile(e.target.files[0])};
-$('#sampleBtn').onclick=()=>{uploaded={name:'URS_ConceptualDesign for layout_0516.xlsx (예시)',size:17814,file:null,sheets:null,sample:true};showFileInfo();buildSamplePreview();$('#runBtn').disabled=false;};
+$('#sampleBtn').onclick=()=>{uploaded={name:'URS_ConceptualDesign for layout_0607-1.xlsx (서버 예시)',size:21400,file:null,sheets:null,sample:true};showFileInfo();buildSamplePreview();$('#runBtn').disabled=false;};
 function showFileInfo(){const fi=$('#fileinfo');fi.classList.add('show');
   fi.innerHTML=`<span class="nm">📄 ${uploaded.name}</span> · ${(uploaded.size/1024).toFixed(1)} KB · <span style="color:var(--blue)">실행 준비됨</span>`;}
 function handleFile(f){
@@ -320,11 +320,11 @@ $('#runBtn').onclick=async()=>{
   if(!uploaded)return;
   $('#runBtn').disabled=true;$('#pipeLog').innerHTML='';
   try{
-    if(LIVE && uploaded.file){ await runLive(); }
-    else{ if(LIVE&&!uploaded.file) logLine('정보','예시 데이터는 내장 결과로 표시합니다 (파일 업로드 시 실서버 실행).',true); await runDemo(); }
+    if(LIVE){ await runLive(); }
+    else{ await runDemo(); }
   }catch(e){
     logLine('오류',String(e),true);
-    if(LIVE && uploaded.file){
+    if(LIVE){
       ran=false;
       lastRunId=null;
       lastDrawingSvg=null;
@@ -341,11 +341,17 @@ $('#runBtn').onclick=async()=>{
 };
 async function runLive(){
   const fd=new FormData();
-  fd.append('file',uploaded.file);
+  let endpoint='/runs';
+  if(uploaded.file){
+    fd.append('file',uploaded.file);
+  }else{
+    endpoint='/runs/sample';
+    logLine('정보','서버 예시 URS로 실제 Rule Engine·Drawing Agent를 실행합니다.');
+  }
   fd.append('exclude_airlock_rooms',$('#optExclAL').checked);
   fd.append('bio_isolation',$('#optBio').checked);
   fd.append('run_validation',$('#optVal').checked);
-  const cr=await fetch(BASE+'/runs',{method:'POST',body:fd});
+  const cr=await fetch(BASE+endpoint,{method:'POST',body:fd});
   if(!cr.ok)throw new Error('run 생성 실패 ('+cr.status+')');
   const {run_id}=await cr.json();
   lastRunId=run_id; lastDrawingSvg=null;
@@ -365,6 +371,11 @@ async function runLive(){
   lastVerdict=st.has_validation?await (await fetch(BASE+'/runs/'+run_id+'/validation')).json():null;
   docConnected=!!st.drawing_available;
   setDocState(docConnected, docConnected?`연결됨 (${docMode})`:'미연결 (Not connected)');
+  if(docConnected){
+    const svg=await getDrawingSvg();
+    renderDrawingSvg(svg);
+    setDocState(true,'SVG 렌더링 완료');
+  }
 }
 async function runDemo(){
   lastRunId=null; lastDrawingSvg=null;
@@ -442,11 +453,26 @@ async function getDrawingSvg(){
   lastDrawingSvg=await r.text();
   return lastDrawingSvg;
 }
+function renderDrawingSvg(svg){
+  const canvas=$('#drawCanvas');
+  canvas.style.display='block';
+  canvas.style.overflow='auto';
+  canvas.style.background='#fff';
+  canvas.innerHTML=svg;
+  const el=canvas.querySelector('svg');
+  if(el){
+    el.removeAttribute('width');
+    el.removeAttribute('height');
+    el.style.width='100%';
+    el.style.height='auto';
+    el.style.display='block';
+  }
+}
 $('#previewDraw').onclick=async()=>{
   if(!ran){alert('먼저 파이프라인을 실행하세요.');return;}
   try{
     const svg=await getDrawingSvg();
-    $('#drawCanvas').innerHTML=svg;
+    renderDrawingSvg(svg);
     setDocState(LIVE&&lastRunId,'SVG 렌더링 완료');
   }catch(e){alert(String(e));}
 };
