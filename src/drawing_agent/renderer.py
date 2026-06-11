@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import html
 import math
+from datetime import date
 from io import StringIO
 
 from src.drawing_agent import design_tokens as T
@@ -38,9 +39,14 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
         z12 범례 & 타이틀 블록
     """
     # 캔버스 크기 (mm → unit + padding)
-    side_panel_w = 390
+    side_panel_w = 640
+    legend_h = _legend_height(layout)
+    titleblock_h = 72
+    titleblock_gap = 48
+    plan_h = T.mm(layout.building_h_mm)
+    content_h = max(plan_h, legend_h)
     w_unit = T.mm(layout.building_w_mm) + 2 * T.CANVAS_PAD + side_panel_w
-    h_unit = T.mm(layout.building_h_mm) + 2 * T.CANVAS_PAD + 100   # 하단 title block
+    h_unit = content_h + 2 * T.CANVAS_PAD + titleblock_gap + titleblock_h
 
     s = StringIO()
     s.write(
@@ -76,8 +82,8 @@ def render(spec: RuleEngineOutput, layout: Layout, flow_mode: str = "full") -> s
     _emit_z12_legend(s, legend_x, oy, spec, layout)
 
     # 하단 타이틀 블록
-    tb_y = oy + T.mm(layout.building_h_mm) + 24
-    _emit_z12_titleblock(s, ox, tb_y, w_unit - 2 * ox, 64, spec)
+    tb_y = oy + content_h + titleblock_gap
+    _emit_z12_titleblock(s, ox, tb_y, w_unit - 2 * ox, titleblock_h, spec)
 
     s.write("</svg>\n")
     return s.getvalue()
@@ -444,8 +450,30 @@ def _emit_z7_airlocks(s: StringIO, ox: float, oy: float, layout: Layout) -> None
 EQUIPMENT_STROKE = "#DC2626"  # red-600 — 건축 도면 관례 (사용자 요청 복원)
 
 
+def _equipment_index(layout: Layout) -> dict[int, str]:
+    labels: dict[int, str] = {}
+    idx = 1
+    for pr in layout.rooms.values():
+        for pe in pr.equipment:
+            labels[id(pe)] = f"E{idx}"
+            idx += 1
+    return labels
+
+
+def _equipment_legend_rows(layout: Layout) -> list[tuple[str, str, str]]:
+    rows: list[tuple[str, str, str]] = []
+    idx = 1
+    for pr in layout.rooms.values():
+        room_name = pr.room.name_ko or pr.room.name_en or pr.room.id
+        for pe in pr.equipment:
+            rows.append((f"E{idx}", room_name, pe.equipment.name))
+            idx += 1
+    return rows
+
+
 def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
-    """Equipment as red-bordered boxes. 텍스트는 빨간색 단색 (사용자 요청)."""
+    """Equipment as red-bordered boxes with compact index labels."""
+    eq_labels = _equipment_index(layout)
     for pr in layout.rooms.values():
         if not pr.equipment:
             continue
@@ -455,50 +483,26 @@ def _emit_z8_equipment(s: StringIO, ox: float, oy: float, layout: Layout) -> Non
         )
         for pe in pr.equipment:
             x, y, w, h = _r(pe.rect, ox, oy)
+            draw_w = max(w, 16.0)
+            draw_h = max(h, 12.0)
+            draw_x = x - (draw_w - w) / 2
+            draw_y = y - (draw_h - h) / 2
             # ─ 빨간 테두리 박스 ─
             s.write(
-                f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" '
+                f'<rect x="{draw_x:.2f}" y="{draw_y:.2f}" width="{draw_w:.2f}" height="{draw_h:.2f}" '
                 f'fill="{T.NEUTRAL["0"]}" stroke="{EQUIPMENT_STROKE}" '
                 f'stroke-width="{(T.STROKE["equipment"] + 0.3) / 2}"/>\n'
             )
-            if w < 18 or h < 12:
-                continue
-            name = pe.equipment.name
-            area_m2 = pe.equipment.footprint_m2
-            # 박스 20% 축소에 맞춰 글씨도 작게 (9→7.5, 8→6.5)
-            name_size = 7.5
-            area_size = 6.5
-            # 박스 폭 안에 들어가게 truncate (1 char ≈ 4.2 unit at fs=7.5)
-            max_chars = max(int(w / 4.2) - 1, 3)
-            short_name = name if len(name) <= max_chars else name[:max_chars - 1] + "."
-
-            # 박스 내부 중앙 정렬 (수평 + 수직)
-            cx = x + w / 2
-            if h >= 16 and area_m2 > 0:
-                # 2줄 (이름 + 면적) — 박스 중앙 기준 위/아래로 분리
-                s.write(
-                    f'<text x="{cx:.2f}" y="{y + h/2 - 1:.2f}" text-anchor="middle" '
-                    f'dominant-baseline="middle" font-size="{name_size}" '
-                    f'fill="{EQUIPMENT_STROKE}" stroke="none" '
-                    f'font-family={_q(T.FONT_MONO)} font-weight="700">'
-                    f'{_esc(short_name)}</text>\n'
-                )
-                s.write(
-                    f'<text x="{cx:.2f}" y="{y + h/2 + 7:.2f}" text-anchor="middle" '
-                    f'dominant-baseline="middle" font-size="{area_size}" '
-                    f'fill="{EQUIPMENT_STROKE}" stroke="none" '
-                    f'font-family={_q(T.FONT_MONO)}>'
-                    f'{area_m2:.1f} m²</text>\n'
-                )
-            else:
-                # 1줄만 (이름) — 박스 정중앙
-                s.write(
-                    f'<text x="{cx:.2f}" y="{y + h/2:.2f}" text-anchor="middle" '
-                    f'dominant-baseline="middle" font-size="{name_size}" '
-                    f'fill="{EQUIPMENT_STROKE}" stroke="none" '
-                    f'font-family={_q(T.FONT_MONO)} font-weight="700">'
-                    f'{_esc(short_name)}</text>\n'
-                )
+            label = eq_labels.get(id(pe), "E?")
+            cx = draw_x + draw_w / 2
+            label_size = max(6.0, min(10.0, draw_w / max(len(label) * 0.65, 1), draw_h * 0.55))
+            s.write(
+                f'<text x="{cx:.2f}" y="{draw_y + draw_h/2:.2f}" text-anchor="middle" '
+                f'dominant-baseline="middle" font-size="{label_size:.1f}" '
+                f'fill="{EQUIPMENT_STROKE}" stroke="none" '
+                f'font-family={_q(T.FONT_MONO)} font-weight="800">'
+                f'{_esc(label)}</text>\n'
+            )
         s.write('</g>\n')
 
 
@@ -519,10 +523,20 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
 
         if w < 40 or h < 30:
             # 너무 좁으면 ID만
+            label = room.id.replace("R_", "")[:14]
+            bg_w = min(max(len(label) * 5.8 + 12, 28), max(w - 4, 28))
+            bg_h = 15
+            bg_x = x + w / 2 - bg_w / 2
+            bg_y = y + h / 2 - bg_h / 2
+            s.write(
+                f'<rect x="{bg_x:.2f}" y="{bg_y:.2f}" width="{bg_w:.2f}" height="{bg_h:.2f}" '
+                f'rx="3" fill="{T.NEUTRAL["0"]}" fill-opacity="0.5" '
+                f'stroke="{T.NEUTRAL["200"]}" stroke-opacity="0.65" stroke-width="0.6"/>\n'
+            )
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{y + h/2 + 4:.2f}" text-anchor="middle" '
                 f'font-size="{T.TEXT["xs"]}" fill="{label_color}" font-weight="600">'
-                f'{_esc(room.id.replace("R_", "")[:14])}</text>\n'
+                f'{_esc(label)}</text>\n'
             )
             continue
 
@@ -533,6 +547,32 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
         #   y+29 : 메타  ← 한글 없을 때 영문 바로 아래
         ko_visible = h >= 50
         meta_y = (y + 42) if ko_visible else (y + 29)
+        dp = room.differential_pressure_Pa
+        sign = "+" if dp > 0 else ""
+        parts = [room.clean_grade, f"{sign}{dp:g}Pa", f"{room.area_m2:.0f}m²"]
+        if room.air_changes_per_hour:
+            parts.append(f"{room.air_changes_per_hour:g}ACH")
+        meta_text = " · ".join(parts)
+        sub = []
+        if h >= 64:
+            if room.ceiling_height_mm:
+                sub.append(f"H{room.ceiling_height_mm:g}")
+            if room.gowning_type:
+                sub.append(room.gowning_type)
+        line_count = 2 + (1 if ko_visible else 0) + (1 if sub else 0)
+        bg_w = min(
+            max(len(room.name_en) * 6.4, len(room.name_ko) * 8.2 if ko_visible else 0,
+                len(meta_text) * 4.6, len(" · ".join(sub)) * 4.5 if sub else 0) + 18,
+            max(w - 8, 36),
+        )
+        bg_h = 16 + (line_count - 1) * 11
+        bg_x = x + w / 2 - bg_w / 2
+        bg_y = y + 5
+        s.write(
+            f'<rect x="{bg_x:.2f}" y="{bg_y:.2f}" width="{bg_w:.2f}" height="{bg_h:.2f}" '
+            f'rx="4" fill="{T.NEUTRAL["0"]}" fill-opacity="0.5" '
+            f'stroke="{T.NEUTRAL["200"]}" stroke-opacity="0.65" stroke-width="0.6"/>\n'
+        )
 
         # ─ 영문명 ─
         s.write(
@@ -551,12 +591,6 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
             )
         # ─ 메타1 (Grade · DP · Area · ACPH) ─ 방 이름 바로 아래
         if h >= 35:
-            dp = room.differential_pressure_Pa
-            sign = "+" if dp > 0 else ""
-            parts = [room.clean_grade, f"{sign}{dp:g}Pa", f"{room.area_m2:.0f}m²"]
-            if room.air_changes_per_hour:           # [정렬] ACPH 반영
-                parts.append(f"{room.air_changes_per_hour:g}ACH")
-            meta_text = " · ".join(parts)
             s.write(
                 f'<text x="{x + w/2:.2f}" y="{meta_y:.2f}" text-anchor="middle" '
                 f'font-size="8" fill="{T.NEUTRAL["600"]}" font-family={_q(T.FONT_MONO)} '
@@ -564,19 +598,13 @@ def _emit_z10_labels(s: StringIO, ox: float, oy: float, layout: Layout) -> None:
                 f'{_esc(meta_text)}</text>\n'
             )
         # ─ 메타2 (천정고 · 갱의) ─ 큰 방만 (천정고·gowning_type 반영)
-        if h >= 64:
-            sub = []
-            if room.ceiling_height_mm:
-                sub.append(f"H{room.ceiling_height_mm:g}")
-            if room.gowning_type:
-                sub.append(room.gowning_type)
-            if sub:
-                s.write(
-                    f'<text x="{x + w/2:.2f}" y="{meta_y + 11:.2f}" text-anchor="middle" '
-                    f'font-size="8" fill="{T.NEUTRAL["400"]}" font-family={_q(T.FONT_MONO)} '
-                    f'>'
-                    f'{_esc(" · ".join(sub))}</text>\n'
-                )
+        if sub:
+            s.write(
+                f'<text x="{x + w/2:.2f}" y="{meta_y + 11:.2f}" text-anchor="middle" '
+                f'font-size="8" fill="{T.NEUTRAL["400"]}" font-family={_q(T.FONT_MONO)} '
+                f'>'
+                f'{_esc(" · ".join(sub))}</text>\n'
+            )
     s.write('</g>\n')
 
 
@@ -1069,8 +1097,8 @@ def _draw_flow_polyline(s: StringIO, pts: list, key: str) -> None:
         return
     d = "M " + " L ".join(f"{x:.2f} {y:.2f}" for x, y in routed)
     s.write(
-        f'<path d="{d}" stroke="{T.FLOW[key]}" stroke-width="1.8" '
-        f'stroke-opacity="0.82" fill="none" stroke-linecap="round" '
+        f'<path d="{d}" stroke="{T.FLOW[key]}" stroke-width="1.6" '
+        f'stroke-opacity="0.72" fill="none" stroke-linecap="round" '
         f'stroke-linejoin="round" stroke-dasharray="7 5" '
         f'marker-end="url(#arrow-{key})"/>\n'
     )
@@ -1151,8 +1179,19 @@ def _emit_z9_flow_arrows_topology(s: StringIO, ox: float, oy: float, layout: Lay
 # ──────────────────────────────────────────────────────────────────────
 # z12 legend
 # ──────────────────────────────────────────────────────────────────────
+def _legend_height(layout: Layout) -> float:
+    eq_rows = _equipment_legend_rows(layout)
+    eq_cols = 2 if len(eq_rows) > 25 else 1
+    eq_line_h = 14
+    equipment_h = (math.ceil(len(eq_rows) / eq_cols) * eq_line_h + 34) if eq_rows else 0
+    return max(430, 246 + equipment_h)
+
+
 def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput, layout: Layout) -> None:
-    w, h = 350, 430
+    eq_rows = _equipment_legend_rows(layout)
+    eq_cols = 2 if len(eq_rows) > 25 else 1
+    eq_line_h = 12
+    w, h = 590, _legend_height(layout)
     s.write(
         f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{T.NEUTRAL["0"]}" '
         f'stroke="{T.NEUTRAL["200"]}" stroke-width="1"/>\n'
@@ -1162,6 +1201,33 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput, la
         f'<text x="{x + 12}" y="{y + 22}" font-size="{T.TEXT["base"]}" font-weight="700" '
         f'fill="{T.NEUTRAL["900"]}">LEGEND</text>\n'
     )
+    area_m2 = layout.building_w_mm * layout.building_h_mm / 1_000_000
+    actual_rooms = [pr for pr in layout.rooms.values() if not _is_corridor_room(pr.room)]
+    info_rows = [
+        ("Canvas", f"{layout.building_w_mm/1000:.1f}m x {layout.building_h_mm/1000:.1f}m"),
+        ("Area", f"{area_m2:.0f} m2"),
+        ("Rooms", str(len(actual_rooms))),
+        ("Airlocks", str(len(layout.airlocks))),
+        ("Doors", str(len(layout.doors))),
+        ("Modality", spec.modality.upper()),
+    ]
+    info_x = x + 334
+    info_y = y + 22
+    s.write(
+        f'<text x="{info_x}" y="{info_y}" font-size="{T.TEXT["xs"]}" font-weight="700" '
+        f'fill="{T.NEUTRAL["900"]}">DRAWING INFO</text>\n'
+    )
+    info_y += 15
+    for label, value in info_rows:
+        s.write(
+            f'<text x="{info_x}" y="{info_y:.0f}" font-size="9" fill="{T.NEUTRAL["600"]}" '
+            f'font-family={_q(T.FONT_MONO)}>{_esc(label)}</text>\n'
+        )
+        s.write(
+            f'<text x="{info_x + 82}" y="{info_y:.0f}" font-size="9.5" fill="{T.NEUTRAL["900"]}" '
+            f'font-weight="600">{_esc(value)}</text>\n'
+        )
+        info_y += 14
     # Grade swatches
     yy = y + 44
     grade_desc = {
@@ -1200,43 +1266,39 @@ def _emit_z12_legend(s: StringIO, x: float, y: float, spec: RuleEngineOutput, la
     yy += 14
     for k, label in [("personnel", "Personnel"), ("material", "Material"), ("waste", "Waste"), ("product", "Product")]:
         s.write(
-            f'<line x1="{x + 14}" y1="{yy - 4}" x2="{x + 40}" y2="{yy - 4}" '
+            f'<line x1="{x + 14}" y1="{yy - 4}" x2="{x + 46}" y2="{yy - 4}" '
             f'stroke="{T.FLOW[k]}" stroke-width="1.8" stroke-dasharray="7 5" '
             f'marker-end="url(#arrow-{k})"/>\n'
         )
         s.write(
-            f'<text x="{x + 50}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" '
+            f'<text x="{x + 68}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" '
             f'fill="{T.NEUTRAL["800"]}">{label}</text>\n'
         )
         yy += 16
 
-    yy += 14
-    s.write(
-        f'<text x="{x + 12}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" font-weight="700" '
-        f'fill="{T.NEUTRAL["900"]}">DRAWING INFO</text>\n'
-    )
-    yy += 18
-    area_m2 = layout.building_w_mm * layout.building_h_mm / 1_000_000
-    actual_rooms = [pr for pr in layout.rooms.values() if not _is_corridor_room(pr.room)]
-    info_rows = [
-        ("Canvas W x H", f"{layout.building_w_mm/1000:.1f}m x {layout.building_h_mm/1000:.1f}m"),
-        ("Canvas Area", f"{area_m2:.0f} m2"),
-        ("Placed Rooms", str(len(actual_rooms))),
-        ("Corridors", str(len(layout.rooms) - len(actual_rooms))),
-        ("Airlocks", str(len(layout.airlocks))),
-        ("Doors", str(len(layout.doors))),
-        ("Modality", spec.modality.upper()),
-    ]
-    for label, value in info_rows:
+    if eq_rows:
+        yy += 12
         s.write(
-            f'<text x="{x + 12}" y="{yy:.0f}" font-size="9" fill="{T.NEUTRAL["600"]}" '
-            f'font-family={_q(T.FONT_MONO)}>{_esc(label)}</text>\n'
+            f'<text x="{x + 12}" y="{yy:.0f}" font-size="{T.TEXT["xs"]}" font-weight="700" '
+            f'fill="{T.NEUTRAL["900"]}">EQUIPMENT INDEX</text>\n'
         )
-        s.write(
-            f'<text x="{x + 138}" y="{yy:.0f}" font-size="10" fill="{T.NEUTRAL["900"]}" '
-            f'font-weight="600">{_esc(value)}</text>\n'
-        )
-        yy += 16
+        yy += 14
+        col_w = 282
+        rows_per_col = math.ceil(len(eq_rows) / eq_cols)
+        for i, (label, room_name, eq_name) in enumerate(eq_rows):
+            col = i // rows_per_col
+            row = i % rows_per_col
+            tx = x + 12 + col * col_w
+            ty = yy + row * eq_line_h
+            text = f"{label} {room_name}: {eq_name}"
+            if len(text) > 52:
+                text = text[:51] + "."
+            s.write(
+                f'<text x="{tx:.0f}" y="{ty:.0f}" font-size="9.5" '
+                f'fill="{T.NEUTRAL["800"]}" font-family={_q(T.FONT_MONO)}>'
+                f'{_esc(text)}</text>\n'
+            )
+        yy += rows_per_col * eq_line_h
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -1252,16 +1314,21 @@ def _emit_z12_titleblock(s: StringIO, x: float, y: float, w: float, h: float, sp
         ("MODALITY", spec.modality.upper()),
         ("ROOMS", str(len(spec.rooms))),
         ("AIRLOCKS", str(len(spec.airlocks))),
-        ("PREPARED BY", "Rule Engine v0.1"),
+        ("PREPARED BY", "GMP-LayGen"),
+        ("DATE", date.today().isoformat()),
     ]
     col_w = w / len(cols)
     for i, (k, v) in enumerate(cols):
         cx = x + i * col_w + 12
+        value = str(v)
+        max_chars = max(10, int((col_w - 24) / 6.2))
+        if len(value) > max_chars:
+            value = value[:max_chars - 1] + "."
         s.write(
             f'<text x="{cx}" y="{y + 18}" font-size="9" fill="{T.NEUTRAL["400"]}" '
             f'font-family={_q(T.FONT_MONO)}>{k}</text>\n'
         )
         s.write(
             f'<text x="{cx}" y="{y + 38}" font-size="{T.TEXT["sm"]}" '
-            f'fill="{T.NEUTRAL["900"]}" font-weight="600">{_esc(v)}</text>\n'
+            f'fill="{T.NEUTRAL["900"]}" font-weight="600">{_esc(value)}</text>\n'
         )

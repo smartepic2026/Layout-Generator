@@ -27,6 +27,7 @@ from typing import Any, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.staticfiles import StaticFiles
 
 # --- 프로젝트 루트(레포)를 import 경로에 추가 -------------------------------
 ROOT = Path(__file__).resolve().parent.parent
@@ -71,6 +72,7 @@ RUNS: dict[str, dict[str, Any]] = {}
 _LOCK = threading.Lock()
 UPLOAD_DIR = ROOT / "backend" / "_uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+ASSETS_DIR = ROOT / "assets"
 SAMPLE_URS = ROOT / "input_urs" / "URS_ConceptualDesign for layout_0607-1.xlsx"
 TEMPLATE_URS = ROOT / "input_urs" / "예제_URS_템플릿.xlsx"
 
@@ -83,8 +85,31 @@ def _log(run: dict, step: str, msg: str) -> None:
     run["log"].append({"t": _now(), "step": step, "msg": msg})
 
 
+def _apply_sample_grade_mix(inp: Any) -> None:
+    """Make the built-in demo show all clean-grade badge colors."""
+    grade_by_room = {
+        "Media preparation": ("A", "무균복"),
+        "Buffer preparation": ("A", "무균복"),
+        "Inoculation": ("B", "무균복"),
+        "Cell Culture": ("C", "무진복"),
+        "Harvest": ("D", "스크럽"),
+        "Purification 1": ("C", "무진복"),
+        "Purification 2": ("D", "스크럽"),
+        "Material storage": ("CNC", "일상복"),
+        "Equipment storage": ("CNC", "일상복"),
+        "Office": ("NC", "일상복"),
+        "Lobby": ("NC", "일상복"),
+    }
+    for room in inp.urs_rooms:
+        name_en = str(room.get("name_en", "")).strip()
+        if name_en in grade_by_room:
+            grade, gowning = grade_by_room[name_en]
+            room["clean_grade"] = grade
+            room["gowning_type"] = gowning
+
+
 def _execute(run_id: str, xlsx_path: Path, exclude_airlock: bool,
-             bio_isolation: bool, run_validation: bool) -> None:
+             bio_isolation: bool, run_validation: bool, demo_grade_mix: bool) -> None:
     """백그라운드 스레드에서 파이프라인을 실행하며 상태를 갱신한다."""
     run = RUNS[run_id]
     try:
@@ -100,6 +125,8 @@ def _execute(run_id: str, xlsx_path: Path, exclude_airlock: bool,
                 biological_safety_isolation=True,
             )
         inp = load_urs_as_input(xlsx_path, **kwargs)
+        if demo_grade_mix:
+            _apply_sample_grade_mix(inp)
         _log(run, "parse",
              f"방 {len(inp.urs_rooms)}개 · 장비 {len(inp.urs_equipment)}개 인식")
 
@@ -153,6 +180,8 @@ app = FastAPI(title="BioForge CD Studio API", version="0.2.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
+if ASSETS_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
 
 FRONTEND = ROOT / "index.html"
 
@@ -204,6 +233,7 @@ async def create_run(
     dest.write_bytes(await file.read())
     return _start_run(
         run_id, dest, file.filename, exclude_airlock_rooms, bio_isolation, run_validation,
+        demo_grade_mix=False,
     )
 
 
@@ -220,6 +250,7 @@ async def create_sample_run(
     dest.write_bytes(SAMPLE_URS.read_bytes())
     return _start_run(
         run_id, dest, SAMPLE_URS.name, exclude_airlock_rooms, bio_isolation, run_validation,
+        demo_grade_mix=True,
     )
 
 
@@ -230,6 +261,7 @@ def _start_run(
     exclude_airlock_rooms: bool,
     bio_isolation: bool,
     run_validation: bool,
+    demo_grade_mix: bool,
 ) -> dict:
     with _LOCK:
         RUNS[run_id] = {
@@ -244,7 +276,8 @@ def _start_run(
         }
     t = threading.Thread(
         target=_execute,
-        args=(run_id, xlsx_path, exclude_airlock_rooms, bio_isolation, run_validation),
+        args=(run_id, xlsx_path, exclude_airlock_rooms, bio_isolation, run_validation,
+              demo_grade_mix),
         daemon=True,
     )
     t.start()
@@ -308,8 +341,10 @@ def get_drawing(
     if variant_index < 0 or variant_index > 12:
         raise HTTPException(400, "variant_index must be between 0 and 12")
     try:
+        drawing_input = dict(run["output"])
+        drawing_input["project_name"] = run["filename"]
         drawing = _CONNECTED_DOC_AGENT.generate(
-            run["output"],
+            drawing_input,
             flow_mode=flow_mode,
             variant_seed=variant_seed,
             variant_index=variant_index,

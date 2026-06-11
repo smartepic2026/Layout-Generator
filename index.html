@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BioForge CD Studio — GMP Layout Workspace</title>
+<title>GMP-LayGen — GMP Layout Workspace</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -41,10 +41,10 @@ body[data-theme="dark"]:before{background:linear-gradient(90deg,rgba(255,255,255
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
 nav{position:sticky;top:0;z-index:50;background:var(--glass-strong);backdrop-filter:blur(18px) saturate(1.22);-webkit-backdrop-filter:blur(18px) saturate(1.22);border-bottom:1px solid var(--glass-line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.2px}
-.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--blue);display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
-.brand small{display:block;font-size:11px;color:var(--mut);font-weight:500;letter-spacing:.2px}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
+.brand{display:flex;align-items:center;min-width:0}
+.brand .logo{display:block;width:auto;height:62px;max-width:240px;object-fit:contain}
+.footer-logo{display:block;width:auto;height:54px;max-width:210px;object-fit:contain}
 .navlinks{display:flex;gap:24px;font-size:14px;color:var(--mut)}
 .navlinks a:hover{color:var(--txt)}
 .conn{font-size:11.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);font-weight:600;display:flex;align-items:center;gap:6px}
@@ -75,6 +75,8 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;padding:11px 20px;border-radius:10px;background:var(--blue);color:#fff;transition:.15s}
 .btn:hover{background:var(--blue-d)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
+body[data-theme="dark"] #templateDownload,
+body[data-theme="dark"] #downloadDraw{color:#000}
 .btn.ghost{background:var(--glass-soft);border:1px solid var(--line2);color:var(--txt);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
 .btn.ghost.on{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
@@ -136,16 +138,16 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 </head>
 <body>
 <nav><div class="wrap">
-  <div class="brand"><div class="logo">BF</div><div>BioForge CD Studio<small>GMP Layout · URS → CD Package</small></div></div>
+  <a class="brand" href="/" aria-label="GMP-LayGen home"><img class="logo" src="/assets/logo01.png" alt="GMP-LayGen"></a>
   <div class="navlinks"><a href="#upload">업로드</a><a href="#pipe">처리 과정</a><a href="#result">결과</a><a href="#drawing">도면</a><a href="#logic">엔진 로직</a></div>
   <div class="nav-actions"><button class="icon-btn" id="themeToggle" title="다크모드">◐</button>
     <span class="conn off" id="conn"><span class="d"></span><span id="connTxt">백엔드 확인 중…</span></span></div>
 </div></nav>
 
 <header class="hero"><div class="wrap">
-  <div class="kicker">Smart Factory / Bioprocess CD</div>
-  <h1>URS 엑셀 한 장에서 <span style="color:var(--blue)">GMP 도면 사양</span>까지.</h1>
-  <p class="lede">URS(사용자 요구규격서)를 업로드하면 Rule Engine이 7블록 도면 사양을 산출하고,
+  <div class="kicker">GMP Layout</div>
+  <h1>URS 엑셀에서 <span style="color:var(--blue)">GMP 규정을 준수하는 사양의 도면</span>까지.</h1>
+  <p class="lede">URS(사용자 요구규격서)를 업로드하면 Rule Engine이 GMP layout 도면 사양을 산출하고,
   RAG 기반 Validation Agent가 규제 문서(FDA·EU GMP·WHO·ISO)와 대조해 검증합니다.
   도면 생성은 내부 Drawing Agent를 통해 SVG로 연결됩니다.</p>
   <div class="stats">
@@ -237,7 +239,7 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 <section id="result"><div class="wrap">
   <div class="step-label"><i>3</i>OUTPUT</div>
   <h2>도면 사양 결과 (7블록)</h2>
-  <p class="sub">Rule Engine이 산출한 GMP 도면 사양. Documentation Agent가 그대로 좌표 배치 입력으로 사용합니다.</p>
+  <p class="sub">URS에서 추출한 Room, 전실, 인접 관계, 동선, 청정구역, 정량 제약을 구조화한 설계 데이터입니다. 이 결과가 도면 생성 단계에서 각 공간의 크기, 배치 우선순위, 연결 관계, 압력·청정등급 표기의 기준으로 사용됩니다.</p>
   <div id="resultEmpty" class="card" style="text-align:center;color:var(--mut);padding:46px">
     아직 결과가 없습니다. 위에서 URS를 업로드하고 <b style="color:var(--blue)">파이프라인 실행</b>을 눌러주세요.</div>
   <div id="resultBody" style="display:none">
@@ -247,13 +249,13 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 <section id="drawing"><div class="wrap">
   <div class="step-label"><i>4</i>DRAWING</div>
   <h2>도면 (Drawing Agent)</h2>
-  <p class="sub">7블록 사양을 좌표로 배치해 실제 GMP layout SVG를 생성합니다. 미리보기와 다운로드는 백엔드 `/drawing` 엔드포인트에서 받아옵니다.</p>
+  <p class="sub">산출된 설계 데이터를 기반으로 Room과 전실을 실제 좌표에 배치하고, 장비 번호, 청정등급 색상, 동선 화살표, 도어 스윙, 설비 범례를 포함한 GMP layout 도면을 생성합니다.</p>
   <div class="card">
     <div class="row" style="justify-content:space-between;align-items:flex-start">
       <div><div style="font-weight:700;font-size:15px;display:flex;align-items:center;gap:9px">
         <span id="docDot" style="width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block"></span>
         Drawing Agent — <span id="docState" style="color:var(--red)">확인 중</span></div>
-        <p class="muted" style="margin-top:6px">입력 계약: 7블록 JSON · 출력 포맷: SVG · backend.app `/runs/{id}/drawing`</p></div>
+        <p class="muted" style="margin-top:6px">입력: 구조화된 도면 사양 · 출력: 미리보기/다운로드 가능한 SVG 도면</p></div>
       <div class="row"><button class="btn ghost sm" id="previewDraw">미리보기</button>
         <button class="btn sm" id="downloadDraw">⬇ 도면 다운로드</button></div></div>
     <div class="draw-controls">
@@ -282,9 +284,9 @@ h2{font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
 </div></section>
 
 <footer style="border-top:1px solid var(--line);padding:28px 0;margin-top:28px">
-  <div class="wrap muted" style="font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-    <span>BioForge CD Studio · Frontend v0.2 + FastAPI backend</span>
-    <span>Rule Engine v0.1.0 · KB GMP_Layout_Logic_0510 · RAG P@5 0.72 / MRR 0.85</span></div>
+  <div class="wrap" style="display:flex;justify-content:center">
+    <img class="footer-logo" src="/assets/logo01.png" alt="GMP-LayGen">
+  </div>
 </footer>
 <style>
 .pipe{display:flex;gap:0;flex-wrap:wrap}
@@ -310,6 +312,18 @@ tr:hover td{background:var(--soft)}
 .pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid var(--line2);color:var(--txt)}
 .pill.b{color:var(--blue);border-color:var(--blue);background:var(--blue-soft)}
 .pill.r{color:var(--red);border-color:var(--red);background:var(--red-soft)}
+.pill.grade-a{color:#5b21b6;border-color:#8b5cf6;background:#ede9fe}
+.pill.grade-b{color:#1d4ed8;border-color:#60a5fa;background:#dbeafe}
+.pill.grade-c{color:#047857;border-color:#34d399;background:#d1fae5}
+.pill.grade-d{color:#b45309;border-color:#f59e0b;background:#fef3c7}
+.pill.grade-cnc{color:#0f766e;border-color:#2dd4bf;background:#ccfbf1}
+.pill.grade-nc{color:#475569;border-color:#94a3b8;background:#f1f5f9}
+body[data-theme="dark"] .pill.grade-a{color:#f5f3ff;border-color:#a78bfa;background:#4c1d95}
+body[data-theme="dark"] .pill.grade-b{color:#eff6ff;border-color:#60a5fa;background:#1e3a8a}
+body[data-theme="dark"] .pill.grade-c{color:#ecfdf5;border-color:#34d399;background:#065f46}
+body[data-theme="dark"] .pill.grade-d{color:#fffbeb;border-color:#f59e0b;background:#92400e}
+body[data-theme="dark"] .pill.grade-cnc{color:#f0fdfa;border-color:#2dd4bf;background:#115e59}
+body[data-theme="dark"] .pill.grade-nc{color:#f8fafc;border-color:#94a3b8;background:#334155}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:4px}
 .kvi{background:var(--glass-soft);border:1px solid var(--glass-line);border-radius:11px;padding:13px 15px}
 .kvi .k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px} .kvi .v{font-size:18px;font-weight:700;margin-top:3px}
@@ -403,7 +417,8 @@ function handleFile(f){
     showFileInfo();renderSheets();$('#runBtn').disabled=false;};
   r.readAsArrayBuffer(f);}
 function buildSamplePreview(){const rows=[['Room (ko)','Room (en)','Grade','Flow','Area m²','Gowning']];
-  DATA.rooms.slice(0,18).forEach(r=>rows.push([r.name_ko,r.name_en,r.clean_grade,r.room_flow,r.area_m2??'',r.gowning_type]));
+  const demoGrades=['A','B','C','D','CNC','NC'];
+  DATA.rooms.slice(0,18).forEach((r,i)=>rows.push([r.name_ko,r.name_en,demoGrades[i%demoGrades.length],r.room_flow,r.area_m2??'',r.gowning_type]));
   uploaded.sheets=[{name:'Room (URS Sheet 2)',rows}];renderSheets();}
 function renderSheets(){if(!uploaded.sheets)return;$('#sheetPrev').style.display='block';
   const tabs=$('#sheetTabs');tabs.innerHTML='';
@@ -413,10 +428,14 @@ function renderSheets(){if(!uploaded.sheets)return;$('#sheetPrev').style.display
   drawSheet(uploaded.sheets[0]);}
 function drawSheet(s){const b=$('#sheetBody');if(!s.rows.length){b.innerHTML='<p class="muted">빈 시트</p>';return;}
   const head=s.rows[0],body=s.rows.slice(1,30);
-  b.innerHTML=`<table class="data-table resizable-table"><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r=>`<tr>${head.map((_,i)=>`<td>${esc(r[i]??'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  b.innerHTML=`<table class="data-table resizable-table"><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r=>`<tr>${head.map((h,i)=>`<td>${sheetCellHtml(h,r[i])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
   makeResizableTables(b);
 }
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function gradeClass(g){return 'grade-'+String(g||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'')}
+function gradeBadge(g){const v=String(g??'').trim();return v?`<span class="pill ${gradeClass(v)}">${esc(v)}</span>`:'—'}
+function isGradeColumn(h){return /grade|등급|청정/i.test(String(h||''))}
+function sheetCellHtml(h,v){const raw=String(v??'').trim();return isGradeColumn(h)&&/^(A|B|C|D|CNC|NC)$/i.test(raw)?gradeBadge(raw.toUpperCase()):esc(v??'')}
 function makeResizableTables(root=document){
   root.querySelectorAll('table').forEach(table=>{
     if(table.dataset.resizableReady)return;
@@ -475,14 +494,16 @@ const DIRECT_TABLES={
       ['area','면적 m²','number'],['flow','흐름','flow'],['dp','차압 Pa','number'],['acph','ACPH','number'],['category','구역','category']
     ],
     rows:[
-      {name_ko:'배지조제실',name_en:'Media preparation',grade:'C',area:'100',flow:'Both-way',dp:'30',acph:'30',category:'process'},
-      {name_ko:'버퍼조제실',name_en:'Buffer preparation',grade:'C',area:'200',flow:'Both-way',dp:'30',acph:'30',category:'process'},
+      {name_ko:'무균 핵심작업실',name_en:'Aseptic core',grade:'A',area:'45',flow:'One-way',dp:'45',acph:'60',category:'process'},
+      {name_ko:'무균 배경구역',name_en:'Aseptic background',grade:'B',area:'80',flow:'One-way',dp:'40',acph:'50',category:'process'},
       {name_ko:'Seed 접종실',name_en:'Inoculation',grade:'C',area:'40',flow:'One-way',dp:'30',acph:'30',category:'process'},
       {name_ko:'배양실',name_en:'Cell Culture',grade:'C',area:'150',flow:'One-way',dp:'30',acph:'30',category:'process'},
       {name_ko:'회수실',name_en:'Harvest',grade:'C',area:'60',flow:'One-way',dp:'30',acph:'30',category:'process'},
       {name_ko:'정제실1',name_en:'Purification 1',grade:'C',area:'300',flow:'One-way',dp:'30',acph:'30',category:'process'},
-      {name_ko:'정제실2',name_en:'Purification 2',grade:'C',area:'100',flow:'One-way',dp:'35',acph:'30',category:'process'},
+      {name_ko:'정제실2',name_en:'Purification 2',grade:'D',area:'100',flow:'One-way',dp:'15',acph:'20',category:'process'},
+      {name_ko:'관리 보조구역',name_en:'Controlled support',grade:'CNC',area:'70',flow:'Both-way',dp:'5',acph:'10',category:'auxiliary'},
       {name_ko:'DS 보관실',name_en:'DS storage',grade:'D',area:'50',flow:'Both-way',dp:'15',acph:'20',category:'auxiliary'},
+      {name_ko:'사무실',name_en:'Office',grade:'NC',area:'35',flow:'Both-way',dp:'0',acph:'',category:'NC'},
     ],
   },
   equipment:{
@@ -745,15 +766,14 @@ function renderResults(){
     b.onclick=()=>{$$('#resTabs .tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');resPanel(tb[0])};t.appendChild(b);});
   resPanel('rooms');
 }
-function gcls(g){return (g==='A'||g==='B')?'b':''}
 function resPanel(k){const el=$('#resPanel');const c='<div class="card">';const o=lastOutput;
   if(k==='rooms'){el.innerHTML=c+`<div style="overflow:auto;max-height:520px"><table><thead><tr><th>방</th><th>등급</th><th>흐름</th><th>면적 m²</th><th>차압 Pa</th><th>ACPH</th><th>장비</th></tr></thead><tbody>
     ${o.rooms.map(r=>`<tr><td><b>${r.name_ko}</b><br><span class="muted">${r.name_en}</span>${r.is_airlock?' <span class="pill">AL</span>':''}</td>
-    <td><span class="pill ${gcls(r.clean_grade)}">${r.clean_grade}</span></td><td>${r.room_flow}</td><td>${r.area_m2??'—'}</td>
+    <td>${gradeBadge(r.clean_grade)}</td><td>${r.room_flow}</td><td>${r.area_m2??'—'}</td>
     <td>${r.differential_pressure_Pa??'—'}</td><td>${r.air_changes_per_hour??'—'}</td>
     <td class="muted">${(r.equipment&&r.equipment.length)?r.equipment.map(e=>e.name).join(', '):'—'}</td></tr>`).join('')}</tbody></table></div></div>`;}
   else if(k==='airlocks'){el.innerHTML=c+`<div style="overflow:auto;max-height:520px"><table><thead><tr><th>AL ID</th><th>kind</th><th>등급</th><th>면적 m²</th><th>flow</th><th>차압 Pa</th><th>목적</th></tr></thead><tbody>
-    ${o.airlocks.map(a=>`<tr><td class="tag">${a.al_id}</td><td><span class="pill">${a.kind}</span></td><td><span class="pill ${gcls(a.clean_grade)}">${a.clean_grade}</span></td>
+    ${o.airlocks.map(a=>`<tr><td class="tag">${a.al_id}</td><td><span class="pill">${a.kind}</span></td><td>${gradeBadge(a.clean_grade)}</td>
     <td>${a.area_m2}</td><td>${a.flow_type}</td><td>${a.differential_pressure_Pa??'—'}</td><td>${a.purpose}</td></tr>`).join('')}</tbody></table></div></div>`;}
   else if(k==='adjacency'){el.innerHTML=c+`<div style="overflow:auto;max-height:520px"><table><thead><tr><th>From</th><th>To</th><th>관계</th><th>도어</th><th>크기 mm</th><th>방향</th></tr></thead><tbody>
     ${o.adjacency.map(a=>`<tr><td class="tag">${nm(a.from_id)}</td><td class="tag">${nm(a.to_id)}</td><td>${a.relationship}</td><td>${a.door_count}</td><td>${a.door_size_mm??'—'}</td><td>${a.flow_direction}</td></tr>`).join('')}</tbody></table></div></div>`;}
